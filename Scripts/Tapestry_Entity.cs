@@ -5,16 +5,27 @@ using UnityEngine;
 public class Tapestry_Entity : Tapestry_Actor {
 
     [Range(0, 1000)]
-    public float stamina;
+    public float stamina = 1000;
+    public Tapestry_Inventory inventory;
+    public Tapestry_AttributeProfile attributeProfile;
+    public Tapestry_SkillProfile skillProfile;
 
     // Use this for initialization
     void Start () {
-		
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
+    }
+
+    private void Reset ()
+    {
+        inventory = new Tapestry_Inventory();
+        damageProfile = new Tapestry_DamageProfile();
+        attributeProfile = new Tapestry_AttributeProfile();
+        skillProfile = new Tapestry_SkillProfile();
     }
 
     public override Tapestry_HealthState GetHealthState()
@@ -27,9 +38,9 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     public Tapestry_StaminaState GetStaminaState()
     {
-        if (health > 500) return Tapestry_StaminaState.Fresh;
-        else if (health > 200) return Tapestry_StaminaState.Winded;
-        else if (health > 0) return Tapestry_StaminaState.Exhausted;
+        if (stamina > 500) return Tapestry_StaminaState.Fresh;
+        else if (stamina > 200) return Tapestry_StaminaState.Winded;
+        else if (stamina > 0) return Tapestry_StaminaState.Exhausted;
         else return Tapestry_StaminaState.Unconscious;
     }
 }

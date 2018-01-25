@@ -3,22 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public struct Tapestry_DamageTypeIndex {
-    public Tapestry_DamageType damageType;
-    [Range(-1,1)]
-    public float resistance;
-    public float mitigation;
+    
+    private float resistance;
+    private float mitigation;
 
-    public Tapestry_DamageTypeIndex(Tapestry_DamageType type, float res, float mit)
+    public float Resistance
     {
-        damageType = type;
-        resistance = res;
-        mitigation = mit;
+        get
+        {
+            return resistance;
+        }
+
+        set
+        {
+            if (value < -1) resistance = -1;
+            else if (value > 1) resistance = 1;
+            else resistance = value;
+        }
+    }
+
+    public float Mitigation
+    {
+        get
+        {
+            return mitigation;
+        }
+
+        set
+        {
+            mitigation = value;
+        }
+    }
+
+    public Tapestry_DamageTypeIndex(float res, float mit) : this()
+    {
+        Resistance = res;
+        Mitigation = mit;
     }
 }
 
 public enum Tapestry_DamageType
 {
     Burning, Choking, Corrosive, Crushing,
-    Electric, Explosive, Freezing, Irradiating,
-    Piercing, Slashing, Toxic, Untyped
+    Electric, Explosive, Freezing, Holy,
+    Irradiating, Necrotic, Piercing, Slashing,
+    Toxic, Untyped
 }

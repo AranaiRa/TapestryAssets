@@ -5,9 +5,9 @@ using UnityEngine;
 public class Tapestry_Actor : MonoBehaviour {
 
     [Range(0,1000)]
-    public float health;
+    public float health = 1000;
     [Range(0, 1000)]
-    public float theshold;
+    public float threshold;
     public Tapestry_DamageProfile damageProfile;
     public float personalTimeFactor = 1.0f;
     public string[] keywords;

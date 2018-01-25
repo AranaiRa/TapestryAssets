@@ -8,6 +8,16 @@ public class Tapestry_Prop : Tapestry_Actor {
         intact,
         broken,
         destroyed;
+    public bool 
+        isPushable, isLiftable;
+    public int
+        pushClumsy = 10, pushCompetent = 40, pushImpressive = 70,
+        liftClumsy = 40, liftCompetent = 70, liftImpressive = 100;
+    public AnimationCurve
+        pushSpeedCurve, liftSpeedCurve;
+    public float
+        pushSpeedMin = 0.2f, pushSpeedMax = 0.6f,
+        liftSpeedMin = 0.2f, liftSpeedMax = 0.9f;
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +28,12 @@ public class Tapestry_Prop : Tapestry_Actor {
 	void Update () {
 		
 	}
+
+    private void Reset()
+    {
+        pushSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
+        liftSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
+    }
 
     public void SetObjectState(Tapestry_HealthState state)
     {
