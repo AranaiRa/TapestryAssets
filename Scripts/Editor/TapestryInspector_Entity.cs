@@ -10,6 +10,7 @@ public class TapestryInspector_Entity : Editor {
     int toolbarActive = -1;
     string[] toolbarNames = { "Skills", "Resist", "Inventory", "Other"};
     Tapestry_Item itemToAdd;
+    string keywordToAdd;
 
     public override void OnInspectorGUI()
     {
@@ -54,12 +55,12 @@ public class TapestryInspector_Entity : Editor {
             GUILayout.BeginVertical("box");
             GUILayout.Label(val.ToString());
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("S", scoreTooltip));
-            e.attributeProfile.SetScore(val, EditorGUILayout.IntField(e.attributeProfile.GetScore(val), GUILayout.Width(40)));
+            GUILayout.Label(new GUIContent("S", scoreTooltip), GUILayout.Width(12));
+            e.attributeProfile.SetScore(val, EditorGUILayout.IntField(e.attributeProfile.GetScore(val), GUILayout.Width(32)));
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("P", progTooltip));
-            e.attributeProfile.SetProgress(val, EditorGUILayout.FloatField(e.attributeProfile.GetProgress(val), GUILayout.Width(40)));
+            GUILayout.Label(new GUIContent("P", progTooltip), GUILayout.Width(12));
+            e.attributeProfile.SetProgress(val, EditorGUILayout.FloatField(e.attributeProfile.GetProgress(val), GUILayout.Width(32)));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
@@ -114,17 +115,54 @@ public class TapestryInspector_Entity : Editor {
                 if (e.inventory == null)
                     e.inventory = new Tapestry_Inventory();
 
-                foreach(Tapestry_Item item in e.inventory.items)
+                int indexToRemove = -1;
+                GUILayout.BeginVertical("box");
+                GUILayout.Label("Inventory");
+                GUILayout.BeginVertical("box");
+                if (e.inventory.items.Count == 0)
+                    GUILayout.Label("No items in inventory.");
+                else
                 {
-                    Tapestry_Item field = (Tapestry_Item)EditorGUILayout.ObjectField(item, typeof(Tapestry_Item), true);
+                    for (int i = 0; i < e.inventory.items.Count; i++)
+                    {
+                        Tapestry_ItemStack stack = e.inventory.items[i];
+                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("-", GUILayout.Width(20)))
+                        {
+                            indexToRemove = i;
+                        }
+                        GUILayout.FlexibleSpace();
+                        stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label("x", GUILayout.Width(12));
+                        GUILayout.FlexibleSpace();
+                        EditorGUILayout.ObjectField(stack.item, typeof(Tapestry_Item), true, GUILayout.Width(300));
+                        GUILayout.EndHorizontal();
+                    }
                 }
-                GUILayout.Label("items 'n' shiiiit");
-                /*Tapestry_Item i */
-                itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true);
-                if (itemToAdd != null)
-                    e.inventory.AddItem(itemToAdd);
-                //itemToAdd = null;
-                GUILayout.Label(e.inventory.items.Count.ToString());
+                if(indexToRemove != -1)
+                {
+                    if (e.inventory.items.Count == 1)
+                        e.inventory.items.Clear();
+                    else
+                        e.inventory.items.RemoveAt(indexToRemove);
+                }
+                GUILayout.EndVertical();
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                if(GUILayout.Button("+", GUILayout.Width(20)))
+                {
+                    if (itemToAdd != null)
+                    {
+                        if (e.inventory.ContainsItem(itemToAdd) == false)
+                            e.inventory.AddItem(itemToAdd, 1);
+                        itemToAdd = null;
+                    }
+                }
+                itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
+                
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
             }
             if (toolbarNames[toolbarActive] == "Skills")
             {
@@ -188,6 +226,64 @@ public class TapestryInspector_Entity : Editor {
                     GUILayout.EndHorizontal();
                 }
 
+                GUILayout.EndVertical();
+            }
+            if (toolbarNames[toolbarActive] == "Other")
+            {
+                GUILayout.BeginVertical("box");
+                GUILayout.Label("Time");
+                GUILayout.BeginHorizontal("box");
+                string timeTooltip = "What time scale this entity operates at. 1.0 is normal time.";
+
+                GUILayout.Label(new GUIContent("Factor", timeTooltip));
+                e.personalTimeFactor = EditorGUILayout.DelayedFloatField(e.personalTimeFactor);
+                GUILayout.EndHorizontal();
+                GUILayout.EndVertical();
+
+                if (e.keywords == null)
+                    e.keywords = new List<string>();
+
+                int indexToRemove = -1;
+                GUILayout.BeginVertical("box");
+                GUILayout.Label("Keywords");
+                GUILayout.BeginVertical("box");
+                if (e.keywords.Count == 0)
+                {
+                    GUILayout.Label("No keywords associated with this Entity.");
+                }
+                else
+                {
+                    for (int i = 0; i < e.keywords.Count; i++)
+                    {
+                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("-", GUILayout.Width(20)))
+                        {
+                            indexToRemove = i;
+                        }
+                        e.keywords[i] = EditorGUILayout.DelayedTextField(e.keywords[i]);
+                        GUILayout.EndHorizontal();
+                    }
+                }
+                if (indexToRemove != -1)
+                {
+                    if (e.keywords.Count == 1)
+                        e.keywords.Clear();
+                    else
+                        e.keywords.RemoveAt(indexToRemove);
+                }
+
+                GUILayout.EndVertical();
+                GUILayout.BeginHorizontal();
+                if(GUILayout.Button("+", GUILayout.Width(20)))
+                {
+                    if (keywordToAdd != "")
+                    {
+                        e.keywords.Add(keywordToAdd);
+                        keywordToAdd = null;
+                    }
+                }
+                keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
+                GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }
         }

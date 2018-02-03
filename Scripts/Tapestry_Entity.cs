@@ -26,6 +26,7 @@ public class Tapestry_Entity : Tapestry_Actor {
         damageProfile = new Tapestry_DamageProfile();
         attributeProfile = new Tapestry_AttributeProfile();
         skillProfile = new Tapestry_SkillProfile();
+        keywords = new List<string>();
     }
 
     public override Tapestry_HealthState GetHealthState()

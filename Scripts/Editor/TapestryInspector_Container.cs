@@ -1,19 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 using UnityEditor;
 
-[CustomEditor(typeof(Tapestry_Prop))]
-public class TapestryInspector_Prop : Editor
-{
+[CustomEditor(typeof(Tapestry_Container))]
+public class TapestryInspector_Container : Editor {
+
     int toolbarActive = -1;
-    string[] toolbarNames = { "Interaction", "Destruction", "Other" };
+    string[] toolbarNames = { "Interaction", "Destruction", "Inventory", "Other" };
+    Tapestry_Item itemToAdd;
     string keywordToAdd;
 
     public override void OnInspectorGUI()
     {
-        Tapestry_Prop p = target as Tapestry_Prop;
+        Tapestry_Container p = target as Tapestry_Container;
 
         GUILayout.BeginHorizontal();
 
@@ -37,13 +37,43 @@ public class TapestryInspector_Prop : Editor
 
         GUILayout.EndHorizontal();
 
+        if (p.security == null)
+            p.security = new Tapestry_Lock(false, 0, "");
+
+        string lockedTooltip = "Is this container locked?";
+        GUILayout.BeginVertical("box");
+
+        GUILayout.BeginHorizontal();
+        p.security.isLocked = EditorGUILayout.Toggle(p.security.isLocked, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
+        GUILayout.EndHorizontal();
+
+
+        if (p.security.isLocked)
+        {
+            GUILayout.BeginHorizontal("box");
+
+            GUILayout.Label("Level");
+            p.security.LockLevel = EditorGUILayout.DelayedIntField(p.security.LockLevel, GUILayout.Width(30));
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Bypassable?");
+            p.security.canBeBypassed = EditorGUILayout.Toggle(p.security.canBeBypassed, GUILayout.Width(12));
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Key");
+            p.security.keyID = EditorGUILayout.DelayedTextField(p.security.keyID, GUILayout.Width(100));
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndVertical();
+
         toolbarActive = GUILayout.Toolbar(toolbarActive, toolbarNames);
 
         if (toolbarActive != -1)
         {
             if (toolbarNames[toolbarActive] == "Interaction")
             {
-                string 
+                string
                     pushableTooltip = "Can Entities push this object if one of their " + Tapestry_Config.pushLiftAttribute.ToString() + " is high enough?",
                     liftableTooltip = "Can Entities lift this object if one of their " + Tapestry_Config.pushLiftAttribute.ToString() + " is high enough?",
                     clumTooltip = "The minimum " + Tapestry_Config.pushLiftAttribute.ToString() + " required to push or lift (as appropriate). Uses the Clumsy animation when your Attribute is equal, mixes with the Competent animation as the score increases.",
@@ -57,7 +87,7 @@ public class TapestryInspector_Prop : Editor
                 GUILayout.Label(new GUIContent("Pushable?", pushableTooltip));
                 GUILayout.EndHorizontal();
 
-                
+
                 if (p.isPushable)
                 {
                     GUILayout.BeginVertical("box");
@@ -191,9 +221,9 @@ public class TapestryInspector_Prop : Editor
             {
                 string
                     destructableTooltip = "Does this object model swap when it reaches certain damage amounts?",
-                    intactTooltip = "What GameObjects to display when the object is "+Tapestry_HealthState.Intact.ToString()+". Use an empty GameObject to contain the parts.",
-                    brokenTooltip = "What GameObjects to display when the object is "+Tapestry_HealthState.Broken.ToString()+". Use an empty GameObject to contain the parts.",
-                    destroTooltip = "What GameObjects to display when the object is "+Tapestry_HealthState.Destroyed.ToString()+". Use an empty GameObject to contain the parts.";
+                    intactTooltip = "What GameObjects to display when the object is " + Tapestry_HealthState.Intact.ToString() + ". Use an empty GameObject to contain the parts.",
+                    brokenTooltip = "What GameObjects to display when the object is " + Tapestry_HealthState.Broken.ToString() + ". Use an empty GameObject to contain the parts.",
+                    destroTooltip = "What GameObjects to display when the object is " + Tapestry_HealthState.Destroyed.ToString() + ". Use an empty GameObject to contain the parts.";
 
                 GUILayout.BeginVertical("box");
 
@@ -224,9 +254,88 @@ public class TapestryInspector_Prop : Editor
                     EditorGUILayout.ObjectField(p.destroyed, typeof(GameObject), true, GUILayout.Width(250));
                     GUILayout.EndHorizontal();
 
+                    string ejectTooltip = "Does this object drop its inventory items on the ground when it reaches certain levels of damage?";
+                    GUILayout.BeginHorizontal();
+                    p.ejectInventory = EditorGUILayout.Toggle(p.ejectInventory, GUILayout.Width(12));
+                    GUILayout.Label(new GUIContent("Eject Inventory?", ejectTooltip));
+                    GUILayout.EndHorizontal();
+                    
+                    if (p.ejectInventory)
+                    {
+                        EjectOptions op;
+                        if (p.ejectState == Tapestry_HealthState.Destroyed)
+                            op = EjectOptions.Destroyed;
+                        else
+                            op = EjectOptions.Broken;
+
+                        GUILayout.BeginHorizontal("box");
+                        GUILayout.Label("Eject when object is:");
+                        op = (EjectOptions)EditorGUILayout.EnumPopup(op);
+                        GUILayout.EndHorizontal();
+
+                        if (op == EjectOptions.Broken)
+                            p.ejectState = Tapestry_HealthState.Broken;
+                        else if (op == EjectOptions.Destroyed)
+                            p.ejectState = Tapestry_HealthState.Destroyed;
+                    }
+
                     GUILayout.EndVertical();
                 }
 
+                GUILayout.EndVertical();
+            }
+            if (toolbarNames[toolbarActive] == "Inventory")
+            {
+                if (p.inventory == null)
+                    p.inventory = new Tapestry_Inventory();
+
+                int indexToRemove = -1;
+                GUILayout.BeginVertical("box");
+                GUILayout.Label("Inventory");
+                GUILayout.BeginVertical("box");
+                if (p.inventory.items.Count == 0)
+                    GUILayout.Label("No items in inventory.");
+                else
+                {
+                    for (int i = 0; i < p.inventory.items.Count; i++)
+                    {
+                        Tapestry_ItemStack stack = p.inventory.items[i];
+                        GUILayout.BeginHorizontal();
+                        if (GUILayout.Button("-", GUILayout.Width(20)))
+                        {
+                            indexToRemove = i;
+                        }
+                        GUILayout.FlexibleSpace();
+                        stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label("x", GUILayout.Width(12));
+                        GUILayout.FlexibleSpace();
+                        EditorGUILayout.ObjectField(stack.item, typeof(Tapestry_Item), true, GUILayout.Width(300));
+                        GUILayout.EndHorizontal();
+                    }
+                }
+                if(indexToRemove != -1)
+                {
+                    if (p.inventory.items.Count == 1)
+                        p.inventory.items.Clear();
+                    else
+                        p.inventory.items.RemoveAt(indexToRemove);
+                }
+                GUILayout.EndVertical();
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                if(GUILayout.Button("+", GUILayout.Width(20)))
+                {
+                    if (itemToAdd != null)
+                    {
+                        if (p.inventory.ContainsItem(itemToAdd) == false)
+                            p.inventory.AddItem(itemToAdd, 1);
+                        itemToAdd = null;
+                    }
+                }
+                itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
+                
+                GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }
             if (toolbarNames[toolbarActive] == "Other")
@@ -289,4 +398,9 @@ public class TapestryInspector_Prop : Editor
             }
         }
     }
+    enum EjectOptions
+    {
+        Broken, Destroyed
+    }
 }
+

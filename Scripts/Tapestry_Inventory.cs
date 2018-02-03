@@ -4,30 +4,26 @@ using UnityEngine;
 
 public class Tapestry_Inventory {
 
-    public List<Tapestry_Item> items;
+    public List<Tapestry_ItemStack> items;
 
     public Tapestry_Inventory()
     {
-        items = new List<Tapestry_Item>();
+        items = new List<Tapestry_ItemStack>();
     }
 
-    public void AddItem(Tapestry_Item item)
+    public void AddItem(Tapestry_Item item, int quantity)
     {
         if (item != null)
         {
-            /*if (item.GetType() == typeof(Tapestry_ItemKey))
-                keys.Add((Tapestry_ItemKey)item);
-            else*/
-            items.Add(item);
-            Debug.Log("added an item named " + item.name + ", currently " + items.Count + " total items");
+            items.Add(new Tapestry_ItemStack(item, quantity));
         }
-        //Debug.Log("item passed was null, currently " + items.Count + " total items");
     }
 
     public bool ContainsKeyID(string id)
     {
-        foreach(Tapestry_Item i in items)
+        foreach(Tapestry_ItemStack iStack in items)
         {
+            Tapestry_Item i = iStack.item;
             if (i.GetType() == typeof(Tapestry_ItemKey))
             {
                 Tapestry_ItemKey k = (Tapestry_ItemKey)i;
@@ -36,5 +32,19 @@ public class Tapestry_Inventory {
             }
         }
         return false;
+    }
+
+    public bool ContainsItem(Tapestry_Item item)
+    {
+        bool check = false;
+        foreach(Tapestry_ItemStack stack in items)
+        {
+            if(item == stack.item)
+            {
+                check = true;
+                break;
+            }
+        }
+        return check;
     }
 }

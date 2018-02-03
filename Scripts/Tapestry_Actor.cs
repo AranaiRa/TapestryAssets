@@ -10,11 +10,11 @@ public class Tapestry_Actor : MonoBehaviour {
     public float threshold;
     public Tapestry_DamageProfile damageProfile;
     public float personalTimeFactor = 1.0f;
-    public string[] keywords;
+    public List<string> keywords;
 
 	// Use this for initialization
 	void Start () {
-		
+
 	}
 	
 	// Update is called once per frame
@@ -29,7 +29,7 @@ public class Tapestry_Actor : MonoBehaviour {
         else return Tapestry_HealthState.Destroyed;
     }
 
-    public void Activate()
+    public virtual void Activate()
     {
 
     }

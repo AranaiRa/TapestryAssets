@@ -2,15 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_Container : MonoBehaviour {
+public class Tapestry_Container : Tapestry_Prop {
+
+    public Tapestry_Lock security;
+    public Tapestry_Inventory inventory;
+    public bool ejectInventory;
+    public Tapestry_HealthState ejectState = Tapestry_HealthState.Destroyed;
 
 	// Use this for initialization
 	void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    protected override void Reset()
+    {
+        inventory = new Tapestry_Inventory();
+        security = new Tapestry_Lock(false, 0, "");
+
+        base.Reset();
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 }
