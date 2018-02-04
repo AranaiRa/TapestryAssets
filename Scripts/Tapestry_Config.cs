@@ -8,4 +8,5 @@ public static class Tapestry_Config {
         BaseEntityWalkSpeed = 1.0f,
         BaseEntityRunSpeed = 2.0f;
     public static Tapestry_Attribute pushLiftAttribute = Tapestry_Attribute.Strength;
+    public static Tapestry_Skill lockBypassSkill = Tapestry_Skill.Larceny;
 }

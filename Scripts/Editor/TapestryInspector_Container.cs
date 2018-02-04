@@ -48,18 +48,25 @@ public class TapestryInspector_Container : Editor {
         GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
         GUILayout.EndHorizontal();
 
-
         if (p.security.isLocked)
         {
             GUILayout.BeginHorizontal("box");
 
-            GUILayout.Label("Level");
-            p.security.LockLevel = EditorGUILayout.DelayedIntField(p.security.LockLevel, GUILayout.Width(30));
-            GUILayout.FlexibleSpace();
-            GUILayout.Label("Bypassable?");
+            string
+                bypassableTooltip = "Can the player bypass this lock with " + Tapestry_Config.lockBypassSkill.ToString() + "?",
+                levelTooltip = "How difficult this lock is to bypass.",
+                keyTooltip = "Entities with a key with this ID can open this door when locked. After passing through the door, the Entity will re-lock it.";
+
+            GUILayout.Label(new GUIContent("Bypassable?", bypassableTooltip));
             p.security.canBeBypassed = EditorGUILayout.Toggle(p.security.canBeBypassed, GUILayout.Width(12));
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Key");
+            if (p.security.canBeBypassed)
+            {
+                GUILayout.Label(new GUIContent("Level", levelTooltip));
+                p.security.LockLevel = EditorGUILayout.DelayedIntField(p.security.LockLevel, GUILayout.Width(30));
+                GUILayout.FlexibleSpace();
+            }
+            GUILayout.Label(new GUIContent("Key", keyTooltip));
             p.security.keyID = EditorGUILayout.DelayedTextField(p.security.keyID, GUILayout.Width(100));
 
             GUILayout.EndHorizontal();

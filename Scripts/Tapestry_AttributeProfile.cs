@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Tapestry_AttributeProfile {
 
     Dictionary<Tapestry_Attribute, Tapestry_AttributeIndex> dict = new Dictionary<Tapestry_Attribute, Tapestry_AttributeIndex>();

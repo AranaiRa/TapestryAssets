@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public struct Tapestry_DamageTypeIndex {
     
     private float resistance;
