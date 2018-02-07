@@ -57,23 +57,27 @@ public class Tapestry_Door : MonoBehaviour {
 		if(isOpening)
         {
             time += Time.deltaTime;
+            if (time >= openTime)
+                time = openTime;
             float prog = curve.Evaluate(time / openTime);
-            if (prog > 1) prog = 1;
+            prog = Mathf.Clamp(prog, 0, 1); Debug.Log("["+Mathf.RoundToInt(time*100/openTime)+"%] "+prog);
 
-            Vector3 pos = Vector3.Lerp(pivot.transform.localPosition, pos2, prog);
-            Quaternion rot = Quaternion.Lerp(pivot.transform.localRotation, rot2, prog);
+            Vector3 evalPos = Vector3.Lerp(pivot.transform.localPosition, pos2, prog);
+            Quaternion evalRot = Quaternion.Lerp(pivot.transform.localRotation, rot2, prog);
 
-            pivot.transform.localPosition = pos;
-            pivot.transform.localRotation = rot;
+            pivot.transform.localPosition = evalPos;
+            pivot.transform.localRotation = evalRot;
 
-            if (prog == 1)
+            if (time == openTime)
                 isOpening = false;
         }
+        // TODO: Needs updating after the opening block's fuckery is figured out
         else if (isClosing)
         {
             time += Time.deltaTime;
             float prog = curve.Evaluate(time / openTime);
             if (prog > 1) prog = 1;
+            if (prog < 0) prog = 0;
 
             Vector3 pos = Vector3.Lerp(pivot.transform.localPosition, pos1, prog);
             Quaternion rot = Quaternion.Lerp(pivot.transform.localRotation, rot1, prog);

@@ -22,6 +22,8 @@ public class TapestryInspector_Door : Editor
         GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
         GUILayout.EndHorizontal();
 
+        if (d.security == null)
+            d.security = new Tapestry_Lock(false, 0, "");
 
         if (d.security.isLocked)
         {
@@ -110,31 +112,5 @@ public class TapestryInspector_Door : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
-        /*GUILayout.BeginHorizontal();
-        
-        GUILayout.FlexibleSpace();
-        GUILayout.Label(d.pos2.ToString());
-        GUILayout.Label(d.rot2.ToString());
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Bake Closed Transform"))
-        {
-            d.BakeClosedState();
-        }
-        GUILayout.FlexibleSpace();
-        GUILayout.Label(d.pos1.ToString());
-        GUILayout.Label(d.rot1.ToString());
-        GUILayout.EndHorizontal();
-
-        
-
-        if(GUILayout.Button("Close"))
-        {
-            if (Application.isPlaying)
-                d.Close();
-            else
-                d.Close(true);
-        }*/
     }
 }
