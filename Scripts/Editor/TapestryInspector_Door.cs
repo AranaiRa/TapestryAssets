@@ -13,6 +13,8 @@ public class TapestryInspector_Door : Editor
 
         if (d.security == null)
             d.security = new Tapestry_Lock(false, 0, "");
+        if (d.curve == null)
+            d.curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
 
         string lockedTooltip = "Is this container locked?";
         GUILayout.BeginVertical("box");

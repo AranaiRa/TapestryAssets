@@ -17,6 +17,8 @@ public class TapestryInspector_Player : Editor
     {
         Tapestry_Player e = target as Tapestry_Player;
 
+        GUILayout.Label("SPEED = " + e.speed2D);
+
         //DrawDefaultInspector();
 
         //GUILayout.Box("BELOW IS CUSTOM INSPECTOR CODE");
