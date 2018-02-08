@@ -16,6 +16,13 @@ public class TapestryInspector_Door : Editor
         if (d.curve == null)
             d.curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
 
+        string displayTooltip = "What string will display on the player's HUD when looking at this object.";
+        GUILayout.BeginHorizontal("box");
+        GUILayout.Label(new GUIContent("Display Name", displayTooltip));
+        GUILayout.FlexibleSpace();
+        d.displayName = EditorGUILayout.DelayedTextField(d.displayName,GUILayout.Width(270));
+        GUILayout.EndHorizontal();
+
         string lockedTooltip = "Is this container locked?";
         GUILayout.BeginVertical("box");
 

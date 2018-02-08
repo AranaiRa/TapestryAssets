@@ -10,13 +10,11 @@ public class Tapestry_Entity : Tapestry_Actor {
     public Tapestry_AttributeProfile attributeProfile;
     public Tapestry_SkillProfile skillProfile;
     public bool isRunning = false;
-    public Rigidbody rb;
-    public float speed3D, speed2D;
-    protected Vector2 velocity2D;
+    protected float speed;
 
     // Use this for initialization
     void Start () {
-
+        
 	}
 	
 	// Update is called once per frame
@@ -26,21 +24,11 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     protected virtual void Reset()
     {
-        velocity2D = new Vector2();
         inventory = new Tapestry_Inventory();
         damageProfile = new Tapestry_DamageProfile();
         attributeProfile = new Tapestry_AttributeProfile();
         skillProfile = new Tapestry_SkillProfile();
         keywords = new List<string>();
-
-        if (rb == null)
-        {
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if (rigidbody == null)
-                gameObject.AddComponent<Rigidbody>();
-            else
-                rb = rigidbody;
-        }
     }
 
     public override Tapestry_HealthState GetHealthState()

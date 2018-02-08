@@ -15,22 +15,36 @@ public class Tapestry_Inventory {
     {
         if (item != null)
         {
-            items.Add(new Tapestry_ItemStack(item, quantity));
+            bool added = false;
+            for(int i=0;i<items.Count;i++)
+            {
+                if(items[i].item.Compare(item.data))
+                {
+                    Debug.Log("items are equal");
+                    items[i].quantity += quantity;
+                    added = true;
+                    break;
+                }
+            }
+            if(!added)
+                items.Add(new Tapestry_ItemStack(item.data, quantity));
         }
     }
 
     public bool ContainsKeyID(string id)
     {
+        Debug.Log("TODO: ContainsKeyID");
+        /*
         foreach(Tapestry_ItemStack iStack in items)
         {
-            Tapestry_Item i = iStack.item;
+            Tapestry_Item i = iStack.item.data;
             if (i.GetType() == typeof(Tapestry_ItemKey))
             {
                 Tapestry_ItemKey k = (Tapestry_ItemKey)i;
                 if (k.keyID == id)
                     return true;
             }
-        }
+        }*/
         return false;
     }
 
@@ -39,7 +53,7 @@ public class Tapestry_Inventory {
         bool check = false;
         foreach(Tapestry_ItemStack stack in items)
         {
-            if(item == stack.item)
+            if(stack.item.Compare(item.data))
             {
                 check = true;
                 break;

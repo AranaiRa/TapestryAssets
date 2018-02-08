@@ -17,8 +17,6 @@ public class TapestryInspector_Player : Editor
     {
         Tapestry_Player e = target as Tapestry_Player;
 
-        GUILayout.Label("SPEED = " + e.speed2D);
-
         //DrawDefaultInspector();
 
         //GUILayout.Box("BELOW IS CUSTOM INSPECTOR CODE");
@@ -139,7 +137,7 @@ public class TapestryInspector_Player : Editor
                         GUILayout.FlexibleSpace();
                         GUILayout.Label("x", GUILayout.Width(12));
                         GUILayout.FlexibleSpace();
-                        EditorGUILayout.ObjectField(stack.item, typeof(Tapestry_Item), true, GUILayout.Width(300));
+                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(300));
                         GUILayout.EndHorizontal();
                     }
                 }

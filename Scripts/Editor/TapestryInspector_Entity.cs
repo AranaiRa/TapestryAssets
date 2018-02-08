@@ -136,7 +136,7 @@ public class TapestryInspector_Entity : Editor {
                         GUILayout.FlexibleSpace();
                         GUILayout.Label("x", GUILayout.Width(12));
                         GUILayout.FlexibleSpace();
-                        EditorGUILayout.ObjectField(stack.item, typeof(Tapestry_Item), true, GUILayout.Width(300));
+                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(300));
                         GUILayout.EndHorizontal();
                     }
                 }

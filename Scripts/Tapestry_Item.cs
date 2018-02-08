@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tapestry_Item : MonoBehaviour {
+public class Tapestry_Item : Tapestry_Activatable {
 
-    public Sprite icon;
-    public GameObject model;
-    public Tapestry_Entity owningEntity;
-    public Tapestry_Faction owningFaction;
-    public Tapestry_ItemSize size = Tapestry_ItemSize.Negligible;
-    public int value;
-    public List<string> keywords;
+    public Tapestry_ItemData data;
 
-	// Use this for initialization
-	void Start () {
+    private void Reset()
+    {
+        displayName = data.displayName;
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -22,6 +21,11 @@ public class Tapestry_Item : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public override void Activate()
+    {
+        Destroy(this.gameObject);
+    }
 }
 
 public enum Tapestry_ItemSize

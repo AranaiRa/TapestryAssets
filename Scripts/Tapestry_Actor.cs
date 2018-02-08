@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_Actor : MonoBehaviour {
+public class Tapestry_Actor : Tapestry_Activatable {
 
     [Range(0,1000)]
     public float health = 1000;
@@ -29,7 +29,7 @@ public class Tapestry_Actor : MonoBehaviour {
         else return Tapestry_HealthState.Destroyed;
     }
 
-    public virtual void Activate()
+    public override void Activate()
     {
 
     }
