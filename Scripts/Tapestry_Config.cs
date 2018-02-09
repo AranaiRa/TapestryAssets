@@ -12,7 +12,11 @@ public static class Tapestry_Config {
         BaseEntityRunSpeed = 4.4f,
         PlayerCameraSensitivityX = 2.0f,
         PlayerCameraSensitivityY = 1.0f,
-        EntityActivationDistance = 2.0f;
+        EntityActivationDistance = 2.0f,
+        SoundVolumeMaster = 1.0f,
+        SoundVolumeAmbient = 1.0f,
+        SoundVolumeMusic = 1.0f,
+        SoundVolumeSFX = 1.0f;
     public static Tapestry_Attribute pushLiftAttribute = Tapestry_Attribute.Strength;
     public static Tapestry_Skill lockBypassSkill = Tapestry_Skill.Larceny;
     public static KeyCode

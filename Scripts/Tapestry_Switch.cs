@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_Door : Tapestry_Activatable {
+public class Tapestry_Switch : Tapestry_Activatable {
 
-    public GameObject pivot;
-    public Tapestry_Lock security;
-    public float 
-        openTime = 0.7f,
-        lockJiggleIntensity = 0.016f;
+    public GameObject pivot, target;
+    public float
+        switchTime = 0.4f,
+        pingPongHoldTime = 0.4f;
     public AnimationCurve curve;
-    public bool jiggleOnActivateWhenLocked = false;
     public AudioSource
         emitter;
     public AudioClip
-        openSound,
-        closeSound,
-        lockedSound;
+        onSound,
+        offSound;
+    public bool
+        pingPong = false;
 
     [SerializeField]
     private Vector3
@@ -28,20 +27,18 @@ public class Tapestry_Door : Tapestry_Activatable {
         rot1 = Quaternion.identity,
         rot2 = Quaternion.identity,
         startingRot = Quaternion.identity;
-    private bool 
-        isOpening = false,
-        isClosing = false,
-        isJiggling = false,
-        isOpen = false;
-    private float 
+    private bool
+        isSwitchingOn = false,
+        isSwitchingOff = false,
+        isOn = false;
+    private float
         time,
         jiggleTime = 0.4f;
 
     private void Reset()
     {
-        displayName = "Door";
+        displayName = "Switch";
         curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
-        security = new Tapestry_Lock(false, 0, "");
 
         bool
             hasPivot = false,
@@ -71,7 +68,7 @@ public class Tapestry_Door : Tapestry_Activatable {
             pivot.transform.localPosition = Vector3.zero;
         }
 
-        if(!hasEmitter)
+        if (!hasEmitter)
         {
             GameObject go = new GameObject();
             go.transform.SetParent(transform);
@@ -91,12 +88,12 @@ public class Tapestry_Door : Tapestry_Activatable {
 	
 	// Update is called once per frame
 	void Update () {
-		if(isOpening)
+        if (isSwitchingOn)
         {
             time += Time.deltaTime;
-            if (time >= openTime)
-                time = openTime;
-            float prog = curve.Evaluate(time / openTime);
+            if (time >= switchTime)
+                time = switchTime;
+            float prog = curve.Evaluate(time / switchTime);
             prog = Mathf.Clamp(prog, 0, 1);
 
             Vector3 evalPos = Vector3.Lerp(startingPos, pos2, prog);
@@ -105,86 +102,62 @@ public class Tapestry_Door : Tapestry_Activatable {
             pivot.transform.localPosition = evalPos;
             pivot.transform.localRotation = evalRot;
 
-            if (time == openTime)
+            if (time == switchTime)
             {
-                isOpening = false;
-                isOpen = true;
+                isSwitchingOn = false;
+                isOn = true;
+                if (pingPong)
+                {
+                    SwitchOff(false, pingPongHoldTime);
+                }
             }
         }
-        else if (isClosing)
+        else if (isSwitchingOff)
         {
             time += Time.deltaTime;
-            if (time >= openTime)
-                time = openTime;
-            float prog = curve.Evaluate(time / openTime);
+            if (time >= switchTime)
+                time = switchTime;
+            float prog = curve.Evaluate(time / switchTime);
             if (prog > 1) prog = 1;
-            if (prog < 0) prog = 0;
-
-            Vector3 evalPos = Vector3.Lerp(startingPos, pos1, prog);
-            Quaternion evalRot = Quaternion.Lerp(startingRot, rot1, prog);
-
-            pivot.transform.localPosition = evalPos;
-            pivot.transform.localRotation = evalRot;
-
-            if (time == openTime)
+            
+            if (time > 0)
             {
-                isClosing = false;
-                isOpen = false;
+                Vector3 evalPos = Vector3.Lerp(startingPos, pos1, prog);
+                Quaternion evalRot = Quaternion.Lerp(startingRot, rot1, prog);
+
+                pivot.transform.localPosition = evalPos;
+                pivot.transform.localRotation = evalRot;
             }
-        }
-        else if(isJiggling)
-        {
-            time += Time.deltaTime;
-            if (time >= jiggleTime)
-                time = jiggleTime;
-            float amt = Random.Range(-lockJiggleIntensity, lockJiggleIntensity);
 
-            Quaternion evalRot = Quaternion.LerpUnclamped(rot1, rot2, amt);
-            pivot.transform.localRotation = evalRot;
-
-            if (time == jiggleTime)
+            if (time == switchTime)
             {
-                Close(true);
-                isJiggling = false;
+                isSwitchingOff = false;
+                isOn = false;
             }
         }
     }
 
     public override void Activate()
     {
-        if(!isOpening && !isClosing)
+        if (!isSwitchingOn && !isSwitchingOff)
         {
-            if (!security.isLocked)
-            {
-                if (isOpen)
-                    Close();
-                else
-                    Open();
-            }
+            if (isOn)
+                SwitchOff();
             else
-            {
-                if(!isOpen && jiggleOnActivateWhenLocked)
-                {
-                    emitter.clip = lockedSound;
-                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
-                    emitter.Play();
-                    isJiggling = true;
-                    time = 0;
-                }
-            }
+                SwitchOn();
         }
     }
 
-    public void Open(bool instant=false)
+    public void SwitchOn(bool instant = false)
     {
-        if(!instant)
+        if (!instant)
         {
             startingPos = pivot.transform.localPosition;
             startingRot = pivot.transform.localRotation;
             time = 0;
-            isOpening = true;
-            isClosing = false;
-            emitter.clip = openSound;
+            isSwitchingOn = true;
+            isSwitchingOff = false;
+            emitter.clip = onSound;
             emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
             emitter.Play();
         }
@@ -192,20 +165,22 @@ public class Tapestry_Door : Tapestry_Activatable {
         {
             pivot.transform.localPosition = pos2;
             pivot.transform.localRotation = rot2;
-            isOpen = true;
+            isOn = true;
         }
     }
 
-    public void Close(bool instant=false)
+    public void SwitchOff(bool instant = false, float delay = 0)
     {
-        if(!instant)
+        if (!instant)
         {
             startingPos = pivot.transform.localPosition;
             startingRot = pivot.transform.localRotation;
             time = 0;
-            isOpening = false;
-            isClosing = true;
-            emitter.clip = closeSound;
+            if (delay > 0)
+                time = -delay;
+            isSwitchingOn = false;
+            isSwitchingOff = true;
+            emitter.clip = offSound;
             emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
             emitter.Play();
         }
@@ -213,7 +188,7 @@ public class Tapestry_Door : Tapestry_Activatable {
         {
             pivot.transform.localPosition = pos1;
             pivot.transform.localRotation = rot1;
-            isOpen = false;
+            isOn = false;
         }
     }
 
@@ -237,10 +212,5 @@ public class Tapestry_Door : Tapestry_Activatable {
     public string GetClosedInspectorString()
     {
         return pos1.ToString() + " | " + rot1.ToString();
-    }
-
-    public bool GetIsOpen()
-    {
-        return isOpen;
     }
 }

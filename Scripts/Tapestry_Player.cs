@@ -64,13 +64,13 @@ public class Tapestry_Player : Tapestry_Entity {
         {
             objectInSights = hit.transform.gameObject.GetComponentInParent<Tapestry_Activatable>();
 
-            if (hit.transform.gameObject.GetComponentInParent<Tapestry_Activatable>() != null)
+            if (objectInSights != null)
             {
                 objectInSights.Hover();
 
                 if(activateLastFrame && !activate)
                 {
-                    if(objectInSights.GetType() == typeof(Tapestry_Item))
+                    if (objectInSights.GetType() == typeof(Tapestry_Item))
                     {
                         Tapestry_Item i = (Tapestry_Item)objectInSights;
                         if (inventory == null)
