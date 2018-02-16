@@ -19,7 +19,9 @@ public class TapestryInspector_Door : Editor
         string 
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
             changeTimeTooltip = "The amount of time, in seconds, it takes for the door to open or close.",
-            changeCurveTooltip = "Animation controls for how the door eases between states.";
+            changeCurveTooltip = "Animation controls for how the door eases between states.",
+            interactableTooltip = "Can the player interact with this door?",
+            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
 
         GUILayout.BeginVertical("box");
 
@@ -35,6 +37,18 @@ public class TapestryInspector_Door : Editor
         GUILayout.FlexibleSpace();
         GUILayout.Label(new GUIContent("Change Curve", changeCurveTooltip));
         d.curve = EditorGUILayout.CurveField(d.curve, GUILayout.Width(150));
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        d.isInteractable = EditorGUILayout.Toggle(d.isInteractable, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Interactable?", interactableTooltip));
+        GUILayout.Space(20);
+        if (!d.isInteractable)
+        {
+            d.displayNameWhenUnactivatable = EditorGUILayout.Toggle(d.displayNameWhenUnactivatable, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Display Name Anyway?", displayNameTooltip));
+            GUILayout.FlexibleSpace();
+        }
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();

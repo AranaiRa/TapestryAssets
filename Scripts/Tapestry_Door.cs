@@ -10,7 +10,8 @@ public class Tapestry_Door : Tapestry_Activatable {
         openTime = 0.7f,
         lockJiggleIntensity = 0.016f;
     public AnimationCurve curve;
-    public bool jiggleOnActivateWhenLocked = false;
+    public bool 
+        jiggleOnActivateWhenLocked = false;
     public AudioSource
         emitter;
     public AudioClip
@@ -104,7 +105,7 @@ public class Tapestry_Door : Tapestry_Activatable {
 
             pivot.transform.localPosition = evalPos;
             pivot.transform.localRotation = evalRot;
-
+            
             if (time == openTime)
             {
                 isOpening = false;
@@ -120,8 +121,11 @@ public class Tapestry_Door : Tapestry_Activatable {
             if (prog > 1) prog = 1;
             if (prog < 0) prog = 0;
 
-            Vector3 evalPos = Vector3.Lerp(startingPos, pos1, prog);
-            Quaternion evalRot = Quaternion.Lerp(startingRot, rot1, prog);
+            Vector3 evalPos;
+            Quaternion evalRot;
+            
+            evalPos = Vector3.Lerp(startingPos, pos1, prog);
+            evalRot = Quaternion.Lerp(startingRot, rot1, prog);
 
             pivot.transform.localPosition = evalPos;
             pivot.transform.localRotation = evalRot;
@@ -181,6 +185,7 @@ public class Tapestry_Door : Tapestry_Activatable {
         {
             startingPos = pivot.transform.localPosition;
             startingRot = pivot.transform.localRotation;
+
             time = 0;
             isOpening = true;
             isClosing = false;

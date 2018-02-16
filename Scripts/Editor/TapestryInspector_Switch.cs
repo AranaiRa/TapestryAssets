@@ -18,7 +18,9 @@ public class TapestryInspector_Switch : Editor {
             changeTimeTooltip = "The amount of time, in seconds, it takes for the switch to change from on to off, or vice-versa..",
             changeCurveTooltip = "Animation controls for how the switch eases between states.",
             pingPongTooltip = "Does this switch go to it's \"on\" position and then immediately back? Useful for buttons or pressure plates.",
-            switchDelayTooltip = "How long, in seconds, the switch holds in the \"on\" position before returning to the \"off\" position.";
+            switchDelayTooltip = "How long, in seconds, the switch holds in the \"on\" position before returning to the \"off\" position.",
+            interactableTooltip = "Can the player interact with this door?",
+            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
 
         GUILayout.BeginVertical("box");
 
@@ -34,6 +36,18 @@ public class TapestryInspector_Switch : Editor {
         GUILayout.FlexibleSpace();
         GUILayout.Label(new GUIContent("Change Curve", changeCurveTooltip));
         s.curve = EditorGUILayout.CurveField(s.curve, GUILayout.Width(150));
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        s.isInteractable = EditorGUILayout.Toggle(s.isInteractable, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Interactable?", interactableTooltip));
+        GUILayout.Space(20);
+        if (!s.isInteractable)
+        {
+            s.displayNameWhenUnactivatable = EditorGUILayout.Toggle(s.displayNameWhenUnactivatable, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Display Name Anyway?", displayNameTooltip));
+            GUILayout.FlexibleSpace();
+        }
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
@@ -124,13 +138,109 @@ public class TapestryInspector_Switch : Editor {
         GUILayout.EndVertical();
         GUILayout.EndVertical();
 
-        string targetTooltip = "What object, if any, this switch affects. Modifyable controls will appear based on what Tapestry components are detected, including in children objects.";
+        string targetTooltip = "What object, if any, this switch affects. Modifyable controls will appear based on what Tapestry components are detected.";
 
         GUILayout.BeginVertical("box");
         GUILayout.BeginHorizontal();
         GUILayout.Label(new GUIContent("Target Object", targetTooltip));
         s.target = (GameObject)EditorGUILayout.ObjectField(s.target, typeof(GameObject), true);
         GUILayout.EndHorizontal();
+
+        if (s.target != null)
+        {
+
+            Tapestry_Activatable comp = s.target.GetComponent<Tapestry_Activatable>();
+            if(comp.GetType() == typeof(Tapestry_Door))
+            {
+                string doorTooltip = "Detected component type is \"Door\".";
+                GUILayout.Label(new GUIContent("Door Controls", doorTooltip));
+                GUILayout.BeginVertical("box");
+                if(s.pingPong)
+                {
+                    GUILayout.Label("When Switch is Activated...");
+
+                    GUILayout.BeginHorizontal();
+                    s.data.pp_swapOpenState = EditorGUILayout.Toggle(s.data.pp_swapOpenState, GUILayout.Width(14));
+                    GUILayout.Label("Open/Close");
+                    GUILayout.FlexibleSpace();
+                    s.data.pp_swapInteractivityState = EditorGUILayout.Toggle(s.data.pp_swapInteractivityState, GUILayout.Width(14));
+                    GUILayout.Label("Interactivity");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    s.data.pp_swapLockedState = EditorGUILayout.Toggle(s.data.pp_swapLockedState, GUILayout.Width(14));
+                    GUILayout.Label("Lock/Unlock");
+                    GUILayout.FlexibleSpace();
+                    s.data.pp_swapBypassableState = EditorGUILayout.Toggle(s.data.pp_swapBypassableState, GUILayout.Width(14));
+                    GUILayout.Label("Bypassability");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    GUILayout.Label("When Switch is On...");
+
+                    GUILayout.BeginHorizontal();
+                    s.data.on_setOpen = EditorGUILayout.Toggle(s.data.on_setOpen, GUILayout.Width(14));
+                    GUILayout.Label("Open", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setClosed = EditorGUILayout.Toggle(s.data.on_setClosed, GUILayout.Width(14));
+                    GUILayout.Label("Close", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setInteractable = EditorGUILayout.Toggle(s.data.on_setInteractable, GUILayout.Width(14));
+                    GUILayout.Label("Interactive", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    s.data.on_setLocked = EditorGUILayout.Toggle(s.data.on_setLocked, GUILayout.Width(14));
+                    GUILayout.Label("Lock", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setUnlocked = EditorGUILayout.Toggle(s.data.on_setUnlocked, GUILayout.Width(14));
+                    GUILayout.Label("Unlock", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setBypassable = EditorGUILayout.Toggle(s.data.on_setBypassable, GUILayout.Width(14));
+                    GUILayout.Label("Bypassable", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.Label("When Switch is Off...");
+
+                    GUILayout.BeginHorizontal();
+                    s.data.off_setOpen = EditorGUILayout.Toggle(s.data.off_setOpen, GUILayout.Width(14));
+                    GUILayout.Label("Open", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setClosed = EditorGUILayout.Toggle(s.data.off_setClosed, GUILayout.Width(14));
+                    GUILayout.Label("Close", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setInteractable = EditorGUILayout.Toggle(s.data.off_setInteractable, GUILayout.Width(14));
+                    GUILayout.Label("Interactive", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    s.data.off_setLocked = EditorGUILayout.Toggle(s.data.off_setLocked, GUILayout.Width(14));
+                    GUILayout.Label("Lock", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setUnlocked = EditorGUILayout.Toggle(s.data.off_setUnlocked, GUILayout.Width(14));
+                    GUILayout.Label("Unlock", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setBypassable = EditorGUILayout.Toggle(s.data.off_setBypassable, GUILayout.Width(14));
+                    GUILayout.Label("Bypassable", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.EndVertical();
+            }
+
+        }
         GUILayout.EndVertical();
+    }
+
+    private string[] GetTabs(List<string> list)
+    {
+        string[] output = new string[list.Count];
+        for (int i = 0; i < list.Count; i++)
+        {
+            output[i] = list[i];
+        }
+        return output;
     }
 }

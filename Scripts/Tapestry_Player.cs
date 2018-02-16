@@ -68,7 +68,7 @@ public class Tapestry_Player : Tapestry_Entity {
             {
                 objectInSights.Hover();
 
-                if(activateLastFrame && !activate)
+                if(activateLastFrame && !activate && objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
                 {
                     if (objectInSights.GetType() == typeof(Tapestry_Item))
                     {

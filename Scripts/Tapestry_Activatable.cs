@@ -5,6 +5,9 @@ using UnityEngine;
 public class Tapestry_Activatable : MonoBehaviour {
 
     public string displayName = "";
+    public bool 
+        isInteractable = true,
+        displayNameWhenUnactivatable = false;
 
     public virtual void Hover()
     {

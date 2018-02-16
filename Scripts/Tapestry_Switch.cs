@@ -16,6 +16,12 @@ public class Tapestry_Switch : Tapestry_Activatable {
         offSound;
     public bool
         pingPong = false;
+    /*[SerializeField]
+    public Dictionary<Tapestry_Activatable, Tapestry_SwitchData> 
+        data = new Dictionary<Tapestry_Activatable, Tapestry_SwitchData>();*/
+    [SerializeField]
+    public Tapestry_SwitchData 
+        data;
 
     [SerializeField]
     private Vector3
@@ -32,13 +38,13 @@ public class Tapestry_Switch : Tapestry_Activatable {
         isSwitchingOff = false,
         isOn = false;
     private float
-        time,
-        jiggleTime = 0.4f;
+        time;
 
     private void Reset()
     {
         displayName = "Switch";
         curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
+        data = new Tapestry_SwitchData();
 
         bool
             hasPivot = false,
@@ -76,6 +82,7 @@ public class Tapestry_Switch : Tapestry_Activatable {
             go.AddComponent<AudioSource>();
             go.transform.localPosition = Vector3.zero;
             emitter = go.GetComponent<AudioSource>();
+            emitter.maxDistance = Tapestry_Config.DefaultSoundRadius;
         }
 
         emitter.playOnAwake = false;
@@ -106,6 +113,8 @@ public class Tapestry_Switch : Tapestry_Activatable {
             {
                 isSwitchingOn = false;
                 isOn = true;
+                Debug.Log("Time is at max");
+                EvaluateOnState();
                 if (pingPong)
                 {
                     SwitchOff(false, pingPongHoldTime);
@@ -133,6 +142,8 @@ public class Tapestry_Switch : Tapestry_Activatable {
             {
                 isSwitchingOff = false;
                 isOn = false;
+                if (!pingPong)
+                    EvaluateOffState();
             }
         }
     }
@@ -145,6 +156,58 @@ public class Tapestry_Switch : Tapestry_Activatable {
                 SwitchOff();
             else
                 SwitchOn();
+        }
+    }
+
+    public void EvaluateOnState()
+    {
+        Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
+        if (pingPong)
+        {
+            if (comp.GetType() == typeof(Tapestry_Door))
+            {
+                Tapestry_Door d = target.GetComponent<Tapestry_Door>();
+                if (data.pp_swapOpenState)
+                {
+                    if (d.GetIsOpen()) d.Close();
+                    else d.Open();
+                }
+                if (data.pp_swapLockedState) d.security.isLocked = !d.security.isLocked;
+                if (data.pp_swapBypassableState) d.security.canBeBypassed = !d.security.canBeBypassed;
+                if (data.pp_swapInteractivityState) d.isInteractable = !d.isInteractable;
+            }
+        }
+        else
+        {
+            if (comp.GetType() == typeof(Tapestry_Door))
+            {
+                Tapestry_Door d = target.GetComponent<Tapestry_Door>();
+                if (data.on_setOpen) d.Open();
+                if (data.on_setClosed) d.Close();
+                if (data.on_setLocked) d.security.isLocked = true;
+                if (data.on_setUnlocked) d.security.isLocked = false;
+                if (data.on_setBypassable) d.security.canBeBypassed = data.on_setBypassable;
+                if (data.on_setInteractable) d.isInteractable = data.on_setInteractable;
+            }
+        }
+    }
+
+    public void EvaluateOffState()
+    {
+        Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
+        if (!pingPong)
+        {
+
+        }
+        if (comp.GetType() == typeof(Tapestry_Door))
+        {
+            Tapestry_Door d = target.GetComponent<Tapestry_Door>();
+            if (data.off_setOpen) d.Open();
+            if (data.off_setClosed) d.Close();
+            if (data.off_setLocked) d.security.isLocked = true;
+            if (data.off_setUnlocked) d.security.isLocked = false;
+            if (data.off_setBypassable) d.security.canBeBypassed = data.off_setBypassable;
+            if (data.off_setInteractable) d.isInteractable = data.off_setInteractable;
         }
     }
 
