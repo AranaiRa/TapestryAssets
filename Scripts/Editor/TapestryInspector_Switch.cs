@@ -148,11 +148,12 @@ public class TapestryInspector_Switch : Editor {
 
         if (s.target != null)
         {
-
             Tapestry_Activatable comp = s.target.GetComponent<Tapestry_Activatable>();
             if(comp.GetType() == typeof(Tapestry_Door))
             {
-                string doorTooltip = "Detected component type is \"Door\".";
+                string
+                    doorTooltip = "Detected component type is \"Door\".";
+
                 GUILayout.Label(new GUIContent("Door Controls", doorTooltip));
                 GUILayout.BeginVertical("box");
                 if(s.pingPong)
@@ -229,7 +230,56 @@ public class TapestryInspector_Switch : Editor {
                 }
                 GUILayout.EndVertical();
             }
+            if(comp.GetType() == typeof(Tapestry_AnimatedLight))
+            {
+                string
+                    animLightTooltip = "Detected component type is \"Animated Light\".";
 
+                GUILayout.Label(new GUIContent("Animated Light Controls", animLightTooltip));
+                GUILayout.BeginVertical("box");
+                if (s.pingPong)
+                {
+                    GUILayout.Label("When Switch is Activated...");
+
+                    GUILayout.BeginHorizontal();
+                    s.data.pp_swapOpenState = EditorGUILayout.Toggle(s.data.pp_swapOpenState, GUILayout.Width(14));
+                    GUILayout.Label("Turn On/Turn Off");
+                    GUILayout.FlexibleSpace();
+                    s.data.pp_swapInteractivityState = EditorGUILayout.Toggle(s.data.pp_swapInteractivityState, GUILayout.Width(14));
+                    GUILayout.Label("Interactivity");
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    GUILayout.Label("When Switch is On...");
+
+                    GUILayout.BeginHorizontal();
+                    s.data.on_setOpen = EditorGUILayout.Toggle(s.data.on_setOpen, GUILayout.Width(14));
+                    GUILayout.Label("Turn On", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setClosed = EditorGUILayout.Toggle(s.data.on_setClosed, GUILayout.Width(14));
+                    GUILayout.Label("Turn Off", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setInteractable = EditorGUILayout.Toggle(s.data.on_setInteractable, GUILayout.Width(14));
+                    GUILayout.Label("Interactive", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.Label("When Switch is Off...");
+
+                    GUILayout.BeginHorizontal();
+                    s.data.off_setOpen = EditorGUILayout.Toggle(s.data.off_setOpen, GUILayout.Width(14));
+                    GUILayout.Label("Turn On", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setClosed = EditorGUILayout.Toggle(s.data.off_setClosed, GUILayout.Width(14));
+                    GUILayout.Label("Turn Off", GUILayout.Width(72));
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setInteractable = EditorGUILayout.Toggle(s.data.off_setInteractable, GUILayout.Width(14));
+                    GUILayout.Label("Interactive", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.EndVertical();
+            }
         }
         GUILayout.EndVertical();
     }

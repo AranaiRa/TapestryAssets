@@ -11,6 +11,10 @@ public static class Tapestry_WorldClock {
     public static int
         hoursPerDay = 24,
         minutesPerHour = 60;
+    public static Vector2Int
+        clockTime = new Vector2Int();
+    public static string
+        clockTimeString = "";
 
 	public static float EvaluateTime(float timeToAdd = 0f)
     {
@@ -19,6 +23,17 @@ public static class Tapestry_WorldClock {
             worldTime -= dayLength;
         if (worldTime < 0)
             worldTime += dayLength;
+
+        int h = Mathf.FloorToInt((worldTime / dayLength) * hoursPerDay);
+        float seg = 1.0f / hoursPerDay;
+        float minChange = ((worldTime / dayLength) % seg) / seg;
+        int m = Mathf.FloorToInt(minChange * minutesPerHour);
+        clockTime = new Vector2Int(h, m);
+        if(m <= 9)
+            clockTimeString = h + ":0" + m;
+        else
+            clockTimeString = h + ":" + m;
+
         return worldTime / dayLength;
     }
 
@@ -59,15 +74,6 @@ public static class Tapestry_WorldClock {
     public static float EvaluateSunSize(AnimationCurve twilightCurve)
     {
         return Mathf.Lerp(Tapestry_Config.SunSizeMidday, Tapestry_Config.SunSizeTwilight, twilightCurve.Evaluate(EvaluateTime()));
-    }
-
-    public static Vector2Int GetFormattedTime()
-    {
-        int h = Mathf.FloorToInt((worldTime / dayLength) * hoursPerDay);
-        float seg = 1.0f / hoursPerDay;
-        float minChange = ((worldTime / dayLength) % seg) / seg;
-        int m = Mathf.FloorToInt(minChange * minutesPerHour);
-        return new Vector2Int(h, m);
     }
 }
 

@@ -30,6 +30,6 @@ public class Tapestry_PlayerHUD : MonoBehaviour {
             targetName.gameObject.SetActive(false);
         }
 
-        debugelement_time.text = Tapestry_WorldClock.worldTime + "\n" + Tapestry_WorldClock.GetFormattedTime();
+        debugelement_time.text = Tapestry_WorldClock.worldTime + "\n" + Tapestry_WorldClock.clockTimeString;
     }
 }

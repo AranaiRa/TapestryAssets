@@ -17,9 +17,11 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         lightPositionJitter = true,
         emissionJitter = true,
         timedLight = false,
-        useInPsys   = true,
-        useHoldPsys = true,
-        useOutPsys  = true;
+        clockLight = false,
+        useInPsys   = false,
+        useHoldPsys = false,
+        useOutPsys  = false,
+        invertTimed = false;
     public float
         lightIntensityBase = 1.0f,
         lightIntensityJitterAmount = 0.1f,
@@ -32,13 +34,15 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         transitionSpeed = 1.0f,
         timedDuration = 4.0f;
     public Vector2Int
-        timedOn,
-        timedOff;
+        timedOn = new Vector2Int(18,0),
+        timedOff = new Vector2Int(6,0);
     public Color
         emissionColor = Color.white;
 
+    [SerializeField]
     private bool
-        isOn = true,
+        isOn = true;
+    private bool
         isTurningOn  = false,
         isTurningOff = false;
     private float
@@ -50,7 +54,8 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         positionJitterTargetTime = 0f,
         emissionJitterTime = 0f,
         emissionJitterTargetTime = 0f,
-        transitionTime = 0f;
+        transitionTime = 0f,
+        timeUntilStateChange = -1f;
     private Vector3
         lightPositionBase = Vector3.zero,
         lightPositionJitterTarget = Vector3.zero,
@@ -77,17 +82,17 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                 particleSystemContainer = transform.GetChild(i).gameObject;
                 for (int j = 0; j < particleSystemContainer.transform.childCount; j++)
                 {
-                    if (transform.GetChild(j).name == "T_PS_In")
+                    if (particleSystemContainer.transform.GetChild(j).name == "T_PS_In")
                     {
-                        psys_in = particleSystemContainer.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        psys_in = particleSystemContainer.transform.GetChild(j).GetComponent<ParticleSystem>();
                     }
-                    if (transform.GetChild(j).name == "T_PS_Active")
+                    if (particleSystemContainer.transform.GetChild(j).name == "T_PS_Active")
                     {
-                        psys_active = particleSystemContainer.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        psys_active = particleSystemContainer.transform.GetChild(j).GetComponent<ParticleSystem>();
                     }
-                    if (transform.GetChild(j).name == "T_PS_Out")
+                    if (particleSystemContainer.transform.GetChild(j).name == "T_PS_Out")
                     {
-                        psys_out = particleSystemContainer.transform.GetChild(i).GetComponent<ParticleSystem>();
+                        psys_out = particleSystemContainer.transform.GetChild(j).GetComponent<ParticleSystem>();
                     }
                 }
             }
@@ -114,14 +119,17 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             psys_in = new GameObject().AddComponent<ParticleSystem>();
             psys_in.transform.SetParent(particleSystemContainer.transform);
             psys_in.name = "T_PS_In";
+            psys_in.Stop();
 
             psys_active = new GameObject().AddComponent<ParticleSystem>();
             psys_active.transform.SetParent(particleSystemContainer.transform);
             psys_active.name = "T_PS_Active";
+            psys_in.Stop();
 
             psys_out = new GameObject().AddComponent<ParticleSystem>();
             psys_out.transform.SetParent(particleSystemContainer.transform);
             psys_out.name = "T_PS_Out";
+            psys_in.Stop();
         }
 
         if(!hasLight)
@@ -135,7 +143,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         {
             emissiveStatics = new GameObject();
             emissiveStatics.transform.SetParent(transform);
-            emissiveStatics.name = "T_EmissiveStatics";
+            emissiveStatics.name = "T_EmissiveMesh";
         }
     }
 
@@ -149,8 +157,10 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         emissionJitterLast = emissionColor;
         emissionJitterTarget = emissionColor;
 
-        psys_in.Stop();
-        psys_out.Stop();
+        if (isOn)
+            TurnOn(true);
+        else
+            TurnOff(true);
     }
 
     private void OnDestroy()
@@ -161,6 +171,21 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
 
     // Update is called once per frame
     void Update () {
+        if (!useInPsys && psys_in.gameObject.activeInHierarchy)
+            psys_in.gameObject.SetActive(false);
+        else if (useInPsys && !psys_in.gameObject.activeInHierarchy)
+            psys_in.gameObject.SetActive(true);
+
+        if (!useHoldPsys && psys_active.gameObject.activeInHierarchy)
+            psys_active.gameObject.SetActive(false);
+        else if (useHoldPsys && !psys_active.gameObject.activeInHierarchy)
+            psys_active.gameObject.SetActive(true);
+
+        if (!useOutPsys && psys_out.gameObject.activeInHierarchy)
+            psys_out.gameObject.SetActive(false);
+        else if (useOutPsys && !psys_out.gameObject.activeSelf)
+            psys_out.gameObject.SetActive(true);
+
         if (isTurningOn)
         {
             transitionTime += Time.deltaTime;
@@ -172,8 +197,8 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             lightSource.intensity = Mathf.Lerp(0, lightIntensityBase, mix);
             lightSource.transform.localPosition = Vector3.Lerp(lightSource.transform.localPosition, lightPositionBase, mix);
 
-            emissiveStatics.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-            emissiveStatics.GetComponent<Renderer>().material.SetColor("_EmissionColor",
+            mat.EnableKeyword("_EMISSION");
+            mat.SetColor("_EmissionColor",
                 Color.Lerp(Color.black, emissionColor, mix)
                 );
 
@@ -194,8 +219,8 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             lightSource.intensity = Mathf.Lerp(lightIntensityBase, 0, mix);
             lightSource.transform.localPosition = Vector3.Lerp(lightPositionBase, lightSource.transform.localPosition, mix);
 
-            emissiveStatics.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-            emissiveStatics.GetComponent<Renderer>().material.SetColor("_EmissionColor",
+            mat.EnableKeyword("_EMISSION");
+            mat.SetColor("_EmissionColor",
                 Color.Lerp(emissionColor, Color.black, mix)
                 );
 
@@ -246,7 +271,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             }
             if (emissionJitter)
             {
-                mat = emissiveStatics.GetComponentInChildren<MeshRenderer>().material;
+                mat = emissiveStatics.transform.GetChild(0).GetComponent<MeshRenderer>().material;
 
                 if (mat.HasProperty("_EmissionColor"))
                 {
@@ -261,16 +286,15 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                     float prog = emissionJitterTime / emissionJitterTargetTime;
                     prog = Mathf.Clamp(prog, 0, 1);
 
-                    emissiveStatics.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-                    emissiveStatics.GetComponent<Renderer>().material.SetColor("_EmissionColor",
+                    mat.EnableKeyword("_EMISSION");
+                    mat.SetColor("_EmissionColor",
                         Color.Lerp(emissionJitterLast, emissionJitterTarget, prog)
                         );
                 }
             }
-            if (timedLight)
+            if (clockLight)
             {
-                Vector2Int clockTime = Tapestry_WorldClock.GetFormattedTime();
-                if((clockTime.x == timedOff.x) && (clockTime.y == timedOff.y))
+                if(Tapestry_WorldClock.clockTime == timedOff)
                 {
                     TurnOff();
                 }
@@ -278,13 +302,25 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         }
         else
         {
-            if (timedLight)
+            if (clockLight)
             {
-                Vector2Int clockTime = Tapestry_WorldClock.GetFormattedTime();
-                if ((clockTime.x == timedOn.x) && (clockTime.y == timedOn.y))
+                if (Tapestry_WorldClock.clockTime == timedOn)
                 {
                     TurnOn();
                 }
+            }
+        }
+
+        if(timeUntilStateChange >= 0)
+        {
+            timeUntilStateChange -= Time.deltaTime * Tapestry_WorldClock.globalTimeFactor;
+
+            if(timeUntilStateChange <= 0)
+            {
+                if(!invertTimed)
+                    TurnOff();
+                else
+                    TurnOn();
             }
         }
     }
@@ -296,14 +332,34 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             transitionTime = 0;
             isTurningOn = true;
             isTurningOff = false;
-
-            psys_in.Play();
-            psys_active.Play();
-            psys_out.Stop();
+            
+            if(useInPsys)
+                psys_in.Play();
+            if(useHoldPsys)
+                psys_active.Play();
+            if(useOutPsys)
+                psys_out.Stop();
+            
+            if(timedLight && !invertTimed)
+            {
+                timeUntilStateChange = timedDuration + transitionSpeed;
+            }
         }
         else
         {
-            
+            isOn = true;
+
+            if(useInPsys)
+                psys_in.Stop();
+            if(useHoldPsys)
+                psys_active.Play();
+            if(useOutPsys)
+                psys_out.Stop();
+
+            lightSource.intensity = lightIntensityBase;
+
+            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.EnableKeyword("_EMISSION");
+            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.SetColor("_EmissionColor", emissionColor);
         }
     }
 
@@ -311,17 +367,43 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
     {
         if (!instant)
         {
+            Debug.Log("beep");
             transitionTime = 0;
             isTurningOn = false;
             isTurningOff = true;
 
-            psys_in.Stop();
-            psys_active.Stop();
-            psys_out.Play();
+            if (useInPsys)
+                psys_in.Stop();
+            if (useInPsys)
+                psys_active.Stop();
+            if (useInPsys)
+                psys_out.Play();
+            
+            if (timedLight && invertTimed)
+            {
+                timeUntilStateChange = timedDuration + transitionSpeed;
+            }
         }
         else
         {
+            isOn = false;
 
+            if (useInPsys)
+                psys_in.Stop();
+            if (useHoldPsys)
+                psys_active.Stop();
+            if (useOutPsys)
+                psys_out.Stop();
+
+            lightSource.intensity = 0;
+
+            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.EnableKeyword("_EMISSION");
+            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.SetColor("_EmissionColor", Color.black);
         }
+    }
+
+    public bool GetIsOn()
+    {
+        return isOn;
     }
 }
