@@ -113,7 +113,7 @@ public class TapestryInspector_Entity : Editor {
             if (toolbarNames[toolbarActive] == "Inventory")
             {
                 if (e.inventory == null)
-                    e.inventory = new Tapestry_Inventory();
+                    e.inventory = new Tapestry_Inventory(e.transform);
 
                 int indexToRemove = -1;
                 GUILayout.BeginVertical("box");
@@ -154,8 +154,7 @@ public class TapestryInspector_Entity : Editor {
                 {
                     if (itemToAdd != null)
                     {
-                        if (e.inventory.ContainsItem(itemToAdd) == false)
-                            e.inventory.AddItem(itemToAdd, 1);
+                        e.inventory.AddItem(itemToAdd, 1);
                         itemToAdd = null;
                     }
                 }

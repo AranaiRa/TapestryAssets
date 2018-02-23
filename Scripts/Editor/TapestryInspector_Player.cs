@@ -114,7 +114,7 @@ public class TapestryInspector_Player : Editor
             if (toolbarNames[toolbarActive] == "Inventory")
             {
                 if (e.inventory == null)
-                    e.inventory = new Tapestry_Inventory();
+                    e.inventory = new Tapestry_Inventory(e.transform);
 
                 int indexToRemove = -1;
                 GUILayout.BeginVertical("box");
@@ -132,12 +132,16 @@ public class TapestryInspector_Player : Editor
                         {
                             indexToRemove = i;
                         }
+                        if (GUILayout.Button("D", GUILayout.Width(20)))
+                        {
+                            e.inventory.DropItem(e.inventory.items[i].item, 1);
+                        }
                         GUILayout.FlexibleSpace();
                         stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
                         GUILayout.FlexibleSpace();
                         GUILayout.Label("x", GUILayout.Width(12));
                         GUILayout.FlexibleSpace();
-                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(300));
+                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(270));
                         GUILayout.EndHorizontal();
                     }
                 }
@@ -155,8 +159,7 @@ public class TapestryInspector_Player : Editor
                 {
                     if (itemToAdd != null)
                     {
-                        if (e.inventory.ContainsItem(itemToAdd) == false)
-                            e.inventory.AddItem(itemToAdd, 1);
+                        e.inventory.AddItem(itemToAdd, 1);
                         itemToAdd = null;
                     }
                 }

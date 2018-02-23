@@ -24,7 +24,7 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     protected virtual void Reset()
     {
-        inventory = new Tapestry_Inventory();
+        inventory = new Tapestry_Inventory(this.transform);
         damageProfile = new Tapestry_DamageProfile();
         attributeProfile = new Tapestry_AttributeProfile();
         skillProfile = new Tapestry_SkillProfile();

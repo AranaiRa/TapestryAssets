@@ -6,7 +6,7 @@ using UnityEditor;
 [CustomEditor(typeof(Tapestry_AnimatedLight))]
 public class TapestryInspector_AnimatedLight : Editor
 {
-    string[] toolbarNames = { "Jitter", "Particles", "Timing" };
+    string[] toolbarNames = { "Jitter", "Particles", "Sound", "Timing" };
     int toolbarActive = -1;
 
     public override void OnInspectorGUI()
@@ -17,7 +17,8 @@ public class TapestryInspector_AnimatedLight : Editor
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
             changeTimeTooltip = "The amount of time, in seconds, it takes for the door to open or close.",
             interactableTooltip = "Can the player interact with this door?",
-            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
+            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?",
+            toggleOnActivateTooltip = "Should the light switch between being on or off when the player activates it?";
 
         GUILayout.BeginVertical("box");
 
@@ -55,6 +56,12 @@ public class TapestryInspector_AnimatedLight : Editor
         {
             l.displayNameWhenUnactivatable = EditorGUILayout.Toggle(l.displayNameWhenUnactivatable, GUILayout.Width(12));
             GUILayout.Label(new GUIContent("Display Name Anyway?", displayNameTooltip));
+            GUILayout.FlexibleSpace();
+        }
+        else
+        {
+            l.toggleOnActivate = EditorGUILayout.Toggle(l.toggleOnActivate, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Toggle on Activate?", toggleOnActivateTooltip));
             GUILayout.FlexibleSpace();
         }
         GUILayout.EndHorizontal();
@@ -181,6 +188,35 @@ public class TapestryInspector_AnimatedLight : Editor
                 GUILayout.FlexibleSpace();
                 l.useOutPsys = EditorGUILayout.Toggle(l.useOutPsys, GUILayout.Width(12));
                 GUILayout.Label(new GUIContent("Use 'Out'?", outTooltip));
+                GUILayout.EndHorizontal();
+
+                GUILayout.EndVertical();
+            }
+            if (toolbarNames[toolbarActive] == "Sound")
+            {
+                string
+                    inSoundTooltip = "The sound to play when the light is turned on.",
+                    activeSoundTooltip = "The sound to play while the light is on. This soundclip is looped for as long as the light stays on.",
+                    outSoundTooltip = "The sound to play when the light is turned off.";
+
+                GUILayout.BeginVertical("box");
+
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("'In' Sound", inSoundTooltip));
+                l.inSound = (AudioClip)EditorGUILayout.ObjectField(l.inSound, typeof(AudioClip), true, GUILayout.Width(240));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("'Active' Sound", activeSoundTooltip));
+                l.activeSound = (AudioClip)EditorGUILayout.ObjectField(l.activeSound, typeof(AudioClip), true, GUILayout.Width(240));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("'Out' Sound", outSoundTooltip));
+                l.outSound = (AudioClip)EditorGUILayout.ObjectField(l.outSound, typeof(AudioClip), true, GUILayout.Width(240));
                 GUILayout.EndHorizontal();
 
                 GUILayout.EndVertical();

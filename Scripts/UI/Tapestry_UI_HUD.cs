@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tapestry_PlayerHUD : MonoBehaviour {
+public class Tapestry_UI_HUD : MonoBehaviour {
 
     public Tapestry_Player player;
     public Text targetName;
     public Text debugelement_time;
+    public Image InventoryPanel;
 
     private void Reset()
     {

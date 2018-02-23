@@ -16,7 +16,7 @@ public class Tapestry_Container : Tapestry_Prop {
 
     protected override void Reset()
     {
-        inventory = new Tapestry_Inventory();
+        inventory = new Tapestry_Inventory(this.transform);
         security = new Tapestry_Lock(false, 0, "");
 
         base.Reset();

@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Tapestry_ItemData {
 
-    public GameObject prefab;
+    public string prefabName;
     public List<string> keywords;
     public Tapestry_Entity owningEntity;
     public Tapestry_Faction owningFaction;
@@ -27,7 +27,7 @@ public class Tapestry_ItemData {
     public bool Compare(Tapestry_ItemData data)
     {
         bool check = true;
-        if (prefab != data.prefab) check = check && false;
+        if (prefabName != data.prefabName) check = check && false;
         if (value != data.value) check = check && false;
         if (icon != data.icon) check = check && false;
         if (size != data.size) check = check && false;

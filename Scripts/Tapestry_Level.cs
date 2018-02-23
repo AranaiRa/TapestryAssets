@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Tapestry_Level : MonoBehaviour {
 
     public bool isTimeFrozen = false;
     public Light sun;
     public Material sky;
-    public AnimationCurve twilightCurve;
+    public Color tempColor;
 
     private void Reset()
     {
@@ -41,16 +39,6 @@ public class Tapestry_Level : MonoBehaviour {
             sun.bounceIntensity = Tapestry_Config.SunIndirectLight;
             sun.shadows = LightShadows.Soft;
         }
-
-        twilightCurve = new AnimationCurve(
-            new Keyframe(0.00f, 1, 0, 0),
-            new Keyframe(0.00f+Tapestry_Config.SunTwilightBleed, 0, 0, 0),
-            new Keyframe(0.50f-Tapestry_Config.SunTwilightBleed, 0, 0, 0),
-            new Keyframe(0.50f, 1, 0, 0),
-            new Keyframe(0.50f+Tapestry_Config.SunTwilightBleed, 0, 0, 0),
-            new Keyframe(1.00f-Tapestry_Config.SunTwilightBleed, 0, 0, 0),
-            new Keyframe(1.00f, 1, 0, 0)
-            );
 }
 
     // Update is called once per frame
@@ -60,7 +48,9 @@ public class Tapestry_Level : MonoBehaviour {
             float dayProg = Tapestry_WorldClock.EvaluateTime(Time.deltaTime);
             sun.transform.rotation = Quaternion.Euler(dayProg * 360f - 90f, 0, 0);
         }
-        sun.color = Tapestry_WorldClock.EvaluateColor(twilightCurve);
-        sky.SetFloat("sun size",Tapestry_WorldClock.EvaluateSunSize(twilightCurve));
-	}
+        sun.color = Tapestry_WorldClock.EvaluateColor();
+        RenderSettings.ambientSkyColor = Tapestry_WorldClock.EvaluateAmbientColor();
+        //RenderSettings.ambientIntensity = 1.0f;
+        //sky.SetFloat("sun size",Tapestry_WorldClock.EvaluateSunSize());
+    }
 }

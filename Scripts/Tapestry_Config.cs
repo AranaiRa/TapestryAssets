@@ -17,7 +17,8 @@ public static class Tapestry_Config {
         SoundVolumeAmbient = 1.0f,
         SoundVolumeMusic = 1.0f,
         SoundVolumeSFX = 1.0f,
-        DefaultSoundRadius = 4.0f;
+        DefaultSoundRadius = 4.0f,
+        ItemDropDistance = 0.7f;
     public static Tapestry_Attribute pushLiftAttribute = Tapestry_Attribute.Strength;
     public static Tapestry_Skill lockBypassSkill = Tapestry_Skill.Larceny;
     public static KeyCode
@@ -30,7 +31,8 @@ public static class Tapestry_Config {
         KeyboardInput_CamTypeSwitch = KeyCode.Tab,
         KeyboardInput_Crouch        = KeyCode.LeftControl,
         KeyboardInput_PushLift      = KeyCode.R,
-        KeyboardInput_RunWalkToggle = KeyCode.Z;
+        KeyboardInput_RunWalkToggle = KeyCode.Z,
+        KeyboardInput_Inventory     = KeyCode.I;
     //TODO: Figure out actual controller input
     public static KeyCode
         ControllerInput_Fwd           = KeyCode.Joystick1Button0,
@@ -42,11 +44,15 @@ public static class Tapestry_Config {
         ControllerInput_CamTypeSwitch = KeyCode.Joystick1Button0,
         ControllerInput_Crouch        = KeyCode.Joystick1Button0,
         ControllerInput_PushLift      = KeyCode.Joystick1Button0,
-        ControllerInput_RunWalkToggle = KeyCode.Joystick1Button0;
+        ControllerInput_RunWalkToggle = KeyCode.Joystick1Button0,
+        ControllerInput_Inventory     = KeyCode.Joystick1Button0;
     public static Color
-        SunDayColor       = new Color(1.0000f, 0.9375f, 0.8205f, 1.0000f),
-        SunTwilightColor  = new Color(0.9140f, 0.3242f, 0.0977f, 1.0000f),
-        SunNightColor     = new Color(0.0000f, 1.0000f, 0.0000f, 1.0000f);
+        SunDayColor          = new Color(1.000f, 0.937f, 0.820f, 1.0f),
+        SunTwilightColor     = new Color(0.914f, 0.324f, 0.097f, 1.0f),
+        SunNightColor        = new Color(0.000f, 0.000f, 0.000f, 1.0f),
+        AmbientDayColor      = new Color(0.216f, 0.314f, 0.382f, 1.0f),
+        AmbientTwilightColor = new Color(0.382f, 0.295f, 0.216f, 1.0f),
+        AmbientNightColor    = new Color(0.216f, 0.314f, 0.382f, 1.0f);
     public static float
         SunShadowIntensity = 1.0f,
         SunDirectLight = 1.0f,

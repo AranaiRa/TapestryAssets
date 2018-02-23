@@ -74,7 +74,7 @@ public class Tapestry_Player : Tapestry_Entity {
                     {
                         Tapestry_Item i = (Tapestry_Item)objectInSights;
                         if (inventory == null)
-                            inventory = new Tapestry_Inventory();
+                            inventory = new Tapestry_Inventory(this.transform);
                         
                         inventory.AddItem(i, 1);
                         objectInSights.Activate();

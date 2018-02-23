@@ -294,7 +294,7 @@ public class TapestryInspector_Container : Editor {
             if (toolbarNames[toolbarActive] == "Inventory")
             {
                 if (p.inventory == null)
-                    p.inventory = new Tapestry_Inventory();
+                    p.inventory = new Tapestry_Inventory(p.transform);
 
                 int indexToRemove = -1;
                 GUILayout.BeginVertical("box");

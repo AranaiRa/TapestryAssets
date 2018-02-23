@@ -21,7 +21,8 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         useInPsys   = false,
         useHoldPsys = false,
         useOutPsys  = false,
-        invertTimed = false;
+        invertTimed = false,
+        toggleOnActivate = false;
     public float
         lightIntensityBase = 1.0f,
         lightIntensityJitterAmount = 0.1f,
@@ -38,6 +39,12 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         timedOff = new Vector2Int(6,0);
     public Color
         emissionColor = Color.white;
+    public AudioSource
+        emitter;
+    public AudioClip
+        inSound,
+        activeSound,
+        outSound;
 
     [SerializeField]
     private bool
@@ -72,7 +79,8 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         bool
             hasParticleContainer = false,
             hasLight = false,
-            hasEmissiveStatics = false;
+            hasEmissiveStatics = false,
+            hasEmitter = false;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -108,26 +116,37 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                 hasEmissiveStatics = true;
                 emissiveStatics = transform.GetChild(i).gameObject;
             }
+            if (transform.GetChild(i).name == "T_Emitter")
+            {
+                hasEmitter = true;
+                emitter = transform.GetChild(i).gameObject.GetComponent<AudioSource>();
+                if (emitter == null)
+                    transform.GetChild(i).gameObject.AddComponent<AudioSource>();
+            }
         }
 
         if (!hasParticleContainer)
         {
             particleSystemContainer = new GameObject();
             particleSystemContainer.transform.SetParent(transform);
+            particleSystemContainer.transform.localPosition = Vector3.zero;
             particleSystemContainer.name = "T_Particles";
 
             psys_in = new GameObject().AddComponent<ParticleSystem>();
             psys_in.transform.SetParent(particleSystemContainer.transform);
+            psys_in.transform.localPosition = Vector3.zero;
             psys_in.name = "T_PS_In";
             psys_in.Stop();
 
             psys_active = new GameObject().AddComponent<ParticleSystem>();
             psys_active.transform.SetParent(particleSystemContainer.transform);
+            psys_active.transform.localPosition = Vector3.zero;
             psys_active.name = "T_PS_Active";
             psys_in.Stop();
 
             psys_out = new GameObject().AddComponent<ParticleSystem>();
             psys_out.transform.SetParent(particleSystemContainer.transform);
+            psys_out.transform.localPosition = Vector3.zero;
             psys_out.name = "T_PS_Out";
             psys_in.Stop();
         }
@@ -136,7 +155,9 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         {
             lightSource = new GameObject().AddComponent<Light>();
             lightSource.transform.SetParent(transform);
+            lightSource.transform.localPosition = Vector3.zero;
             lightSource.name = "T_Light";
+            lightSource.shadows = LightShadows.Soft;
         }
 
         if (!hasEmissiveStatics)
@@ -144,7 +165,20 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             emissiveStatics = new GameObject();
             emissiveStatics.transform.SetParent(transform);
             emissiveStatics.name = "T_EmissiveMesh";
+            emissiveStatics.transform.localPosition = Vector3.zero;
         }
+
+        if (!hasEmitter)
+        {
+            GameObject go = new GameObject();
+            go.transform.SetParent(transform);
+            go.name = "T_Emitter";
+            go.AddComponent<AudioSource>();
+            go.transform.localPosition = Vector3.zero;
+            emitter = go.GetComponent<AudioSource>();
+        }
+
+        emitter.playOnAwake = false;
     }
 
     void Start()
@@ -197,15 +231,25 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             lightSource.intensity = Mathf.Lerp(0, lightIntensityBase, mix);
             lightSource.transform.localPosition = Vector3.Lerp(lightSource.transform.localPosition, lightPositionBase, mix);
 
-            mat.EnableKeyword("_EMISSION");
-            mat.SetColor("_EmissionColor",
-                Color.Lerp(Color.black, emissionColor, mix)
-                );
+            if (mat != null)
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor",
+                    Color.Lerp(Color.black, emissionColor, mix)
+                    );
+            }
 
             if (transitionTime == transitionSpeed)
             {
                 isTurningOn = false;
                 isOn = true;
+                if (activeSound != null)
+                {
+                    emitter.clip = activeSound;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.loop = true;
+                    emitter.Play();
+                }
             }
         }
         else if (isTurningOff)
@@ -219,10 +263,13 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             lightSource.intensity = Mathf.Lerp(lightIntensityBase, 0, mix);
             lightSource.transform.localPosition = Vector3.Lerp(lightPositionBase, lightSource.transform.localPosition, mix);
 
-            mat.EnableKeyword("_EMISSION");
-            mat.SetColor("_EmissionColor",
-                Color.Lerp(emissionColor, Color.black, mix)
-                );
+            if (mat != null)
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor",
+                    Color.Lerp(emissionColor, Color.black, mix)
+                    );
+            }
 
             if (transitionTime == transitionSpeed)
             {
@@ -325,6 +372,20 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         }
     }
 
+    public override void Activate()
+    {
+        if (toggleOnActivate)
+        {
+            if (!isTurningOn && !isTurningOff)
+            {
+                if (isOn)
+                    TurnOff();
+                else
+                    TurnOn();
+            }
+        }
+    }
+
     public void TurnOn(bool instant = false)
     {
         if (!instant)
@@ -344,6 +405,14 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             {
                 timeUntilStateChange = timedDuration + transitionSpeed;
             }
+
+            if (inSound != null)
+            {
+                emitter.clip = inSound;
+                emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                emitter.loop = false;
+                emitter.Play();
+            }
         }
         else
         {
@@ -358,8 +427,11 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
 
             lightSource.intensity = lightIntensityBase;
 
-            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.EnableKeyword("_EMISSION");
-            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.SetColor("_EmissionColor", emissionColor);
+            if (emissiveStatics != null)
+            {
+                emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.EnableKeyword("_EMISSION");
+                emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.SetColor("_EmissionColor", emissionColor);
+            }
         }
     }
 
@@ -367,7 +439,6 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
     {
         if (!instant)
         {
-            Debug.Log("beep");
             transitionTime = 0;
             isTurningOn = false;
             isTurningOff = true;
@@ -383,6 +454,15 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             {
                 timeUntilStateChange = timedDuration + transitionSpeed;
             }
+
+
+            if (outSound != null)
+            {
+                emitter.clip = outSound;
+                emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                emitter.loop = false;
+                emitter.Play();
+            }
         }
         else
         {
@@ -397,8 +477,11 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
 
             lightSource.intensity = 0;
 
-            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.EnableKeyword("_EMISSION");
-            emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.SetColor("_EmissionColor", Color.black);
+            if (emissiveStatics != null)
+            {
+                emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.EnableKeyword("_EMISSION");
+                emissiveStatics.transform.GetChild(0).GetComponent<Renderer>().sharedMaterial.SetColor("_EmissionColor", Color.black);
+            }
         }
     }
 

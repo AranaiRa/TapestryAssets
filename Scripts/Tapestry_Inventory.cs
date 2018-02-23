@@ -5,9 +5,11 @@ using UnityEngine;
 public class Tapestry_Inventory {
 
     public List<Tapestry_ItemStack> items;
+    private Transform source;
 
-    public Tapestry_Inventory()
+    public Tapestry_Inventory(Transform source)
     {
+        this.source = source;
         items = new List<Tapestry_ItemStack>();
     }
 
@@ -20,7 +22,6 @@ public class Tapestry_Inventory {
             {
                 if(items[i].item.Compare(item.data))
                 {
-                    Debug.Log("items are equal");
                     items[i].quantity += quantity;
                     added = true;
                     break;
@@ -60,5 +61,30 @@ public class Tapestry_Inventory {
             }
         }
         return check;
+    }
+
+    public void DropItem(Tapestry_ItemData id, int amount)
+    {
+        if (amount >= 0)
+        {
+            foreach(Tapestry_ItemStack stack in items)
+            {
+                if(stack.item.Equals(id))
+                {
+                    if (amount > stack.quantity)
+                        amount = stack.quantity;
+                    GameObject clone = GameObject.Instantiate(Resources.Load("Items/"+stack.item.prefabName) as GameObject);
+                    clone.transform.position = source.position + source.forward * Tapestry_Config.ItemDropDistance;
+                    clone.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
+                    
+                    stack.quantity -= amount;
+                    if (stack.quantity == 0)
+                    {
+                        items.Remove(stack);
+                    }
+                    break;
+                }
+            }
+        }
     }
 }

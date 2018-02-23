@@ -37,7 +37,7 @@ public static class Tapestry_WorldClock {
         return worldTime / dayLength;
     }
 
-    public static Color EvaluateColor(AnimationCurve twilightCurve)
+    public static Color EvaluateColor()
     {
         Color c = Color.black;
         float dayProg = EvaluateTime();
@@ -71,9 +71,54 @@ public static class Tapestry_WorldClock {
         return c;
     }
 
-    public static float EvaluateSunSize(AnimationCurve twilightCurve)
+    public static Color EvaluateAmbientColor()
     {
-        return Mathf.Lerp(Tapestry_Config.SunSizeMidday, Tapestry_Config.SunSizeTwilight, twilightCurve.Evaluate(EvaluateTime()));
+        Color c = Tapestry_Config.AmbientNightColor;
+        float dayProg = EvaluateTime();
+        if (dayProg < 0) dayProg += 1.0f;
+
+        if (dayProg >= 0.23f && dayProg < 0.25f)
+        {
+            float mix = (dayProg - 0.23f) / 0.02f;
+            c = Color.Lerp(Tapestry_Config.AmbientNightColor, Tapestry_Config.AmbientTwilightColor, mix);
+        }
+        else if (dayProg >= 0.25f && dayProg < 0.27f)
+        {
+            float mix = (dayProg - 0.25f) / 0.02f;
+            c = Color.Lerp(Tapestry_Config.AmbientDayColor, Tapestry_Config.AmbientTwilightColor, mix);
+        }
+        else if (dayProg >= 0.27f && dayProg < 0.37f)
+        {
+            float mix = (dayProg - 0.27f) / 0.10f;
+            c = Color.Lerp(Tapestry_Config.AmbientTwilightColor, Tapestry_Config.AmbientDayColor, mix);
+        }
+        else if (dayProg > 0.37f && dayProg < 0.63f)
+        {
+            c = Tapestry_Config.AmbientDayColor;
+        }
+        else if (dayProg > 0.63f && dayProg <= 0.73f)
+        {
+            float mix = (dayProg - 0.63f) / 0.10f;
+            c = Color.Lerp(Tapestry_Config.AmbientDayColor, Tapestry_Config.AmbientTwilightColor, mix);
+        }
+        else if (dayProg > 0.73f && dayProg <= 0.75f)
+        {
+            float mix = (dayProg - 0.73f) / 0.02f;
+            c = Color.Lerp(Tapestry_Config.AmbientTwilightColor, Tapestry_Config.AmbientDayColor, mix);
+        }
+        else if (dayProg > 0.75f && dayProg <= 0.77f)
+        {
+            float mix = (dayProg - 0.75f) / 0.02f;
+            c = Color.Lerp(Tapestry_Config.AmbientTwilightColor, Tapestry_Config.AmbientNightColor, mix);
+        }
+
+        return c;
+    }
+
+    public static float EvaluateSunSize()
+    {
+        //TODO: Sun size controls
+        return 1.0f;
     }
 }
 
