@@ -11,7 +11,9 @@ public class Tapestry_Door : Tapestry_Activatable {
         lockJiggleIntensity = 0.016f;
     public AnimationCurve curve;
     public bool 
-        jiggleOnActivateWhenLocked = false;
+        jiggleOnActivateWhenLocked = false,
+        relockWhenClosed = false,
+        consumeKeyOnUnlock = false;
     public AudioSource
         emitter;
     public AudioClip
@@ -29,7 +31,7 @@ public class Tapestry_Door : Tapestry_Activatable {
         rot1 = Quaternion.identity,
         rot2 = Quaternion.identity,
         startingRot = Quaternion.identity;
-    private bool 
+    private bool
         isOpening = false,
         isClosing = false,
         isJiggling = false,
@@ -134,6 +136,8 @@ public class Tapestry_Door : Tapestry_Activatable {
             {
                 isClosing = false;
                 isOpen = false;
+                if (relockWhenClosed)
+                    security.isLocked = true;
             }
         }
         else if(isJiggling)

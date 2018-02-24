@@ -1,21 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEditor;
 
-[CustomEditor(typeof(Tapestry_Item))]
-public class TapestryInspector_Item : Editor
-{
+[CustomEditor(typeof(Tapestry_ItemKey))]
+public class TapestryInspector_ItemKey : Editor {
+
     public override void OnInspectorGUI()
     {
-        Tapestry_Item i = target as Tapestry_Item;
+        Tapestry_Item i = target as Tapestry_ItemKey;
 
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
             interactableTooltip = "Can the player take this object to their inventory?",
             displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?",
-            valueTooltip = "How valuable is this object?";
+            valueTooltip = "How valuable is this object?",
+            keyIDTooltip = "What ID this key has. If this string matches the lock ID of a door, an entity can unlock it if this key is in their inventory.";
 
         GUILayout.BeginVertical("box");
 
@@ -68,8 +68,15 @@ public class TapestryInspector_Item : Editor
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-        GUILayout.EndVertical();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        GUILayout.Label(new GUIContent("Key ID", keyIDTooltip));
+        i.data.keyID = EditorGUILayout.DelayedTextField(i.data.keyID);
+        i.data.isKey = true;
+        GUILayout.EndHorizontal();
 
+        GUILayout.EndVertical();
+        
         i.data.prefabName = i.transform.name;
     }
 }

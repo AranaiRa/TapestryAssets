@@ -75,7 +75,9 @@ public class TapestryInspector_Door : Editor
                 keyTooltip = "Entities with a key with this ID can open this door when locked. After passing through the door, the Entity will re-lock it.",
                 lockedJiggleTooltip = "If this door is locked, does it jiggle when activated?",
                 jiggleIntensityTooltip = "How much this door jiggles on activation when locked. This is a percentage of the difference between the closed state and the open state.",
-                lockedSoundTooltip = "The sound that plays when the door is unsuccessfully opened when locked, if any.";
+                lockedSoundTooltip = "The sound that plays when the door is unsuccessfully opened when locked, if any.",
+                relockTooltip = "Should this door relock itself once closed?",
+                consumeKeyTooltip = "Should the key for this door be removed from the player's inventory when the door is unlocked?";
 
             d.security.canBeBypassed = EditorGUILayout.Toggle(d.security.canBeBypassed, GUILayout.Width(12));
             GUILayout.Label(new GUIContent("Bypassable?",bypassableTooltip));
@@ -104,6 +106,17 @@ public class TapestryInspector_Door : Editor
                 d.lockedSound = (AudioClip)EditorGUILayout.ObjectField(d.lockedSound, typeof(AudioClip), true, GUILayout.Width(120));
             }
 
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            d.relockWhenClosed = EditorGUILayout.Toggle(d.relockWhenClosed, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Relock When Closed?", relockTooltip));
+            if(!d.relockWhenClosed)
+            {
+                GUILayout.FlexibleSpace();
+                d.consumeKeyOnUnlock = EditorGUILayout.Toggle(d.consumeKeyOnUnlock, GUILayout.Width(12));
+                GUILayout.Label(new GUIContent("Consume Key on Unlock?", consumeKeyTooltip));
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }

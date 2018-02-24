@@ -4,22 +4,21 @@ using UnityEngine;
 
 [System.Serializable]
 public class Tapestry_ItemData {
-
-    public string prefabName;
+    
     public List<string> keywords;
     public Tapestry_Entity owningEntity;
     public Tapestry_Faction owningFaction;
-    public int value;
-    public Sprite icon;
     public Tapestry_ItemSize size;
-    public string displayName;
+    public Sprite icon;
+    public int value;
+    public string 
+        prefabName,
+        displayName,
+        keyID;
+    public bool
+        isKey;
 
     public Tapestry_ItemData()
-    {
-
-    }
-
-    public void Instantiate()
     {
 
     }
@@ -34,6 +33,11 @@ public class Tapestry_ItemData {
         if (owningEntity != data.owningEntity) check = check && false;
         if (owningFaction != data.owningFaction) check = check && false;
         if (displayName != data.displayName) check = check && false;
+        if (isKey != data.isKey) check = check && false;
+        if (isKey)
+        {
+            if(keyID != data.keyID) check = check && false;
+        }
         return check;
     }
 }

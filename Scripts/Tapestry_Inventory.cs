@@ -34,18 +34,15 @@ public class Tapestry_Inventory {
 
     public bool ContainsKeyID(string id)
     {
-        Debug.Log("TODO: ContainsKeyID");
-        /*
         foreach(Tapestry_ItemStack iStack in items)
         {
-            Tapestry_Item i = iStack.item.data;
-            if (i.GetType() == typeof(Tapestry_ItemKey))
+            Tapestry_ItemData i = iStack.item;
+            if(i.isKey)
             {
-                Tapestry_ItemKey k = (Tapestry_ItemKey)i;
-                if (k.keyID == id)
+                if (i.keyID == id)
                     return true;
             }
-        }*/
+        }
         return false;
     }
 
@@ -63,7 +60,7 @@ public class Tapestry_Inventory {
         return check;
     }
 
-    public void DropItem(Tapestry_ItemData id, int amount)
+    public void DropItem(Tapestry_ItemData id, int amount = 1)
     {
         if (amount >= 0)
         {
@@ -77,6 +74,50 @@ public class Tapestry_Inventory {
                     clone.transform.position = source.position + source.forward * Tapestry_Config.ItemDropDistance;
                     clone.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
                     
+                    stack.quantity -= amount;
+                    if (stack.quantity == 0)
+                    {
+                        items.Remove(stack);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public void RemoveItem(Tapestry_ItemData id, int amount = 1)
+    {
+        if (amount >= 0)
+        {
+            foreach (Tapestry_ItemStack stack in items)
+            {
+                if (stack.item.Equals(id))
+                {
+                    if (amount > stack.quantity)
+                        amount = stack.quantity;
+
+                    stack.quantity -= amount;
+                    if (stack.quantity == 0)
+                    {
+                        items.Remove(stack);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public void RemoveKeyWithID(string id, int amount = 1)
+    {
+        if (amount >= 0)
+        {
+            foreach (Tapestry_ItemStack stack in items)
+            {
+                if (stack.item.isKey && stack.item.keyID == id)
+                {
+                    if (amount > stack.quantity)
+                        amount = stack.quantity;
+
                     stack.quantity -= amount;
                     if (stack.quantity == 0)
                     {

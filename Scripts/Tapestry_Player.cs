@@ -70,14 +70,37 @@ public class Tapestry_Player : Tapestry_Entity {
 
                 if(activateLastFrame && !activate && objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
                 {
-                    if (objectInSights.GetType() == typeof(Tapestry_Item))
+                    if ((objectInSights.GetType() == typeof(Tapestry_Item)) || 
+                        (objectInSights.GetType() == typeof(Tapestry_ItemKey)))
                     {
                         Tapestry_Item i = (Tapestry_Item)objectInSights;
                         if (inventory == null)
                             inventory = new Tapestry_Inventory(this.transform);
-                        
+
                         inventory.AddItem(i, 1);
                         objectInSights.Activate();
+                    }
+                    else if (objectInSights.GetType() == typeof(Tapestry_Door))
+                    {
+                        Tapestry_Door d = (Tapestry_Door)objectInSights;
+                        if(d.security.isLocked)
+                        {
+                            if (inventory == null)
+                                inventory = new Tapestry_Inventory(this.transform);
+
+                            if (!d.GetIsOpen())
+                            {
+                                if (inventory.ContainsKeyID(d.security.keyID))
+                                {
+                                    d.security.isLocked = false;
+                                    if(d.consumeKeyOnUnlock)
+
+                                }
+                                objectInSights.Activate();
+                            }
+                        }
+                        else
+                            objectInSights.Activate();
                     }
                     else
                         objectInSights.Activate();
