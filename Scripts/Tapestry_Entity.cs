@@ -24,6 +24,7 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     protected virtual void Reset()
     {
+        Debug.Log("running entity reset");
         inventory = new Tapestry_Inventory(this.transform);
         damageProfile = new Tapestry_DamageProfile();
         attributeProfile = new Tapestry_AttributeProfile();

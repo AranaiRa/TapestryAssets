@@ -222,7 +222,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
 
         if (isTurningOn)
         {
-            transitionTime += Time.deltaTime;
+            transitionTime += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (transitionTime >= transitionSpeed)
                 transitionTime = transitionSpeed;
 
@@ -254,7 +254,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         }
         else if (isTurningOff)
         {
-            transitionTime += Time.deltaTime;
+            transitionTime += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (transitionTime >= transitionSpeed)
                 transitionTime = transitionSpeed;
 
@@ -288,7 +288,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                     intensityJitterTime = 0;
                     intensityJitterTargetTime = Random.Range(lightJitterSpeed * 0.4f, lightJitterSpeed);
                 }
-                intensityJitterTime += Time.deltaTime * Tapestry_WorldClock.globalTimeFactor;
+                intensityJitterTime += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
                 float prog = intensityJitterTime / intensityJitterTargetTime;
                 prog = Mathf.Clamp(prog, 0, 1);
 
@@ -310,7 +310,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                     positionJitterTime = 0;
                     positionJitterTargetTime = Random.Range(lightJitterSpeed * 0.4f, lightJitterSpeed);
                 }
-                positionJitterTime += Time.deltaTime * Tapestry_WorldClock.globalTimeFactor;
+                positionJitterTime += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
                 float prog = positionJitterTime / positionJitterTargetTime;
                 prog = Mathf.Clamp(prog, 0, 1);
 
@@ -329,7 +329,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                         emissionJitterTime = 0;
                         emissionJitterTargetTime = Random.Range(emissionJitterSpeed * 0.4f, emissionJitterSpeed);
                     }
-                    emissionJitterTime += Time.deltaTime * Tapestry_WorldClock.globalTimeFactor;
+                    emissionJitterTime += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
                     float prog = emissionJitterTime / emissionJitterTargetTime;
                     prog = Mathf.Clamp(prog, 0, 1);
 
@@ -360,7 +360,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
 
         if(timeUntilStateChange >= 0)
         {
-            timeUntilStateChange -= Time.deltaTime * Tapestry_WorldClock.globalTimeFactor;
+            timeUntilStateChange -= Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
 
             if(timeUntilStateChange <= 0)
             {

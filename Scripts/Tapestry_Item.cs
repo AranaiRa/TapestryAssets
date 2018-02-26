@@ -9,6 +9,7 @@ public class Tapestry_Item : Tapestry_Activatable {
 
     private void Reset()
     {
+        data = new Tapestry_ItemData();
         displayName = data.displayName;
     }
 

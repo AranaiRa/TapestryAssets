@@ -6,8 +6,7 @@ public static class Tapestry_WorldClock {
 
     public static float 
         worldTime,
-        dayLength = 90.0f,
-        globalTimeFactor = 1.0f;
+        dayLength = 90.0f;
     public static int
         hoursPerDay = 24,
         minutesPerHour = 60;
@@ -15,9 +14,30 @@ public static class Tapestry_WorldClock {
         clockTime = new Vector2Int();
     public static string
         clockTimeString = "";
+    public static bool
+        isPaused = false;
+    private static float globalTimeFactor = 1.0f;
 
-	public static float EvaluateTime(float timeToAdd = 0f)
+    public static float GlobalTimeFactor
     {
+        get
+        {
+            if (isPaused)
+                return 0;
+            else
+                return globalTimeFactor;
+        }
+
+        set
+        {
+            globalTimeFactor = value;
+        }
+    }
+
+    public static float EvaluateTime(float timeToAdd = 0f)
+    {
+        if(!isPaused)
+        { 
         worldTime += timeToAdd;
         if (worldTime > dayLength)
             worldTime -= dayLength;
@@ -33,7 +53,7 @@ public static class Tapestry_WorldClock {
             clockTimeString = h + ":0" + m;
         else
             clockTimeString = h + ":" + m;
-
+        }
         return worldTime / dayLength;
     }
 

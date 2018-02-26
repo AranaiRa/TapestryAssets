@@ -97,7 +97,7 @@ public class Tapestry_Switch : Tapestry_Activatable {
 	void Update () {
         if (isSwitchingOn)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= switchTime)
                 time = switchTime;
             float prog = curve.Evaluate(time / switchTime);
@@ -122,7 +122,7 @@ public class Tapestry_Switch : Tapestry_Activatable {
         }
         else if (isSwitchingOff)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= switchTime)
                 time = switchTime;
             float prog = curve.Evaluate(time / switchTime);

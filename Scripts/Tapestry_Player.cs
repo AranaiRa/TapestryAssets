@@ -16,7 +16,9 @@ public class Tapestry_Player : Tapestry_Entity {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
+        base.Reset();
         isRunning = true;
 	}
 	
@@ -58,7 +60,8 @@ public class Tapestry_Player : Tapestry_Entity {
             Camera.main.transform.position,
             Camera.main.transform.forward,
             out hit,
-            Tapestry_Config.EntityActivationDistance
+            Tapestry_Config.EntityActivationDistance,
+            ~LayerMask.GetMask("Ignore Raycast")
             );
         if(rayHit)
         {
@@ -94,7 +97,9 @@ public class Tapestry_Player : Tapestry_Entity {
                                 {
                                     d.security.isLocked = false;
                                     if(d.consumeKeyOnUnlock)
-
+                                    {
+                                        inventory.RemoveKeyWithID(d.security.keyID);
+                                    }
                                 }
                                 objectInSights.Activate();
                             }
@@ -116,68 +121,74 @@ public class Tapestry_Player : Tapestry_Entity {
     {
         if (allowCameraMovement)
         {
-            //Mouselook
-            float invertX = 1;
-            if (Tapestry_Config.InvertPlayerCameraY)
-                invertX = -1;
-            float rotVert = Camera.main.transform.localRotation.eulerAngles.x;
-            rotVert += Input.GetAxis("Mouse Y") * Tapestry_Config.PlayerCameraSensitivityY * invertX;
+            if (!Tapestry_WorldClock.isPaused)
+            {
+                //Mouselook
+                float invertX = 1;
+                if (Tapestry_Config.InvertPlayerCameraY)
+                    invertX = -1;
+                float rotVert = Camera.main.transform.localRotation.eulerAngles.x;
+                rotVert += Input.GetAxis("Mouse Y") * Tapestry_Config.PlayerCameraSensitivityY * invertX;
 
-            float invertY = 1;
-            if (Tapestry_Config.InvertPlayerCameraX)
-                invertY = -1;
-            Camera.main.transform.localRotation = Quaternion.Euler(rotVert, 0, 0);
-            float rotHori = transform.rotation.eulerAngles.y;
-            rotHori += Input.GetAxis("Mouse X") * Tapestry_Config.PlayerCameraSensitivityX * invertY;
-            transform.rotation = Quaternion.Euler(0, rotHori, 0);
+                float invertY = 1;
+                if (Tapestry_Config.InvertPlayerCameraX)
+                    invertY = -1;
+                Camera.main.transform.localRotation = Quaternion.Euler(rotVert, 0, 0);
+                float rotHori = transform.rotation.eulerAngles.y;
+                rotHori += Input.GetAxis("Mouse X") * Tapestry_Config.PlayerCameraSensitivityX * invertY;
+                transform.rotation = Quaternion.Euler(0, rotHori, 0);
 
-            //Controller
+                //Controller
+            }
         }
     }
 
     private void HandleMovement()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-
-        bool runToggleThisFrame = Input.GetKey(Tapestry_Config.KeyboardInput_RunWalkToggle);
-        if (!runToggleThisFrame && runToggleLastFrame)
+        if (!Tapestry_WorldClock.isPaused)
         {
-            isRunning = !isRunning;
+            Rigidbody rb = GetComponent<Rigidbody>();
+
+            bool runToggleThisFrame = Input.GetKey(Tapestry_Config.KeyboardInput_RunWalkToggle);
+            if (!runToggleThisFrame && runToggleLastFrame)
+            {
+                isRunning = !isRunning;
+            }
+            bool fwd =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Fwd) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Fwd);
+            bool bck =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Back) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Back);
+            bool lft =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Left) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Left);
+            bool rgt =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Right);
+
+            Vector2 direction = new Vector2();
+
+            if (fwd && !bck)
+                direction += GetFwd2D();
+            else if (bck && !fwd)
+                direction -= GetFwd2D();
+
+            if (rgt && !lft)
+                direction += GetRight2D();
+            else if (lft && !rgt)
+                direction -= GetRight2D();
+
+            if (isRunning)
+                direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed;
+            else
+                direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed;
+
+            rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
+
+            //end of frame
+            runToggleLastFrame = runToggleThisFrame;
         }
-        bool fwd =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Fwd) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Fwd);
-        bool bck =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Back) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Back);
-        bool lft =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Left) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Left);
-        bool rgt =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Right);
-
-        Vector2 direction = new Vector2();
-
-        if (fwd && !bck)
-            direction += GetFwd2D();
-        else if (bck && !fwd)
-            direction -= GetFwd2D();
-
-        if (rgt && !lft)
-            direction += GetRight2D();
-        else if (lft && !rgt)
-            direction -= GetRight2D();
-        
-        if (isRunning)
-            direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed;
-        else
-            direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed;
-
-        rb.velocity = new Vector3(direction.x,rb.velocity.y,direction.y);
-        
-        //end of frame
-        runToggleLastFrame = runToggleThisFrame;
     }
 
     public Tapestry_Entity ClonePlayerAsEntity()

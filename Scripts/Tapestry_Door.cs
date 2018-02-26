@@ -96,7 +96,7 @@ public class Tapestry_Door : Tapestry_Activatable {
 	void Update () {
 		if(isOpening)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= openTime)
                 time = openTime;
             float prog = curve.Evaluate(time / openTime);
@@ -116,7 +116,7 @@ public class Tapestry_Door : Tapestry_Activatable {
         }
         else if (isClosing)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= openTime)
                 time = openTime;
             float prog = curve.Evaluate(time / openTime);
@@ -142,13 +142,16 @@ public class Tapestry_Door : Tapestry_Activatable {
         }
         else if(isJiggling)
         {
-            time += Time.deltaTime;
+            time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= jiggleTime)
                 time = jiggleTime;
             float amt = Random.Range(-lockJiggleIntensity, lockJiggleIntensity);
 
-            Quaternion evalRot = Quaternion.LerpUnclamped(rot1, rot2, amt);
-            pivot.transform.localRotation = evalRot;
+            if (!Tapestry_WorldClock.isPaused)
+            {
+                Quaternion evalRot = Quaternion.LerpUnclamped(rot1, rot2, amt);
+                pivot.transform.localRotation = evalRot;
+            }
 
             if (time == jiggleTime)
             {
