@@ -18,7 +18,8 @@ public static class Tapestry_Config {
         SoundVolumeMusic = 1.0f,
         SoundVolumeSFX = 1.0f,
         DefaultSoundRadius = 4.0f,
-        ItemDropDistance = 0.7f;
+        ItemDropDistance = 0.7f,
+        InventoryItemFadeTime = 0.2f;
     public static Tapestry_Attribute pushLiftAttribute = Tapestry_Attribute.Strength;
     public static Tapestry_Skill lockBypassSkill = Tapestry_Skill.Larceny;
     public static KeyCode
@@ -32,7 +33,8 @@ public static class Tapestry_Config {
         KeyboardInput_Crouch        = KeyCode.LeftControl,
         KeyboardInput_PushLift      = KeyCode.R,
         KeyboardInput_RunWalkToggle = KeyCode.Z,
-        KeyboardInput_Inventory     = KeyCode.I;
+        KeyboardInput_Inventory     = KeyCode.I,
+        KeyboardInput_InventoryDrop = KeyCode.Q;
     //TODO: Figure out actual controller input
     public static KeyCode
         ControllerInput_Fwd           = KeyCode.Joystick1Button0,

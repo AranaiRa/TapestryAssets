@@ -17,7 +17,7 @@ public static class Tapestry_WorldClock {
     public static bool
         isPaused = false;
     private static float globalTimeFactor = 1.0f;
-
+    
     public static float GlobalTimeFactor
     {
         get
@@ -140,9 +140,4 @@ public static class Tapestry_WorldClock {
         //TODO: Sun size controls
         return 1.0f;
     }
-}
-
-public enum DaysOfTheWeek
-{
-    Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
 }
