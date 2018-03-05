@@ -4,19 +4,19 @@ using UnityEngine;
 
 public static class Tapestry_WorldClock {
 
-    public static float 
-        worldTime,
+    public static Tapestry_TimeIndex worldTime = new Tapestry_TimeIndex();
+    public static float
         dayLength = 90.0f;
     public static int
         hoursPerDay = 24,
         minutesPerHour = 60;
-    public static Vector2Int
-        clockTime = new Vector2Int();
-    public static string
-        clockTimeString = "";
     public static bool
         isPaused = false;
-    private static float globalTimeFactor = 1.0f;
+
+    private static float
+        globalTimeFactor = 1.0f,
+        sunProg,
+        leftoverTime;
     
     public static float GlobalTimeFactor
     {
@@ -36,25 +36,18 @@ public static class Tapestry_WorldClock {
 
     public static float EvaluateTime(float timeToAdd = 0f)
     {
-        if(!isPaused)
-        { 
-        worldTime += timeToAdd;
-        if (worldTime > dayLength)
-            worldTime -= dayLength;
-        if (worldTime < 0)
-            worldTime += dayLength;
-
-        int h = Mathf.FloorToInt((worldTime / dayLength) * hoursPerDay);
-        float seg = 1.0f / hoursPerDay;
-        float minChange = ((worldTime / dayLength) % seg) / seg;
-        int m = Mathf.FloorToInt(minChange * minutesPerHour);
-        clockTime = new Vector2Int(h, m);
-        if(m <= 9)
-            clockTimeString = h + ":0" + m;
-        else
-            clockTimeString = h + ":" + m;
+        if (!isPaused)
+        {
+            leftoverTime += timeToAdd;
+            if (leftoverTime >= 1)
+            {
+                worldTime.AddTime(Mathf.FloorToInt(leftoverTime));
+                leftoverTime = leftoverTime % 1;
+            }
+            sunProg = worldTime.ProgressUntilNextDay(leftoverTime);
         }
-        return worldTime / dayLength;
+
+        return sunProg;
     }
 
     public static Color EvaluateColor()

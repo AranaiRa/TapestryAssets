@@ -81,7 +81,7 @@ public class Tapestry_Player : Tapestry_Entity {
                             inventory = new Tapestry_Inventory(this.transform);
 
                         inventory.AddItem(i, 1);
-                        objectInSights.Activate();
+                        objectInSights.Activate(this);
                     }
                     else if (objectInSights.GetType() == typeof(Tapestry_Door))
                     {
@@ -101,14 +101,14 @@ public class Tapestry_Player : Tapestry_Entity {
                                         inventory.RemoveKeyWithID(d.security.keyID);
                                     }
                                 }
-                                objectInSights.Activate();
+                                objectInSights.Activate(this);
                             }
                         }
                         else
-                            objectInSights.Activate();
+                            objectInSights.Activate(this);
                     }
                     else
-                        objectInSights.Activate();
+                        objectInSights.Activate(this);
                 }
             }
         }

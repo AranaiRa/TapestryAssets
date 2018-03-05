@@ -29,7 +29,7 @@ public class Tapestry_Actor : Tapestry_Activatable {
         else return Tapestry_HealthState.Destroyed;
     }
 
-    public override void Activate()
+    public override void Activate(Tapestry_Entity activatingEntity)
     {
 
     }

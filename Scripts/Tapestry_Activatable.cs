@@ -14,7 +14,7 @@ public class Tapestry_Activatable : MonoBehaviour {
 
     }
 
-	public virtual void Activate()
+	public virtual void Activate(Tapestry_Entity activatingEntity)
     {
 
     }

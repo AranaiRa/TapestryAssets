@@ -23,7 +23,7 @@ public class Tapestry_Item : Tapestry_Activatable {
 		
 	}
 
-    public override void Activate()
+    public override void Activate(Tapestry_Entity activatingEntity)
     {
         Destroy(this.gameObject);
     }

@@ -45,7 +45,7 @@ public class Tapestry_Level : MonoBehaviour {
     void Update () {
         if (!isTimeFrozen)
         {
-            float dayProg = Tapestry_WorldClock.EvaluateTime(Time.deltaTime);
+            float dayProg = Tapestry_WorldClock.EvaluateTime(Time.deltaTime * Tapestry_Config.ClockProgressionFactor);
             sun.transform.rotation = Quaternion.Euler(dayProg * 360f - 90f, 0, 0);
         }
         sun.color = Tapestry_WorldClock.EvaluateColor();

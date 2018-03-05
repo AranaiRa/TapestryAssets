@@ -31,6 +31,13 @@ public class Tapestry_UI_HUD : MonoBehaviour {
             targetName.gameObject.SetActive(false);
         }
 
-        debugelement_time.text = Tapestry_WorldClock.worldTime + "\n" + Tapestry_WorldClock.clockTimeString;
+        string h = Tapestry_WorldClock.worldTime.Hour.ToString();
+        string m = Tapestry_WorldClock.worldTime.Minute.ToString();
+        if (m.Length == 1)
+            m = "0" + m;
+        string s = Tapestry_WorldClock.worldTime.Second.ToString();
+        if (s.Length == 1)
+            s = "0" + s;
+        debugelement_time.text = h+":"+m+":"+s;
     }
 }

@@ -161,7 +161,7 @@ public class Tapestry_Door : Tapestry_Activatable {
         }
     }
 
-    public override void Activate()
+    public override void Activate(Tapestry_Entity activatingEntity)
     {
         if(!isOpening && !isClosing)
         {

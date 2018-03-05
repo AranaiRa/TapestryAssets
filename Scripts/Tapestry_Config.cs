@@ -8,6 +8,7 @@ public static class Tapestry_Config {
         InvertPlayerCameraX = false,
         InvertPlayerCameraY = true;
     public static float
+        ClockProgressionFactor = 30.0f,
         BaseEntityWalkSpeed = 2.0f,
         BaseEntityRunSpeed = 4.4f,
         PlayerCameraSensitivityX = 2.0f,

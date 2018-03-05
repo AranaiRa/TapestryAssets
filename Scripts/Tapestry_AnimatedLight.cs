@@ -341,7 +341,10 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             }
             if (clockLight)
             {
-                if(Tapestry_WorldClock.clockTime == timedOff)
+                bool h = (Tapestry_WorldClock.worldTime.Hour == timedOff.x);
+                bool m = (Tapestry_WorldClock.worldTime.Minute == timedOff.y);
+
+                if (h && m)
                 {
                     TurnOff();
                 }
@@ -351,7 +354,10 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         {
             if (clockLight)
             {
-                if (Tapestry_WorldClock.clockTime == timedOn)
+                bool h = (Tapestry_WorldClock.worldTime.Hour == timedOff.x);
+                bool m = (Tapestry_WorldClock.worldTime.Minute == timedOff.y);
+
+                if (h && m)
                 {
                     TurnOn();
                 }
@@ -372,7 +378,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         }
     }
 
-    public override void Activate()
+    public override void Activate(Tapestry_Entity activatingEntity)
     {
         if (toggleOnActivate)
         {
