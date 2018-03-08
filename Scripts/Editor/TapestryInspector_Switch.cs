@@ -280,6 +280,52 @@ public class TapestryInspector_Switch : Editor {
                 }
                 GUILayout.EndVertical();
             }
+            if(comp.GetType() == typeof(Tapestry_ItemSource))
+            {
+                string
+                    animLightTooltip = "Detected component type is \"Item Source\".";
+
+                GUILayout.Label(new GUIContent("Item Source Controls", animLightTooltip));
+                GUILayout.BeginVertical("box");
+                if (s.pingPong)
+                {
+                    GUILayout.Label("When Switch is Activated...");
+                    
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    s.data.pp_setSourceHarvestable = EditorGUILayout.Toggle(s.data.pp_setSourceHarvestable, GUILayout.Width(14));
+                    GUILayout.Label("Harvestable");
+                    GUILayout.FlexibleSpace();
+                    s.data.pp_swapInteractivityState = EditorGUILayout.Toggle(s.data.pp_swapInteractivityState, GUILayout.Width(14));
+                    GUILayout.Label("Interactivity");
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    GUILayout.Label("When Switch is On...");
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setSourceHarvestable = EditorGUILayout.Toggle(s.data.on_setSourceHarvestable, GUILayout.Width(14));
+                    GUILayout.Label("Harvestability");
+                    GUILayout.FlexibleSpace();
+                    s.data.on_setInteractable = EditorGUILayout.Toggle(s.data.on_setInteractable, GUILayout.Width(14));
+                    GUILayout.Label("Interactive", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.Label("When Switch is Off...");
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setSourceHarvestable = EditorGUILayout.Toggle(s.data.off_setSourceHarvestable, GUILayout.Width(14));
+                    GUILayout.Label("Harvestability");
+                    GUILayout.FlexibleSpace();
+                    s.data.off_setInteractable = EditorGUILayout.Toggle(s.data.off_setInteractable, GUILayout.Width(14));
+                    GUILayout.Label("Interactive", GUILayout.Width(72));
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.EndVertical();
+            }
         }
         GUILayout.EndVertical();
     }

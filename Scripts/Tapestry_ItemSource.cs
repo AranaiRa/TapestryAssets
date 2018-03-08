@@ -7,16 +7,16 @@ public class Tapestry_ItemSource : Tapestry_Activatable {
     public GameObject 
         meshHarvestable,
         meshUnharvestable;
-    public bool 
+    public bool
         isHarvestable = true,
         requiresLevelReload = false,
-        allRefreshSimultaneously = false;
+        automaticRefresh = true;
     public Tapestry_Item item;
     public int
         quantityMin,
         quantityMax;
     public AnimationCurve quantityWeightCurve;
-    public Vector3Int resetDelay; //x=minutes,y=hours,z=days
+    public Vector3Int resetDelay = new Vector3Int(0,0,3); //x=minutes,y=hours,z=days
 
     private Tapestry_TimeIndex resetTime;
 
@@ -58,7 +58,7 @@ public class Tapestry_ItemSource : Tapestry_Activatable {
 	
 	// Update is called once per frame
 	void Update () {
-		if(!requiresLevelReload && !isHarvestable)
+		if(automaticRefresh && !requiresLevelReload && !isHarvestable)
         {
             if(Tapestry_WorldClock.worldTime.HasPassedTime(resetTime))
             {

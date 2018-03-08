@@ -45,10 +45,12 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
     private void HandleDisplayRotation()
     {
         bool rotLeft =
-            Input.GetKey(KeyCode.LeftArrow) &&
+            Input.GetKeyDown(Tapestry_Config.KeyboardInput_Left) ||
+            (Input.GetAxis("Mouse ScrollWheel") > 0) &&
             timeRotationInputDelay == 0;
         bool rotRight =
-            Input.GetKey(KeyCode.RightArrow) &&
+            Input.GetKeyDown(Tapestry_Config.KeyboardInput_Right) ||
+            (Input.GetAxis("Mouse ScrollWheel") < 0) &&
             timeRotationInputDelay == 0;
 
         if (rotLeft)

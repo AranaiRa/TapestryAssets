@@ -185,6 +185,12 @@ public class Tapestry_Switch : Tapestry_Activatable {
                 }
                 if (data.pp_swapInteractivityState) al.isInteractable = !al.isInteractable;
             }
+            if (comp.GetType() == typeof(Tapestry_ItemSource))
+            {
+                Tapestry_ItemSource i = target.GetComponent<Tapestry_ItemSource>();
+                if (data.pp_swapInteractivityState) i.isInteractable = !i.isInteractable;
+                if (data.pp_setSourceHarvestable) i.SetHarvestability(true);
+            }
         }
         else
         {
@@ -204,6 +210,11 @@ public class Tapestry_Switch : Tapestry_Activatable {
                 if (data.on_setOpen) al.TurnOn();
                 if (data.on_setClosed) al.TurnOff();
                 if (data.on_setInteractable) al.isInteractable = data.on_setInteractable;
+            }
+            if (comp.GetType() == typeof(Tapestry_ItemSource))
+            {
+                Tapestry_ItemSource i = target.GetComponent<Tapestry_ItemSource>();
+                if (data.on_setInteractable) i.isInteractable = data.on_setInteractable;
             }
         }
     }
