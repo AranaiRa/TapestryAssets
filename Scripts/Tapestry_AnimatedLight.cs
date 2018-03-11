@@ -235,7 +235,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             {
                 mat.EnableKeyword("_EMISSION");
                 mat.SetColor("_EmissionColor",
-                    Color.Lerp(Color.black, emissionColor, mix)
+                    Color.Lerp(Color.black, emissionColor * emissionMin, mix)
                     );
             }
 
@@ -267,7 +267,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             {
                 mat.EnableKeyword("_EMISSION");
                 mat.SetColor("_EmissionColor",
-                    Color.Lerp(emissionColor, Color.black, mix)
+                    Color.Lerp(emissionColor * emissionMin, Color.black, mix)
                     );
             }
 

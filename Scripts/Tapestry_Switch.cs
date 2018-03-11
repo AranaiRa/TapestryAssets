@@ -35,12 +35,13 @@ public class Tapestry_Switch : Tapestry_Activatable {
         startingRot = Quaternion.identity;
     private bool
         isSwitchingOn = false,
-        isSwitchingOff = false,
+        isSwitchingOff = false;
+    protected bool
         isOn = false;
     private float
         time;
 
-    private void Reset()
+    protected virtual void Reset()
     {
         displayName = "Switch";
         curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
@@ -94,7 +95,7 @@ public class Tapestry_Switch : Tapestry_Activatable {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected virtual void Update () {
         if (isSwitchingOn)
         {
             time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;

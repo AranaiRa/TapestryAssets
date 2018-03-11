@@ -10,7 +10,6 @@ public class Tapestry_Actor : Tapestry_Activatable {
     public float threshold;
     public Tapestry_DamageProfile damageProfile;
     public float personalTimeFactor = 1.0f;
-    public List<string> keywords;
 
 	// Use this for initialization
 	void Start () {

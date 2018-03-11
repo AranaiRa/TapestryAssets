@@ -44,9 +44,10 @@ public class TapestryInspector_Player : Editor
 
         if (e.attributeProfile == null)
             e.attributeProfile = new Tapestry_AttributeProfile();
-
-        string scoreTooltip = "Score: What the score starts at. Ranges from 0 to 100, but Effect can push above that cap.";
-        string progTooltip = "Progress: How close the Entity is to a new rank. Generally only the player or followers are going to make use of this. A new rank occurs at 1000 Progress.";
+        
+        string
+            scoreTooltip = "Score: What the score starts at. Ranges from 0 to 100, but Effect can push above that cap.",
+            progTooltip = "Progress: How close the Entity is to a new rank. Generally only the player or followers are going to make use of this. A new rank occurs at 1000 Progress.";
 
         GUILayout.BeginHorizontal("box");
         foreach (var v in Enum.GetValues(typeof(Tapestry_Attribute)))
@@ -112,126 +113,14 @@ public class TapestryInspector_Player : Editor
         if (toolbarActive != -1)
         {
             if (toolbarNames[toolbarActive] == "Inventory")
-            {
-                if (e.inventory == null)
-                    e.inventory = new Tapestry_Inventory(e.transform);
+                DrawTabInventory(e);
 
-                int indexToRemove = -1;
-                GUILayout.BeginVertical("box");
-                GUILayout.Label("Inventory");
-                GUILayout.BeginVertical("box");
-                if (e.inventory.items.Count == 0)
-                    GUILayout.Label("No items in inventory.");
-                else
-                {
-                    for (int i = 0; i < e.inventory.items.Count; i++)
-                    {
-                        Tapestry_ItemStack stack = e.inventory.items[i];
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("-", GUILayout.Width(20)))
-                        {
-                            indexToRemove = i;
-                        }
-                        if (GUILayout.Button("D", GUILayout.Width(20)))
-                        {
-                            e.inventory.DropItem(e.inventory.items[i].item, 1);
-                        }
-                        GUILayout.FlexibleSpace();
-                        stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Label("x", GUILayout.Width(12));
-                        GUILayout.FlexibleSpace();
-                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(270));
-                        GUILayout.EndHorizontal();
-                    }
-                }
-                if (indexToRemove != -1)
-                {
-                    if (e.inventory.items.Count == 1)
-                        e.inventory.items.Clear();
-                    else
-                        e.inventory.items.RemoveAt(indexToRemove);
-                }
-                GUILayout.EndVertical();
-                GUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                if (GUILayout.Button("+", GUILayout.Width(20)))
-                {
-                    if (itemToAdd != null)
-                    {
-                        e.inventory.AddItem(itemToAdd, 1);
-                        itemToAdd = null;
-                    }
-                }
-                itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
-
-                GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
-            }
             if (toolbarNames[toolbarActive] == "Skills")
-            {
+                DrawTabSkills(e);
 
-                if (e.skillProfile == null)
-                    e.skillProfile = new Tapestry_SkillProfile();
-
-                GUILayout.BeginVertical("box");
-
-                foreach (var v in Enum.GetValues(typeof(Tapestry_Skill)))
-                {
-                    Tapestry_Skill val = (Tapestry_Skill)v;
-
-                    GUILayout.BeginHorizontal();
-
-                    GUILayout.Label(val.ToString(), GUILayout.Width(120));
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("Score:", scoreTooltip));
-                    e.skillProfile.SetScore(val, EditorGUILayout.IntField(e.skillProfile.GetScore(val), GUILayout.Width(40)));
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("Prog:", progTooltip));
-                    e.skillProfile.SetProgress(val, EditorGUILayout.FloatField(e.skillProfile.GetProgress(val), GUILayout.Width(40)));
-
-                    GUILayout.EndHorizontal();
-                }
-
-                GUILayout.EndVertical();
-            }
             if (toolbarNames[toolbarActive] == "Resist")
-            {
-                if (e.damageProfile == null)
-                    e.damageProfile = new Tapestry_DamageProfile();
+                DrawTabResist(e);
 
-                GUILayout.BeginVertical("box");
-
-                string resTooltip = "Resistance: All incoming damage of this type is reduced by the listed value (EG: 0.5 will reduce damage by 50%, -0.5 will increase it by 50%).";
-                string mitTooltip = "Mitigation: Damage taken subtracts this amount after Resistance is applied.";
-
-                foreach (var v in Enum.GetValues(typeof(Tapestry_DamageType)))
-                {
-                    Tapestry_DamageType val = (Tapestry_DamageType)v;
-
-                    GUILayout.BeginHorizontal();
-
-                    GUILayout.Label(val.ToString(), GUILayout.Width(70));
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("RES", resTooltip), GUILayout.Width(30));
-                    e.damageProfile.SetRes(val, EditorGUILayout.FloatField(e.damageProfile.GetRes(val), GUILayout.Width(40)));
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("MIT", mitTooltip), GUILayout.Width(30));
-                    e.damageProfile.SetMit(val, EditorGUILayout.FloatField(e.damageProfile.GetMit(val), GUILayout.Width(40)));
-
-                    GUILayout.EndHorizontal();
-                }
-
-                GUILayout.EndVertical();
-            }
             if (toolbarNames[toolbarActive] == "Other")
             {
                 GUILayout.BeginVertical("box");
@@ -244,52 +133,184 @@ public class TapestryInspector_Player : Editor
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
 
-                if (e.keywords == null)
-                    e.keywords = new List<string>();
-
-                int indexToRemove = -1;
-                GUILayout.BeginVertical("box");
-                GUILayout.Label("Keywords");
-                GUILayout.BeginVertical("box");
-                if (e.keywords.Count == 0)
-                {
-                    GUILayout.Label("No keywords associated with this Entity.");
-                }
-                else
-                {
-                    for (int i = 0; i < e.keywords.Count; i++)
-                    {
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("-", GUILayout.Width(20)))
-                        {
-                            indexToRemove = i;
-                        }
-                        e.keywords[i] = EditorGUILayout.DelayedTextField(e.keywords[i]);
-                        GUILayout.EndHorizontal();
-                    }
-                }
-                if (indexToRemove != -1)
-                {
-                    if (e.keywords.Count == 1)
-                        e.keywords.Clear();
-                    else
-                        e.keywords.RemoveAt(indexToRemove);
-                }
-
-                GUILayout.EndVertical();
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("+", GUILayout.Width(20)))
-                {
-                    if (keywordToAdd != "")
-                    {
-                        e.keywords.Add(keywordToAdd);
-                        keywordToAdd = null;
-                    }
-                }
-                keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
-                GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
+                DrawSubTabKeywords(e);
             }
         }
+    }
+
+    private void DrawTabInventory(Tapestry_Player e)
+    {
+        if (e.inventory == null)
+            e.inventory = new Tapestry_Inventory(e.transform);
+
+        int indexToRemove = -1;
+        GUILayout.BeginVertical("box");
+        GUILayout.Label("Inventory");
+        GUILayout.BeginVertical("box");
+        if (e.inventory.items.Count == 0)
+            GUILayout.Label("No items in inventory.");
+        else
+        {
+            for (int i = 0; i < e.inventory.items.Count; i++)
+            {
+                Tapestry_ItemStack stack = e.inventory.items[i];
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("-", GUILayout.Width(20)))
+                {
+                    indexToRemove = i;
+                }
+                if (GUILayout.Button("D", GUILayout.Width(20)))
+                {
+                    e.inventory.DropItem(e.inventory.items[i].item, 1);
+                }
+                GUILayout.FlexibleSpace();
+                stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("x", GUILayout.Width(12));
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(270));
+                GUILayout.EndHorizontal();
+            }
+        }
+        if (indexToRemove != -1)
+        {
+            if (e.inventory.items.Count == 1)
+                e.inventory.items.Clear();
+            else
+                e.inventory.items.RemoveAt(indexToRemove);
+        }
+        GUILayout.EndVertical();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("+", GUILayout.Width(20)))
+        {
+            if (itemToAdd != null)
+            {
+                e.inventory.AddItem(itemToAdd, 1);
+                itemToAdd = null;
+            }
+        }
+        itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
+
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
+    }
+
+    private void DrawTabSkills(Tapestry_Player e)
+    {
+        string 
+            scoreTooltip = "Score: What the score starts at. Ranges from 0 to 100, but Effect can push above that cap.",
+            progTooltip = "Progress: How close the Entity is to a new rank. Generally only the player or followers are going to make use of this. A new rank occurs at 1000 Progress.";
+
+        if (e.skillProfile == null)
+            e.skillProfile = new Tapestry_SkillProfile();
+
+        GUILayout.BeginVertical("box");
+
+        foreach (var v in Enum.GetValues(typeof(Tapestry_Skill)))
+        {
+            Tapestry_Skill val = (Tapestry_Skill)v;
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label(val.ToString(), GUILayout.Width(120));
+
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label(new GUIContent("Score:", scoreTooltip));
+            e.skillProfile.SetScore(val, EditorGUILayout.IntField(e.skillProfile.GetScore(val), GUILayout.Width(40)));
+
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label(new GUIContent("Prog:", progTooltip));
+            e.skillProfile.SetProgress(val, EditorGUILayout.FloatField(e.skillProfile.GetProgress(val), GUILayout.Width(40)));
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndVertical();
+    }
+
+    private void DrawTabResist(Tapestry_Player e)
+    {
+        if (e.damageProfile == null)
+            e.damageProfile = new Tapestry_DamageProfile();
+
+        GUILayout.BeginVertical("box");
+
+        string resTooltip = "Resistance: All incoming damage of this type is reduced by the listed value (EG: 0.5 will reduce damage by 50%, -0.5 will increase it by 50%).";
+        string mitTooltip = "Mitigation: Damage taken subtracts this amount after Resistance is applied.";
+
+        foreach (var v in Enum.GetValues(typeof(Tapestry_DamageType)))
+        {
+            Tapestry_DamageType val = (Tapestry_DamageType)v;
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label(val.ToString(), GUILayout.Width(70));
+
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label(new GUIContent("RES", resTooltip), GUILayout.Width(30));
+            e.damageProfile.SetRes(val, EditorGUILayout.FloatField(e.damageProfile.GetRes(val), GUILayout.Width(40)));
+
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label(new GUIContent("MIT", mitTooltip), GUILayout.Width(30));
+            e.damageProfile.SetMit(val, EditorGUILayout.FloatField(e.damageProfile.GetMit(val), GUILayout.Width(40)));
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndVertical();
+    }
+
+    private void DrawSubTabKeywords(Tapestry_Player e)
+    {
+        if (e.keywords == null)
+            e.keywords = new List<string>();
+
+        int indexToRemove = -1;
+        GUILayout.BeginVertical("box");
+        GUILayout.Label("Keywords");
+        GUILayout.BeginVertical("box");
+        if (e.keywords.Count == 0)
+        {
+            GUILayout.Label("No keywords associated with this Entity.");
+        }
+        else
+        {
+            for (int i = 0; i < e.keywords.Count; i++)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("-", GUILayout.Width(20)))
+                {
+                    indexToRemove = i;
+                }
+                e.keywords[i] = EditorGUILayout.DelayedTextField(e.keywords[i]);
+                GUILayout.EndHorizontal();
+            }
+        }
+        if (indexToRemove != -1)
+        {
+            if (e.keywords.Count == 1)
+                e.keywords.Clear();
+            else
+                e.keywords.RemoveAt(indexToRemove);
+        }
+
+        GUILayout.EndVertical();
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("+", GUILayout.Width(20)))
+        {
+            if (keywordToAdd != "")
+            {
+                e.keywords.Add(keywordToAdd);
+                keywordToAdd = null;
+            }
+        }
+        keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
     }
 }
