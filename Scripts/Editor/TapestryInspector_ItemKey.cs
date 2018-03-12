@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEditor;
 
 [CustomEditor(typeof(Tapestry_ItemKey))]
-public class TapestryInspector_ItemKey : Editor {
+public class TapestryInspector_ItemKey : TapestryInspector_Item {
 
     public override void OnInspectorGUI()
     {
@@ -77,6 +77,8 @@ public class TapestryInspector_ItemKey : Editor {
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
+
+        DrawSubTabKeywords(i);
         
         i.data.prefabName = i.transform.name;
     }

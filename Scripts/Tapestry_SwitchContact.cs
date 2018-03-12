@@ -13,8 +13,16 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
 
     protected override void Update()
     {
-
         base.Update();
+        if (isOn && touching.Count == 0 && !isSwitchingOff)
+            SwitchOff();
+        else if (!isOn && touching.Count > 0 && !isSwitchingOn)
+            SwitchOn();
+    }
+
+    public override void Activate(Tapestry_Entity activatingEntity)
+    {
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -25,12 +33,9 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
             touching.Add(other);
 
             if (!isOn && touching.Count > 0)
-            {
-                Debug.Log("Ping! I'm on.");
                 SwitchOn();
-            }
         }
-        else
+        else if(!fireOnlyOnce || (fireOnlyOnce && !hasFired))
         {
             Tapestry_Activatable a = other.gameObject.GetComponentInParent<Tapestry_Activatable>();
             
@@ -65,17 +70,12 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
             touching.Remove(other);
 
             if (isOn && touching.Count == 0)
-            {
-                Debug.Log("Zorp. I'm off.");
                 SwitchOff();
-            }
         }
-        else
+        else if (!fireOnlyOnce || (fireOnlyOnce && !hasFired))
         {
-            if(touching.Contains(other))
-            {
+            if (touching.Contains(other))
                 touching.Remove(other);
-            }
 
             if (isOn && touching.Count == 0)
                 SwitchOff();

@@ -7,6 +7,8 @@ using UnityEditor;
 [CustomEditor(typeof(Tapestry_Item))]
 public class TapestryInspector_Item : Editor
 {
+    string keywordToAdd;
+
     public override void OnInspectorGUI()
     {
         Tapestry_Item i = target as Tapestry_Item;
@@ -43,6 +45,15 @@ public class TapestryInspector_Item : Editor
 
         GUILayout.EndVertical();
 
+        DrawSubTabItemData(i);
+
+        DrawSubTabKeywords(i);
+
+        i.data.prefabName = i.transform.name;
+    }
+
+    protected void DrawSubTabItemData(Tapestry_Item i)
+    {
         string
             owningEntityTooltip = "What entity, if any, owns this object?",
             owningFactionTooltip = "What faction, if any, owns this object? If a faction owns the object, all Entities within the faction count as owning it.",
@@ -69,7 +80,56 @@ public class TapestryInspector_Item : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
+    }
 
-        i.data.prefabName = i.transform.name;
+    protected void DrawSubTabKeywords(Tapestry_Item i)
+    {
+        if (i.keywords == null)
+            i.keywords = new List<string>();
+
+        int indexToRemove = -1;
+        GUILayout.BeginVertical("box");
+        GUILayout.Label("Keywords");
+        GUILayout.BeginVertical("box");
+        if (i.keywords.Count == 0)
+        {
+            GUILayout.Label("No keywords associated with this Item.");
+        }
+        else
+        {
+            for (int j = 0; j < i.keywords.Count; j++)
+            {
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("-", GUILayout.Width(20)))
+                {
+                    indexToRemove = j;
+                }
+                i.keywords[j] = EditorGUILayout.DelayedTextField(i.keywords[j]);
+                GUILayout.EndHorizontal();
+            }
+        }
+        if (indexToRemove != -1)
+        {
+            if (i.keywords.Count == 1)
+                i.keywords.Clear();
+            else
+                i.keywords.RemoveAt(indexToRemove);
+        }
+
+        GUILayout.EndVertical();
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("+", GUILayout.Width(20)))
+        {
+            if (keywordToAdd != "")
+            {
+                i.keywords.Add(keywordToAdd);
+                keywordToAdd = null;
+            }
+        }
+        keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
+        GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
     }
 }

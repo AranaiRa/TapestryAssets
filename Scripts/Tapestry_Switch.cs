@@ -15,7 +15,8 @@ public class Tapestry_Switch : Tapestry_Activatable {
         onSound,
         offSound;
     public bool
-        pingPong = false;
+        pingPong = false,
+        fireOnlyOnce = false;
     /*[SerializeField]
     public Dictionary<Tapestry_Activatable, Tapestry_SwitchData> 
         data = new Dictionary<Tapestry_Activatable, Tapestry_SwitchData>();*/
@@ -33,11 +34,11 @@ public class Tapestry_Switch : Tapestry_Activatable {
         rot1 = Quaternion.identity,
         rot2 = Quaternion.identity,
         startingRot = Quaternion.identity;
-    private bool
+    protected bool
+        isOn = false,
+        hasFired = false,
         isSwitchingOn = false,
         isSwitchingOff = false;
-    protected bool
-        isOn = false;
     private float
         time;
 
@@ -150,18 +151,23 @@ public class Tapestry_Switch : Tapestry_Activatable {
 
     public override void Activate(Tapestry_Entity activatingEntity)
     {
-        if (!isSwitchingOn && !isSwitchingOff)
+        if (fireOnlyOnce && !hasFired)
         {
-            if (isOn)
-                SwitchOff();
-            else
-                SwitchOn();
+            if (!isSwitchingOn && !isSwitchingOff)
+            {
+                if (isOn)
+                    SwitchOff();
+                else
+                    SwitchOn();
+            }
         }
     }
 
     public void EvaluateOnState()
     {
+        hasFired = true;
         Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
+        isOn = true;
         if (pingPong)
         {
             if (comp.GetType() == typeof(Tapestry_Door))
@@ -223,6 +229,8 @@ public class Tapestry_Switch : Tapestry_Activatable {
     public void EvaluateOffState()
     {
         Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
+        hasFired = true;
+        isOn = false;
         if (!pingPong)
         {
 
@@ -263,7 +271,6 @@ public class Tapestry_Switch : Tapestry_Activatable {
         {
             pivot.transform.localPosition = pos2;
             pivot.transform.localRotation = rot2;
-            isOn = true;
         }
     }
 

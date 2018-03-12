@@ -23,7 +23,8 @@ public class TapestryInspector_Switch : Editor {
             pingPongTooltip = "Does this switch go to it's \"on\" position and then immediately back? Useful for buttons or pressure plates.",
             switchDelayTooltip = "How long, in seconds, the switch holds in the \"on\" position before returning to the \"off\" position.",
             interactableTooltip = "Can the player interact with this door?",
-            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
+            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?",
+            fireOnceTooltip = "Is this switch only allowed to change states once during play?";
 
         GUILayout.BeginVertical("box");
 
@@ -54,8 +55,8 @@ public class TapestryInspector_Switch : Editor {
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label(new GUIContent("Ping Pong?", pingPongTooltip));
         s.pingPong = EditorGUILayout.Toggle(s.pingPong, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Ping Pong?", pingPongTooltip));
         GUILayout.FlexibleSpace();
         if (s.pingPong)
         {
@@ -63,6 +64,8 @@ public class TapestryInspector_Switch : Editor {
             s.pingPongHoldTime = EditorGUILayout.DelayedFloatField(s.pingPongHoldTime, GUILayout.Width(36));
             GUILayout.FlexibleSpace();
         }
+        s.fireOnlyOnce = EditorGUILayout.Toggle(s.fireOnlyOnce, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Fire Only Once?", fireOnceTooltip));
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
