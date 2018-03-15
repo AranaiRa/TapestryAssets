@@ -18,15 +18,39 @@ public class Tapestry_Player : Tapestry_Entity {
     // Use this for initialization
     void Start ()
     {
-        base.Reset();
+        inventory = new Tapestry_Inventory(this.transform);
+        damageProfile = new Tapestry_DamageProfile();
+        attributeProfile = new Tapestry_AttributeProfile();
+        skillProfile = new Tapestry_SkillProfile();
+        keywords = new List<string>();
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name == "T_Points")
+            {
+                Debug.Log("Points container found.");
+                GameObject pointContainer = transform.GetChild(i).gameObject;
+                for (int j = 0; j < pointContainer.transform.childCount; j++)
+                {
+                    if (pointContainer.transform.GetChild(j).name == "P_Attach")
+                    {
+                        attachPoint = pointContainer.transform.GetChild(j).gameObject;
+                        Debug.Log("Attach point set.");
+                    }
+                }
+            }
+        }
         isRunning = true;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        HandleMouselook();
-        HandleActivation();
+        if (!Tapestry_WorldClock.isPaused)
+        {
+            HandleMouselook();
+            HandleActivation();
+        }
     }
 
     private void FixedUpdate()
@@ -107,6 +131,11 @@ public class Tapestry_Player : Tapestry_Entity {
                         else
                             objectInSights.Activate(this);
                     }
+                    /*else if (objectInSights.GetType() == typeof(Tapestry_Prop))
+                    {
+                        Tapestry_Prop p = (Tapestry_Prop)objectInSights;
+
+                    }*/
                     else
                         objectInSights.Activate(this);
                 }
@@ -121,74 +150,71 @@ public class Tapestry_Player : Tapestry_Entity {
     {
         if (allowCameraMovement)
         {
-            if (!Tapestry_WorldClock.isPaused)
-            {
-                //Mouselook
-                float invertX = 1;
-                if (Tapestry_Config.InvertPlayerCameraY)
-                    invertX = -1;
-                float rotVert = Camera.main.transform.localRotation.eulerAngles.x;
-                rotVert += Input.GetAxis("Mouse Y") * Tapestry_Config.PlayerCameraSensitivityY * invertX;
+            //Mouselook
+            float invertX = 1;
+            if (Tapestry_Config.InvertPlayerCameraY)
+                invertX = -1;
+            float rotVert = Camera.main.transform.localRotation.eulerAngles.x;
+            rotVert += Input.GetAxis("Mouse Y") * Tapestry_Config.PlayerCameraSensitivityY * invertX;
+            float invertY = 1;
+            if (Tapestry_Config.InvertPlayerCameraX)
+                invertY = -1;
+            Camera.main.transform.localRotation = Quaternion.Euler(rotVert, 0, 0);
 
-                float invertY = 1;
-                if (Tapestry_Config.InvertPlayerCameraX)
-                    invertY = -1;
-                Camera.main.transform.localRotation = Quaternion.Euler(rotVert, 0, 0);
+            if (!isPushing)
+            {
                 float rotHori = transform.rotation.eulerAngles.y;
                 rotHori += Input.GetAxis("Mouse X") * Tapestry_Config.PlayerCameraSensitivityX * invertY;
                 transform.rotation = Quaternion.Euler(0, rotHori, 0);
-
-                //Controller
             }
+
+            //Controller
         }
     }
 
     private void HandleMovement()
     {
-        if (!Tapestry_WorldClock.isPaused)
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        bool runToggleThisFrame = Input.GetKey(Tapestry_Config.KeyboardInput_RunWalkToggle);
+        if (!runToggleThisFrame && runToggleLastFrame)
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
-
-            bool runToggleThisFrame = Input.GetKey(Tapestry_Config.KeyboardInput_RunWalkToggle);
-            if (!runToggleThisFrame && runToggleLastFrame)
-            {
-                isRunning = !isRunning;
-            }
-            bool fwd =
-                Input.GetKey(Tapestry_Config.KeyboardInput_Fwd) ||
-                Input.GetKey(Tapestry_Config.ControllerInput_Fwd);
-            bool bck =
-                Input.GetKey(Tapestry_Config.KeyboardInput_Back) ||
-                Input.GetKey(Tapestry_Config.ControllerInput_Back);
-            bool lft =
-                Input.GetKey(Tapestry_Config.KeyboardInput_Left) ||
-                Input.GetKey(Tapestry_Config.ControllerInput_Left);
-            bool rgt =
-                Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
-                Input.GetKey(Tapestry_Config.ControllerInput_Right);
-
-            Vector2 direction = new Vector2();
-
-            if (fwd && !bck)
-                direction += GetFwd2D();
-            else if (bck && !fwd)
-                direction -= GetFwd2D();
-
-            if (rgt && !lft)
-                direction += GetRight2D();
-            else if (lft && !rgt)
-                direction -= GetRight2D();
-
-            if (isRunning)
-                direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed;
-            else
-                direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed;
-
-            rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
-
-            //end of frame
-            runToggleLastFrame = runToggleThisFrame;
+            isRunning = !isRunning;
         }
+        bool fwd =
+            Input.GetKey(Tapestry_Config.KeyboardInput_Fwd) ||
+            Input.GetKey(Tapestry_Config.ControllerInput_Fwd);
+        bool bck =
+            Input.GetKey(Tapestry_Config.KeyboardInput_Back) ||
+            Input.GetKey(Tapestry_Config.ControllerInput_Back);
+        bool lft =
+            Input.GetKey(Tapestry_Config.KeyboardInput_Left) ||
+            Input.GetKey(Tapestry_Config.ControllerInput_Left);
+        bool rgt =
+            Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
+            Input.GetKey(Tapestry_Config.ControllerInput_Right);
+
+        Vector2 direction = new Vector2();
+
+        if (fwd && !bck)
+            direction += GetFwd2D();
+        else if (bck && !fwd)
+            direction -= GetFwd2D();
+
+        if (rgt && !lft)
+            direction += GetRight2D();
+        else if (lft && !rgt)
+            direction -= GetRight2D();
+
+        if (isRunning)
+            direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed * personalTimeFactor;
+        else
+            direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed * personalTimeFactor;
+
+        rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
+
+        //end of frame
+        runToggleLastFrame = runToggleThisFrame;
     }
 
     public Tapestry_Entity ClonePlayerAsEntity()

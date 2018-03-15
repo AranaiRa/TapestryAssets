@@ -9,8 +9,16 @@ public class Tapestry_Entity : Tapestry_Actor {
     public Tapestry_Inventory inventory;
     public Tapestry_AttributeProfile attributeProfile;
     public Tapestry_SkillProfile skillProfile;
-    public bool isRunning = false;
+    public Tapestry_Prop pushTarget;
+    public bool
+        isRunning = false,
+        isPushing = false,
+        isLifting = false;
+    public GameObject
+        attachPoint;
+
     protected float speed;
+
 
     // Use this for initialization
     void Start () {
@@ -29,6 +37,21 @@ public class Tapestry_Entity : Tapestry_Actor {
         attributeProfile = new Tapestry_AttributeProfile();
         skillProfile = new Tapestry_SkillProfile();
         keywords = new List<string>();
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name == "T_Points")
+            {
+                GameObject pointContainer = transform.GetChild(i).gameObject;
+                for (int j = 0; j < pointContainer.transform.childCount; j++)
+                {
+                    if (transform.GetChild(i).name == "P_Attach")
+                    {
+                        attachPoint = pointContainer.transform.GetChild(j).gameObject;
+                    }
+                }
+            }
+        }
     }
 
     public override Tapestry_HealthState GetHealthState()

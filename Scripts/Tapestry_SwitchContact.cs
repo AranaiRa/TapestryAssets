@@ -27,7 +27,6 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collision has begun. Filters:" + keywords.Count);
         if(keywords.Count == 0)
         {
             touching.Add(other);
@@ -38,7 +37,7 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
         else if(!fireOnlyOnce || (fireOnlyOnce && !hasFired))
         {
             Tapestry_Activatable a = other.gameObject.GetComponentInParent<Tapestry_Activatable>();
-            
+
             if (a != null)
             {
                 bool keywordMatch = false;
@@ -64,7 +63,6 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Collision has ended.");
         if (keywords.Count == 0)
         {
             touching.Remove(other);
