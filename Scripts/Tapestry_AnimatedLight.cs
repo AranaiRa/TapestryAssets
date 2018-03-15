@@ -39,8 +39,6 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         timedOff = new Vector2Int(6,0);
     public Color
         emissionColor = Color.white;
-    public AudioSource
-        emitter;
     public AudioClip
         inSound,
         activeSound,
@@ -72,15 +70,14 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         emissionJitterLast = Color.white;
     private Material mat;
 
-    private void Reset()
+    protected override void Reset()
     {
         intensityJitterLast = lightIntensityBase;
 
         bool
             hasParticleContainer = false,
             hasLight = false,
-            hasEmissiveStatics = false,
-            hasEmitter = false;
+            hasEmissiveStatics = false;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -115,13 +112,6 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             {
                 hasEmissiveStatics = true;
                 emissiveStatics = transform.GetChild(i).gameObject;
-            }
-            if (transform.GetChild(i).name == "T_Emitter")
-            {
-                hasEmitter = true;
-                emitter = transform.GetChild(i).gameObject.GetComponent<AudioSource>();
-                if (emitter == null)
-                    transform.GetChild(i).gameObject.AddComponent<AudioSource>();
             }
         }
 
@@ -168,17 +158,7 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             emissiveStatics.transform.localPosition = Vector3.zero;
         }
 
-        if (!hasEmitter)
-        {
-            GameObject go = new GameObject();
-            go.transform.SetParent(transform);
-            go.name = "T_Emitter";
-            go.AddComponent<AudioSource>();
-            go.transform.localPosition = Vector3.zero;
-            emitter = go.GetComponent<AudioSource>();
-        }
-
-        emitter.playOnAwake = false;
+        base.Reset();
     }
 
     void Start()

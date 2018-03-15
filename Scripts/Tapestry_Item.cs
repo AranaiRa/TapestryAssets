@@ -6,11 +6,16 @@ using UnityEngine.UI;
 public class Tapestry_Item : Tapestry_Activatable {
 
     public Tapestry_ItemData data;
+    public AudioClip
+        pickupSound,
+        collideSound;
 
-    private void Reset()
+    protected override void Reset()
     {
         data = new Tapestry_ItemData();
         displayName = data.displayName;
+
+        base.Reset();
     }
 
     // Use this for initialization

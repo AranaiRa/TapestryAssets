@@ -22,6 +22,10 @@ public class Tapestry_Prop : Tapestry_Actor {
         pushSpeedMin = 0.2f, pushSpeedMax = 0.6f,
         liftSpeedMin = 0.2f, liftSpeedMax = 0.9f,
         pushIncrement = 0.5f;
+    public AudioClip
+        pushingSound,
+        collideNeutralSound,
+        collidePushingSound;
 
     private float
         time,
@@ -50,12 +54,29 @@ public class Tapestry_Prop : Tapestry_Actor {
     {
         if (isPushing)
         {
-            if(collision.gameObject.GetComponent<Rigidbody>() != null)
+            if (collidePushingSound != null)
+            {
+                emitter.clip = collidePushingSound;
+                emitter.loop = false;
+                emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                emitter.Play();
+            }
+            if (collision.gameObject.GetComponent<Rigidbody>() != null)
                 isPushing = false;
+        }
+        else
+        {
+            if (collideNeutralSound != null)
+            {
+                emitter.clip = collideNeutralSound;
+                emitter.loop = false;
+                emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                emitter.Play();
+            }
         }
     }
 
-    protected virtual void Reset()
+    protected override void Reset()
     {
         pushSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
         liftSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
@@ -145,6 +166,8 @@ public class Tapestry_Prop : Tapestry_Actor {
             gizmo.transform.localPosition = Vector3.zero;
             gizmo.transform.localRotation = Quaternion.identity;
         }
+
+        base.Reset();
     }
 
     protected void HandlePush()
@@ -182,6 +205,13 @@ public class Tapestry_Prop : Tapestry_Actor {
                 time = 0;
                 startingPosGridbound = transform.position;
                 pushDir = activeAttachPoint.transform.forward * pushIncrement;
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = false;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
             else if (!isPushing && bck && allowPull)
             {
@@ -189,6 +219,13 @@ public class Tapestry_Prop : Tapestry_Actor {
                 time = 0;
                 startingPosGridbound = transform.position;
                 pushDir = -activeAttachPoint.transform.forward * pushIncrement;
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = false;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
             else if (!isPushing && rgt && !lft && allowLateral)
             {
@@ -196,6 +233,13 @@ public class Tapestry_Prop : Tapestry_Actor {
                 time = 0;
                 startingPosGridbound = transform.position;
                 pushDir = activeAttachPoint.transform.right * pushIncrement;
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = false;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
             else if (!isPushing && !rgt && lft && allowLateral)
             {
@@ -203,6 +247,13 @@ public class Tapestry_Prop : Tapestry_Actor {
                 time = 0;
                 startingPosGridbound = transform.position;
                 pushDir = -activeAttachPoint.transform.right * pushIncrement;
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = false;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
         }
         else
@@ -213,24 +264,59 @@ public class Tapestry_Prop : Tapestry_Actor {
                 isPushing = true;
                 pushDir = activeAttachPoint.transform.forward * pushIncrement;
                 GetComponent<Rigidbody>().MovePosition(transform.position + pushDir * pushSpeed * Time.deltaTime);
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = true;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
             else if (bck && allowPull)
             {
                 isPushing = true;
                 pushDir = -activeAttachPoint.transform.forward * pushIncrement;
                 GetComponent<Rigidbody>().MovePosition(transform.position + pushDir * pushSpeed * Time.deltaTime);
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = true;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
             else if (rgt && !lft && allowLateral)
             {
                 isPushing = true;
                 pushDir = activeAttachPoint.transform.right * pushIncrement;
                 GetComponent<Rigidbody>().MovePosition(transform.position + pushDir * pushSpeed * Time.deltaTime);
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = true;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
             }
             else if (!rgt && lft && allowLateral)
             {
                 isPushing = true;
                 pushDir = -activeAttachPoint.transform.right * pushIncrement;
                 GetComponent<Rigidbody>().MovePosition(transform.position + pushDir * pushSpeed * Time.deltaTime);
+                if (pushingSound != null)
+                {
+                    emitter.clip = pushingSound;
+                    emitter.loop = true;
+                    emitter.volume = Tapestry_Config.SoundVolumeMaster * Tapestry_Config.SoundVolumeSFX;
+                    emitter.Play();
+                }
+            }
+            else
+            {
+                if (pushingSound != null)
+                {
+                    emitter.loop = false;
+                }
             }
         }
     }

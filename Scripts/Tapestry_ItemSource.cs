@@ -20,7 +20,7 @@ public class Tapestry_ItemSource : Tapestry_Activatable {
 
     private Tapestry_TimeIndex resetTime;
 
-    private void Reset()
+    protected override void Reset()
     {
         bool
             hasHarvestable = false,
@@ -54,6 +54,8 @@ public class Tapestry_ItemSource : Tapestry_Activatable {
             meshUnharvestable.transform.localPosition = Vector3.zero;
             meshUnharvestable.name = "T_Collection_Off";
         }
+
+        base.Reset();
     }
 	
 	// Update is called once per frame

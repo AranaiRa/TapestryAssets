@@ -16262,9 +16262,9 @@ MonoBehaviour:
   isPushable: 1
   isLiftable: 0
   isDestructable: 0
-  gridAligned: 1
-  allowLateral: 1
-  allowPull: 1
+  gridAligned: 0
+  allowLateral: 0
+  allowPull: 0
   pushForcesThirdPerson: 0
   liftForcesThirdPerson: 0
   pushClumsy: 10
@@ -16309,8 +16309,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  pushSpeedMin: 1.8
-  pushSpeedMax: 0.2
+  pushSpeedMin: 0.2
+  pushSpeedMax: 0.8
   liftSpeedMin: 0.2
   liftSpeedMax: 0.9
   pushIncrement: 1
@@ -16340,12 +16340,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!1 &460662601
 GameObject:
   m_ObjectHideFlags: 0

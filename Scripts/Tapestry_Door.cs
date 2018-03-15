@@ -14,8 +14,6 @@ public class Tapestry_Door : Tapestry_Activatable {
         jiggleOnActivateWhenLocked = false,
         relockWhenClosed = false,
         consumeKeyOnUnlock = false;
-    public AudioSource
-        emitter;
     public AudioClip
         openSound,
         closeSound,
@@ -40,15 +38,14 @@ public class Tapestry_Door : Tapestry_Activatable {
         time,
         jiggleTime = 0.4f;
 
-    private void Reset()
+    protected override void Reset()
     {
         displayName = "Door";
         curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
         security = new Tapestry_Lock(false, 0, "");
 
         bool
-            hasPivot = false,
-            hasEmitter = false;
+            hasPivot = false;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -56,13 +53,6 @@ public class Tapestry_Door : Tapestry_Activatable {
             {
                 hasPivot = true;
                 pivot = transform.GetChild(i).gameObject;
-            }
-            if (transform.GetChild(i).name == "T_Emitter")
-            {
-                hasEmitter = true;
-                emitter = transform.GetChild(i).gameObject.GetComponent<AudioSource>();
-                if (emitter == null)
-                    transform.GetChild(i).gameObject.AddComponent<AudioSource>();
             }
         }
 
@@ -74,17 +64,7 @@ public class Tapestry_Door : Tapestry_Activatable {
             pivot.transform.localPosition = Vector3.zero;
         }
 
-        if(!hasEmitter)
-        {
-            GameObject go = new GameObject();
-            go.transform.SetParent(transform);
-            go.name = "T_Emitter";
-            go.AddComponent<AudioSource>();
-            go.transform.localPosition = Vector3.zero;
-            emitter = go.GetComponent<AudioSource>();
-        }
-
-        emitter.playOnAwake = false;
+        base.Reset();
     }
 
     // Use this for initialization

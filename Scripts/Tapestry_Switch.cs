@@ -9,8 +9,6 @@ public class Tapestry_Switch : Tapestry_Activatable {
         switchTime = 0.4f,
         pingPongHoldTime = 0.4f;
     public AnimationCurve curve;
-    public AudioSource
-        emitter;
     public AudioClip
         onSound,
         offSound;
@@ -42,15 +40,14 @@ public class Tapestry_Switch : Tapestry_Activatable {
     private float
         time;
 
-    protected virtual void Reset()
+    protected override void Reset()
     {
         displayName = "Switch";
         curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
         data = new Tapestry_SwitchData();
 
         bool
-            hasPivot = false,
-            hasEmitter = false;
+            hasPivot = false;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -58,13 +55,6 @@ public class Tapestry_Switch : Tapestry_Activatable {
             {
                 hasPivot = true;
                 pivot = transform.GetChild(i).gameObject;
-            }
-            if (transform.GetChild(i).name == "T_Emitter")
-            {
-                hasEmitter = true;
-                emitter = transform.GetChild(i).gameObject.GetComponent<AudioSource>();
-                if (emitter == null)
-                    transform.GetChild(i).gameObject.AddComponent<AudioSource>();
             }
         }
 
@@ -75,19 +65,6 @@ public class Tapestry_Switch : Tapestry_Activatable {
             pivot.name = "T_Pivot";
             pivot.transform.localPosition = Vector3.zero;
         }
-
-        if (!hasEmitter)
-        {
-            GameObject go = new GameObject();
-            go.transform.SetParent(transform);
-            go.name = "T_Emitter";
-            go.AddComponent<AudioSource>();
-            go.transform.localPosition = Vector3.zero;
-            emitter = go.GetComponent<AudioSource>();
-            emitter.maxDistance = Tapestry_Config.DefaultSoundRadius;
-        }
-
-        emitter.playOnAwake = false;
     }
 
     // Use this for initialization

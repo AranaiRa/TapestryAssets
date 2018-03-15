@@ -15,27 +15,32 @@ public class TapestryInspector_Prop : Editor
     {
         Tapestry_Prop p = target as Tapestry_Prop;
 
-        GUILayout.BeginHorizontal();
+        string
+            displayTooltip = "What string will display on the player's HUD when looking at this object.",
+            interactableTooltip = "Can the player take this object to their inventory?",
+            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
 
         GUILayout.BeginVertical("box");
-        GUILayout.Label("Health (" + p.GetHealthState() + ")");
+
         GUILayout.BeginHorizontal();
-        p.health = GUILayout.HorizontalSlider(p.health, 0, 1000);
-        float.TryParse(GUILayout.TextField(p.health.ToString(), GUILayout.MaxWidth(40)), out p.health);
+        GUILayout.Label(new GUIContent("Display Name", displayTooltip));
+        GUILayout.FlexibleSpace();
+        p.displayName = EditorGUILayout.DelayedTextField(p.displayName, GUILayout.Width(270));
         GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
 
-        string dtTooltip = "Damage Threshold: Any amount of damage sustained below this value will be ignored.";
-
-        GUILayout.BeginVertical("box");
-        GUILayout.Label(new GUIContent("Damage Threshold", dtTooltip));
         GUILayout.BeginHorizontal();
-        p.threshold = GUILayout.HorizontalSlider(p.threshold, 0, 1000);
-        float.TryParse(GUILayout.TextField(p.threshold.ToString(), GUILayout.MaxWidth(40)), out p.threshold);
+        p.isInteractable = EditorGUILayout.Toggle(p.isInteractable, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Interactable?", interactableTooltip));
+        GUILayout.Space(20);
+        if (!p.isInteractable)
+        {
+            p.displayNameWhenUnactivatable = EditorGUILayout.Toggle(p.displayNameWhenUnactivatable, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Display Name Anyway?", displayNameTooltip));
+            GUILayout.FlexibleSpace();
+        }
         GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
 
-        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
 
         toolbarActive = GUILayout.Toolbar(toolbarActive, toolbarNames);
 
@@ -237,6 +242,29 @@ public class TapestryInspector_Prop : Editor
 
             GUILayout.EndHorizontal();
 
+            string
+                pushSoundTooltip = "What sound, if any, plays while the object is being pushed. If this object is grid aligned, the sound triggers every time a push is initiated. If the object is not grid aligned, the sound loops as long as the object is being pushed.",
+                collideSoundNeutralTooltip = "What sound, if any, plays when something collides with the object while it is idle.",
+                collideSoundPushingTooltip = "What sound, if any, plays when the object collides with something while being pushed.";
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("Pushing", pushSoundTooltip));
+            p.pushingSound = (AudioClip)EditorGUILayout.ObjectField(p.pushingSound, typeof(AudioClip), true, GUILayout.Width(250));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("Collision while Idle", collideSoundNeutralTooltip));
+            p.pushingSound = (AudioClip)EditorGUILayout.ObjectField(p.pushingSound, typeof(AudioClip), true, GUILayout.Width(250));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("Collision while Pushing", collideSoundPushingTooltip));
+            p.pushingSound = (AudioClip)EditorGUILayout.ObjectField(p.pushingSound, typeof(AudioClip), true, GUILayout.Width(250));
+            GUILayout.EndHorizontal();
+
             GUILayout.EndVertical();
 
             GUILayout.EndVertical();
@@ -339,6 +367,28 @@ public class TapestryInspector_Prop : Editor
 
         if (p.isDestructable)
         {
+            GUILayout.BeginHorizontal();
+
+            GUILayout.BeginVertical("box");
+            GUILayout.Label("Health (" + p.GetHealthState() + ")");
+            GUILayout.BeginHorizontal();
+            p.health = GUILayout.HorizontalSlider(p.health, 0, 1000);
+            float.TryParse(GUILayout.TextField(p.health.ToString(), GUILayout.MaxWidth(40)), out p.health);
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+
+            string dtTooltip = "Damage Threshold: Any amount of damage sustained below this value will be ignored.";
+
+            GUILayout.BeginVertical("box");
+            GUILayout.Label(new GUIContent("Damage Threshold", dtTooltip));
+            GUILayout.BeginHorizontal();
+            p.threshold = GUILayout.HorizontalSlider(p.threshold, 0, 1000);
+            float.TryParse(GUILayout.TextField(p.threshold.ToString(), GUILayout.MaxWidth(40)), out p.threshold);
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+
+            GUILayout.EndHorizontal();
+
             GUILayout.BeginVertical("box");
 
             GUILayout.BeginHorizontal();

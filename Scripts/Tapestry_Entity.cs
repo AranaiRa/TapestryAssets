@@ -30,7 +30,7 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     }
 
-    protected virtual void Reset()
+    protected override void Reset()
     {
         inventory = new Tapestry_Inventory(this.transform);
         damageProfile = new Tapestry_DamageProfile();
@@ -52,6 +52,8 @@ public class Tapestry_Entity : Tapestry_Actor {
                 }
             }
         }
+
+        base.Reset();
     }
 
     public override Tapestry_HealthState GetHealthState()
