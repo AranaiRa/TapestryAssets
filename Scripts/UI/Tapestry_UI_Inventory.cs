@@ -11,7 +11,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
     public Text itemNameText;
     public static float itemRadius = 200.0f;
     public float
-        delayTime = 0.16f;
+        delayTime = 0.07f;
     public bool
         isWindowOpen = false;
     public List<Tapestry_UI_Inventory_ItemDisplay> itemDisplays = new List<Tapestry_UI_Inventory_ItemDisplay>();
@@ -154,7 +154,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
         if (timeOpenClose < 0) timeOpenClose = 0;
     }
 
-    public void Open(Tapestry_Inventory inv)
+    public void Open(Tapestry_Inventory inv, bool lootable = false)
     {
         Tapestry_WorldClock.isPaused = true;
         GetComponent<Image>().color = new Color(1, 1, 1, 1);

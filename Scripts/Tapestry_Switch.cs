@@ -128,7 +128,7 @@ public class Tapestry_Switch : Tapestry_Activatable {
 
     public override void Activate(Tapestry_Entity activatingEntity)
     {
-        if (fireOnlyOnce && !hasFired)
+        if (!fireOnlyOnce || (fireOnlyOnce && !hasFired))
         {
             if (!isSwitchingOn && !isSwitchingOff)
             {

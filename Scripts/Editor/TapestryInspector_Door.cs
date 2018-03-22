@@ -53,75 +53,7 @@ public class TapestryInspector_Door : Editor
 
         GUILayout.EndVertical();
 
-        string lockedTooltip = "Is this container locked?";
-        GUILayout.BeginVertical("box");
-
-        GUILayout.BeginHorizontal();
-        d.security.isLocked = EditorGUILayout.Toggle(d.security.isLocked, GUILayout.Width(12));
-        GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
-        GUILayout.EndHorizontal();
-
-        if (d.security == null)
-            d.security = new Tapestry_Lock(false, 0, "");
-
-        if (d.security.isLocked)
-        {
-            GUILayout.BeginVertical("box");
-            GUILayout.BeginHorizontal();
-
-            string 
-                bypassableTooltip = "Can the player bypass this lock with "+Tapestry_Config.lockBypassSkill.ToString()+"?",
-                levelTooltip = "How difficult this lock is to bypass.",
-                keyTooltip = "Entities with a key with this ID can open this door when locked. After passing through the door, the Entity will re-lock it.",
-                lockedJiggleTooltip = "If this door is locked, does it jiggle when activated?",
-                jiggleIntensityTooltip = "How much this door jiggles on activation when locked. This is a percentage of the difference between the closed state and the open state.",
-                lockedSoundTooltip = "The sound that plays when the door is unsuccessfully opened when locked, if any.",
-                relockTooltip = "Should this door relock itself once closed?",
-                consumeKeyTooltip = "Should the key for this door be removed from the player's inventory when the door is unlocked?";
-
-            d.security.canBeBypassed = EditorGUILayout.Toggle(d.security.canBeBypassed, GUILayout.Width(12));
-            GUILayout.Label(new GUIContent("Bypassable?",bypassableTooltip));
-            GUILayout.FlexibleSpace();
-            if (d.security.canBeBypassed)
-            {
-                GUILayout.Label(new GUIContent("Level", levelTooltip));
-                d.security.LockLevel = EditorGUILayout.DelayedIntField(d.security.LockLevel, GUILayout.Width(30));
-                GUILayout.FlexibleSpace();
-            }
-            GUILayout.Label(new GUIContent("Key", keyTooltip));
-            d.security.keyID = EditorGUILayout.DelayedTextField(d.security.keyID, GUILayout.Width(100));
-
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-
-            d.jiggleOnActivateWhenLocked = EditorGUILayout.Toggle(d.jiggleOnActivateWhenLocked, GUILayout.Width(12));
-            GUILayout.Label(new GUIContent("Jiggle?", lockedJiggleTooltip));
-            if (d.jiggleOnActivateWhenLocked)
-            {
-                GUILayout.FlexibleSpace();
-                GUILayout.Label(new GUIContent("Intensity", jiggleIntensityTooltip));
-                d.lockJiggleIntensity = EditorGUILayout.DelayedFloatField(d.lockJiggleIntensity, GUILayout.Width(40));
-                GUILayout.FlexibleSpace();
-                GUILayout.Label(new GUIContent("Sound", lockedSoundTooltip));
-                d.lockedSound = (AudioClip)EditorGUILayout.ObjectField(d.lockedSound, typeof(AudioClip), true, GUILayout.Width(120));
-            }
-
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal();
-            d.relockWhenClosed = EditorGUILayout.Toggle(d.relockWhenClosed, GUILayout.Width(12));
-            GUILayout.Label(new GUIContent("Relock When Closed?", relockTooltip));
-            if(!d.relockWhenClosed)
-            {
-                GUILayout.FlexibleSpace();
-                d.consumeKeyOnUnlock = EditorGUILayout.Toggle(d.consumeKeyOnUnlock, GUILayout.Width(12));
-                GUILayout.Label(new GUIContent("Consume Key on Unlock?", consumeKeyTooltip));
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
-        }
-
-        GUILayout.EndVertical();
+        DrawSecurityTab(d);
         
         string
             openTransformTooltip = "The transform data for the door's open state. Don't worry about the actual numbers too much, but if they're the same as the closed values, you need to bake your open and closed states.",
@@ -161,9 +93,7 @@ public class TapestryInspector_Door : Editor
 
         GUILayout.EndVertical();
         GUILayout.EndVertical();
-
-
-
+        
         GUILayout.BeginVertical("box");
 
         GUILayout.BeginHorizontal();
@@ -195,6 +125,79 @@ public class TapestryInspector_Door : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
+        GUILayout.EndVertical();
+    }
+
+    protected void DrawSecurityTab(Tapestry_Door d)
+    {
+        string lockedTooltip = "Is this container locked?";
+        GUILayout.BeginVertical("box");
+
+        GUILayout.BeginHorizontal();
+        d.security.isLocked = EditorGUILayout.Toggle(d.security.isLocked, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
+        GUILayout.EndHorizontal();
+
+        if (d.security == null)
+            d.security = new Tapestry_Lock(false, 0, "");
+
+        if (d.security.isLocked)
+        {
+            GUILayout.BeginVertical("box");
+            GUILayout.BeginHorizontal();
+
+            string
+                bypassableTooltip = "Can the player bypass this lock with " + Tapestry_Config.lockBypassSkill.ToString() + "?",
+                levelTooltip = "How difficult this lock is to bypass.",
+                keyTooltip = "Entities with a key with this ID can open this door when locked. After passing through the door, the Entity will re-lock it.",
+                lockedJiggleTooltip = "If this door is locked, does it jiggle when activated?",
+                jiggleIntensityTooltip = "How much this door jiggles on activation when locked. This is a percentage of the difference between the closed state and the open state.",
+                lockedSoundTooltip = "The sound that plays when the door is unsuccessfully opened when locked, if any.",
+                relockTooltip = "Should this door relock itself once closed?",
+                consumeKeyTooltip = "Should the key for this door be removed from the player's inventory when the door is unlocked?";
+
+            d.security.canBeBypassed = EditorGUILayout.Toggle(d.security.canBeBypassed, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Bypassable?", bypassableTooltip));
+            GUILayout.FlexibleSpace();
+            if (d.security.canBeBypassed)
+            {
+                GUILayout.Label(new GUIContent("Level", levelTooltip));
+                d.security.LockLevel = EditorGUILayout.DelayedIntField(d.security.LockLevel, GUILayout.Width(30));
+                GUILayout.FlexibleSpace();
+            }
+            GUILayout.Label(new GUIContent("Key", keyTooltip));
+            d.security.keyID = EditorGUILayout.DelayedTextField(d.security.keyID, GUILayout.Width(100));
+
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+
+            d.jiggleOnActivateWhenLocked = EditorGUILayout.Toggle(d.jiggleOnActivateWhenLocked, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Jiggle?", lockedJiggleTooltip));
+            if (d.jiggleOnActivateWhenLocked)
+            {
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("Intensity", jiggleIntensityTooltip));
+                d.lockJiggleIntensity = EditorGUILayout.DelayedFloatField(d.lockJiggleIntensity, GUILayout.Width(40));
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("Sound", lockedSoundTooltip));
+                d.lockedSound = (AudioClip)EditorGUILayout.ObjectField(d.lockedSound, typeof(AudioClip), true, GUILayout.Width(120));
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            d.relockWhenClosed = EditorGUILayout.Toggle(d.relockWhenClosed, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Relock When Closed?", relockTooltip));
+            if (!d.relockWhenClosed)
+            {
+                GUILayout.FlexibleSpace();
+                d.consumeKeyOnUnlock = EditorGUILayout.Toggle(d.consumeKeyOnUnlock, GUILayout.Width(12));
+                GUILayout.Label(new GUIContent("Consume Key on Unlock?", consumeKeyTooltip));
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
         GUILayout.EndVertical();
     }
 }

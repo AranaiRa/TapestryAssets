@@ -7,9 +7,9 @@ using UnityEditor;
 [CustomEditor(typeof(Tapestry_Prop))]
 public class TapestryInspector_Prop : Editor
 {
-    int toolbarActive = -1;
-    string[] toolbarNames = { "Interaction", "Destruction", "Other" };
-    string keywordToAdd;
+    protected int toolbarActive = -1;
+    protected string[] toolbarNames = { "Interaction", "Destruction", "Other" };
+    protected string keywordToAdd;
 
     public override void OnInspectorGUI()
     {

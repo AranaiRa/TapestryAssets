@@ -74,7 +74,12 @@ public class Tapestry_Door : Tapestry_Activatable {
 	
 	// Update is called once per frame
 	void Update () {
-		if(isOpening)
+        HandleAnimation();
+    }
+
+    protected void HandleAnimation()
+    {
+        if (isOpening)
         {
             time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= openTime)
@@ -87,7 +92,7 @@ public class Tapestry_Door : Tapestry_Activatable {
 
             pivot.transform.localPosition = evalPos;
             pivot.transform.localRotation = evalRot;
-            
+
             if (time == openTime)
             {
                 isOpening = false;
@@ -105,7 +110,7 @@ public class Tapestry_Door : Tapestry_Activatable {
 
             Vector3 evalPos;
             Quaternion evalRot;
-            
+
             evalPos = Vector3.Lerp(startingPos, pos1, prog);
             evalRot = Quaternion.Lerp(startingRot, rot1, prog);
 
@@ -120,7 +125,7 @@ public class Tapestry_Door : Tapestry_Activatable {
                     security.isLocked = true;
             }
         }
-        else if(isJiggling)
+        else if (isJiggling)
         {
             time += Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor;
             if (time >= jiggleTime)

@@ -4,75 +4,48 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(Tapestry_Container))]
-public class TapestryInspector_Container : Editor {
-
-    int toolbarActive = -1;
-    string[] toolbarNames = { "Interaction", "Destruction", "Inventory", "Other" };
+public class TapestryInspector_Container : TapestryInspector_Prop {
+    
     Tapestry_Item itemToAdd;
-    string keywordToAdd;
 
     public override void OnInspectorGUI()
     {
+        string[] toolbarNames = { "Interaction", "Destruction", "Inventory", "Other" };
         Tapestry_Container p = target as Tapestry_Container;
 
-        GUILayout.BeginHorizontal();
+        string
+            displayTooltip = "What string will display on the player's HUD when looking at this object.",
+            changeTimeTooltip = "The amount of time, in seconds, it takes for the door to open or close.",
+            changeCurveTooltip = "Animation controls for how the door eases between states.",
+            interactableTooltip = "Can the player interact with this door?",
+            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
 
         GUILayout.BeginVertical("box");
-        GUILayout.Label("Health (" + p.GetHealthState() + ")");
+
         GUILayout.BeginHorizontal();
-        p.health = GUILayout.HorizontalSlider(p.health, 0, 1000);
-        float.TryParse(GUILayout.TextField(p.health.ToString(), GUILayout.MaxWidth(40)), out p.health);
+        GUILayout.Label(new GUIContent("Display Name", displayTooltip));
+        GUILayout.FlexibleSpace();
+        p.displayName = EditorGUILayout.DelayedTextField(p.displayName, GUILayout.Width(270));
         GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
 
-        string dtTooltip = "Damage Threshold: Any amount of damage sustained below this value will be ignored.";
-
-        GUILayout.BeginVertical("box");
-        GUILayout.Label(new GUIContent("Damage Threshold", dtTooltip));
         GUILayout.BeginHorizontal();
-        p.threshold = GUILayout.HorizontalSlider(p.threshold, 0, 1000);
-        float.TryParse(GUILayout.TextField(p.threshold.ToString(), GUILayout.MaxWidth(40)), out p.threshold);
+        p.isInteractable = EditorGUILayout.Toggle(p.isInteractable, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Interactable?", interactableTooltip));
+        GUILayout.Space(20);
+        if (!p.isInteractable)
+        {
+            p.displayNameWhenUnactivatable = EditorGUILayout.Toggle(p.displayNameWhenUnactivatable, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Display Name Anyway?", displayNameTooltip));
+            GUILayout.FlexibleSpace();
+        }
         GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
 
-        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
 
         if (p.security == null)
             p.security = new Tapestry_Lock(false, 0, "");
-
-        string lockedTooltip = "Is this container locked?";
-        GUILayout.BeginVertical("box");
-
-        GUILayout.BeginHorizontal();
-        p.security.isLocked = EditorGUILayout.Toggle(p.security.isLocked, GUILayout.Width(12));
-        GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
-        GUILayout.EndHorizontal();
-
-        if (p.security.isLocked)
-        {
-            GUILayout.BeginHorizontal("box");
-
-            string
-                bypassableTooltip = "Can the player bypass this lock with " + Tapestry_Config.lockBypassSkill.ToString() + "?",
-                levelTooltip = "How difficult this lock is to bypass.",
-                keyTooltip = "Entities with a key with this ID can open this door when locked. After passing through the door, the Entity will re-lock it.";
-
-            GUILayout.Label(new GUIContent("Bypassable?", bypassableTooltip));
-            p.security.canBeBypassed = EditorGUILayout.Toggle(p.security.canBeBypassed, GUILayout.Width(12));
-            GUILayout.FlexibleSpace();
-            if (p.security.canBeBypassed)
-            {
-                GUILayout.Label(new GUIContent("Level", levelTooltip));
-                p.security.LockLevel = EditorGUILayout.DelayedIntField(p.security.LockLevel, GUILayout.Width(30));
-                GUILayout.FlexibleSpace();
-            }
-            GUILayout.Label(new GUIContent("Key", keyTooltip));
-            p.security.keyID = EditorGUILayout.DelayedTextField(p.security.keyID, GUILayout.Width(100));
-
-            GUILayout.EndHorizontal();
-        }
-
-        GUILayout.EndVertical();
+        
+        DrawSecurityTab(p);
 
         toolbarActive = GUILayout.Toolbar(toolbarActive, toolbarNames);
 
@@ -80,149 +53,9 @@ public class TapestryInspector_Container : Editor {
         {
             if (toolbarNames[toolbarActive] == "Interaction")
             {
-                string
-                    pushableTooltip = "Can Entities push this object if one of their " + Tapestry_Config.pushLiftAttribute.ToString() + " is high enough?",
-                    liftableTooltip = "Can Entities lift this object if one of their " + Tapestry_Config.pushLiftAttribute.ToString() + " is high enough?",
-                    clumTooltip = "The minimum " + Tapestry_Config.pushLiftAttribute.ToString() + " required to push or lift (as appropriate). Uses the Clumsy animation when your Attribute is equal, mixes with the Competent animation as the score increases.",
-                    compTooltip = "The " + Tapestry_Config.pushLiftAttribute.ToString() + " score at which the Competent animation is used. Mixes with Clumsy as score goes down, mixes with Impressive as score goes up.",
-                    imprTooltip = "The " + Tapestry_Config.pushLiftAttribute.ToString() + " score at which the Impressive animation is used. Mixes with Competent as score goes down, doesn't improve any further as score goes up.";
-
-                GUILayout.BeginVertical("box");
-
-                GUILayout.BeginHorizontal();
-                p.isPushable = EditorGUILayout.Toggle(p.isPushable, GUILayout.Width(12));
-                GUILayout.Label(new GUIContent("Pushable?", pushableTooltip));
-                GUILayout.EndHorizontal();
-
-
-                if (p.isPushable)
-                {
-                    GUILayout.BeginVertical("box");
-
-                    GUILayout.BeginHorizontal();
-
-                    GUILayout.Label(new GUIContent("Clumsy:", clumTooltip));
-                    p.pushClumsy = EditorGUILayout.DelayedIntField(p.pushClumsy, GUILayout.Width(40));
-
-                    if (p.pushClumsy > p.pushCompetent) p.pushCompetent = p.pushClumsy;
-                    if (p.pushClumsy > p.pushImpressive) p.pushImpressive = p.pushClumsy;
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("Competent:", compTooltip));
-                    p.pushCompetent = EditorGUILayout.DelayedIntField(p.pushCompetent, GUILayout.Width(40));
-
-                    if (p.pushCompetent < p.pushClumsy) p.pushClumsy = p.pushCompetent;
-                    if (p.pushCompetent > p.pushImpressive) p.pushImpressive = p.pushCompetent;
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("Impressive:", imprTooltip));
-                    p.pushImpressive = EditorGUILayout.DelayedIntField(p.pushImpressive, GUILayout.Width(40));
-
-                    if (p.pushImpressive < p.pushClumsy) p.pushClumsy = p.pushImpressive;
-                    if (p.pushImpressive < p.pushCompetent) p.pushCompetent = p.pushImpressive;
-
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginVertical();
-
-                    string
-                        minTooltip = "Minimum movement speed while pushing the object, as a multiplier to the Entity's normal movement speed. (EG: 0.5 means you'll move at half speed while pushing)",
-                        maxTooltip = "Maximum movement speed while pushing the object, as a multiplier to the Entity's normal movement speed. (EG: 0.5 means you'll move at half speed while pushing)";
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label("Move Speeds");
-                    GUILayout.Label(new GUIContent("Min", minTooltip), GUILayout.Width(30));
-                    p.pushSpeedMin = EditorGUILayout.FloatField(p.pushSpeedMin, GUILayout.Width(40));
-                    GUILayout.Label(new GUIContent("Max", maxTooltip), GUILayout.Width(30));
-                    p.pushSpeedMax = EditorGUILayout.FloatField(p.pushSpeedMax, GUILayout.Width(40));
-                    GUILayout.EndHorizontal();
-
-                    p.pushSpeedMin = Mathf.Clamp(p.pushSpeedMin, 0, 1);
-                    p.pushSpeedMax = Mathf.Clamp(p.pushSpeedMax, 0, 1);
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Space(80);
-                    GUILayout.FlexibleSpace();
-                    p.pushSpeedCurve = EditorGUILayout.CurveField(p.pushSpeedCurve, GUILayout.Width(150));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.EndVertical();
-
-                    GUILayout.EndVertical();
-                }
-
-                GUILayout.EndVertical();
-
-                GUILayout.BeginVertical("box");
-
-                GUILayout.BeginHorizontal();
-                p.isLiftable = EditorGUILayout.Toggle(p.isLiftable, GUILayout.Width(12));
-                GUILayout.Label(new GUIContent("Liftable?", liftableTooltip));
-                GUILayout.EndHorizontal();
-
-                if (p.isLiftable)
-                {
-                    GUILayout.BeginVertical("box");
-
-                    GUILayout.BeginHorizontal();
-
-                    GUILayout.Label(new GUIContent("Clumsy:", clumTooltip));
-                    p.liftClumsy = EditorGUILayout.DelayedIntField(p.liftClumsy, GUILayout.Width(40));
-
-                    if (p.liftClumsy > p.liftCompetent) p.liftCompetent = p.liftClumsy;
-                    if (p.liftClumsy > p.liftImpressive) p.liftImpressive = p.liftClumsy;
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("Competent:", compTooltip));
-                    p.liftCompetent = EditorGUILayout.DelayedIntField(p.liftCompetent, GUILayout.Width(40));
-
-                    if (p.liftCompetent < p.liftClumsy) p.liftClumsy = p.liftCompetent;
-                    if (p.liftCompetent > p.liftImpressive) p.liftImpressive = p.liftCompetent;
-
-                    GUILayout.FlexibleSpace();
-
-                    GUILayout.Label(new GUIContent("Impressive:", imprTooltip));
-                    p.liftImpressive = EditorGUILayout.DelayedIntField(p.liftImpressive, GUILayout.Width(40));
-
-                    if (p.liftImpressive < p.liftClumsy) p.liftClumsy = p.liftImpressive;
-                    if (p.liftImpressive < p.liftCompetent) p.liftCompetent = p.liftImpressive;
-
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginVertical();
-
-                    string
-                        minTooltip = "Minimum movement speed while lifting the object, as a multiplier to the Entity's normal movement speed. (EG: 0.5 means you'll move at half speed while lifting)",
-                        maxTooltip = "Maximum movement speed while lifting the object, as a multiplier to the Entity's normal movement speed. (EG: 0.5 means you'll move at half speed while lifting)";
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.FlexibleSpace();
-                    GUILayout.Label("Move Speeds");
-                    GUILayout.Label(new GUIContent("Min", minTooltip), GUILayout.Width(30));
-                    p.liftSpeedMin = EditorGUILayout.FloatField(p.liftSpeedMin, GUILayout.Width(40));
-                    GUILayout.Label(new GUIContent("Max", maxTooltip), GUILayout.Width(30));
-                    p.liftSpeedMax = EditorGUILayout.FloatField(p.liftSpeedMax, GUILayout.Width(40));
-                    GUILayout.EndHorizontal();
-
-                    p.liftSpeedMin = Mathf.Clamp(p.liftSpeedMin, 0, 1);
-                    p.liftSpeedMax = Mathf.Clamp(p.liftSpeedMax, 0, 1);
-
-                    GUILayout.BeginHorizontal();
-                    GUILayout.Space(80);
-                    GUILayout.FlexibleSpace();
-                    p.liftSpeedCurve = EditorGUILayout.CurveField(p.liftSpeedCurve, GUILayout.Width(150));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.EndVertical();
-
-                    GUILayout.EndVertical();
-                }
-
-                GUILayout.EndVertical();
+                DrawSubTabAnimated(p);
+                DrawSubTabPushable(p);
+                DrawSubTabLiftable(p);
             }
             if (toolbarNames[toolbarActive] == "Destruction")
             {
@@ -405,6 +238,170 @@ public class TapestryInspector_Container : Editor {
             }
         }
     }
+
+
+
+    protected void DrawSubTabAnimated(Tapestry_Container c)
+    {
+        string
+            animatedTooltip = "Does this container have an open state and closed state?",
+            openTransformTooltip = "The transform data for the container's open state. Don't worry about the actual numbers too much, but if they're the same as the closed values, you need to bake your open and closed states.",
+            closedTransformTooltip = "The transform data for the container's closed state. Don't worry about the actual numbers too much, but if they're the same as the closed values, you need to bake your open and closed states.",
+            openSoundTooltip = "The sound to play when the container opens, if any.",
+            closedSoundTooltip = "The sound to play when the container closes, if any.";
+
+        GUILayout.BeginVertical("box");
+        GUILayout.BeginHorizontal();
+        c.isAnimated = EditorGUILayout.Toggle(c.isAnimated, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Animated Open/Close?", animatedTooltip));
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        if (c.isAnimated)
+        {
+            GUILayout.BeginVertical("box");
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("On");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent(c.GetOpenInspectorString(), openTransformTooltip));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginVertical("box");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Open"))
+            {
+                if (Application.isPlaying)
+                    c.Open();
+                else
+                    c.Open(true);
+            }
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Bake Open Pivot Transform"))
+            {
+                c.BakeOpenState();
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("Sound", openSoundTooltip));
+            c.openSound = (AudioClip)EditorGUILayout.ObjectField(c.openSound, typeof(AudioClip), true, GUILayout.Width(250));
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+            GUILayout.EndVertical();
+
+            GUILayout.BeginVertical("box");
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Off");
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent(c.GetClosedInspectorString(), closedTransformTooltip));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginVertical("box");
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Close"))
+            {
+                if (Application.isPlaying)
+                    c.Close();
+                else
+                    c.Close(true);
+            }
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Bake Closed Pivot Transform"))
+            {
+                c.BakeClosedState();
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("Sound", closedSoundTooltip));
+            c.closeSound = (AudioClip)EditorGUILayout.ObjectField(c.closeSound, typeof(AudioClip), true, GUILayout.Width(250));
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+
+            GUILayout.EndVertical();
+        }
+
+        GUILayout.EndVertical();
+    }
+
+    protected void DrawSecurityTab(Tapestry_Container c)
+    {
+        string lockedTooltip = "Is this container locked?";
+        GUILayout.BeginVertical("box");
+
+        GUILayout.BeginHorizontal();
+        c.security.isLocked = EditorGUILayout.Toggle(c.security.isLocked, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Locked?", lockedTooltip));
+        GUILayout.EndHorizontal();
+
+        if (c.security == null)
+            c.security = new Tapestry_Lock(false, 0, "");
+
+        if (c.security.isLocked)
+        {
+            GUILayout.BeginVertical("box");
+            GUILayout.BeginHorizontal();
+
+            string
+                bypassableTooltip = "Can the player bypass this lock with " + Tapestry_Config.lockBypassSkill.ToString() + "?",
+                levelTooltip = "How difficult this lock is to bypass.",
+                keyTooltip = "Entities with a key with this ID can open this container when locked. After closing the container, the Entity will re-lock it.",
+                lockedJiggleTooltip = "If this container is locked, does it jiggle when activated?",
+                jiggleIntensityTooltip = "How much this container jiggles on activation when locked. This is a percentage of the difference between the closed state and the open state.",
+                lockedSoundTooltip = "The sound that plays when the container is unsuccessfully opened when locked, if any.",
+                relockTooltip = "Should this container relock itself once closed?",
+                consumeKeyTooltip = "Should the key for this container be removed from the player's inventory when the container is unlocked?";
+
+            c.security.canBeBypassed = EditorGUILayout.Toggle(c.security.canBeBypassed, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Bypassable?", bypassableTooltip));
+            GUILayout.FlexibleSpace();
+            if (c.security.canBeBypassed)
+            {
+                GUILayout.Label(new GUIContent("Level", levelTooltip));
+                c.security.LockLevel = EditorGUILayout.DelayedIntField(c.security.LockLevel, GUILayout.Width(30));
+                GUILayout.FlexibleSpace();
+            }
+            GUILayout.Label(new GUIContent("Key", keyTooltip));
+            c.security.keyID = EditorGUILayout.DelayedTextField(c.security.keyID, GUILayout.Width(100));
+
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+
+            c.jiggleOnActivateWhenLocked = EditorGUILayout.Toggle(c.jiggleOnActivateWhenLocked, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Jiggle?", lockedJiggleTooltip));
+            if (c.jiggleOnActivateWhenLocked)
+            {
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("Intensity", jiggleIntensityTooltip));
+                c.lockJiggleIntensity = EditorGUILayout.DelayedFloatField(c.lockJiggleIntensity, GUILayout.Width(40));
+                GUILayout.FlexibleSpace();
+                GUILayout.Label(new GUIContent("Sound", lockedSoundTooltip));
+                c.lockedSound = (AudioClip)EditorGUILayout.ObjectField(c.lockedSound, typeof(AudioClip), true, GUILayout.Width(120));
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            c.relockWhenClosed = EditorGUILayout.Toggle(c.relockWhenClosed, GUILayout.Width(12));
+            GUILayout.Label(new GUIContent("Relock When Closed?", relockTooltip));
+            if (!c.relockWhenClosed)
+            {
+                GUILayout.FlexibleSpace();
+                c.consumeKeyOnUnlock = EditorGUILayout.Toggle(c.consumeKeyOnUnlock, GUILayout.Width(12));
+                GUILayout.Label(new GUIContent("Consume Key on Unlock?", consumeKeyTooltip));
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
+        GUILayout.EndVertical();
+    }
+
     enum EjectOptions
     {
         Broken, Destroyed

@@ -9,15 +9,18 @@ public class Tapestry_Player : Tapestry_Entity {
         activateLastFrame;
     public bool allowCameraMovement = true;
     public Tapestry_Activatable objectInSights;
+    public Tapestry_UI_Inventory inventoryUI;
 
     protected override void Reset()
     {
+        inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
         base.Reset();
     }
 
     // Use this for initialization
     void Start ()
     {
+        inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
         inventory = new Tapestry_Inventory(this.transform);
         damageProfile = new Tapestry_DamageProfile();
         attributeProfile = new Tapestry_AttributeProfile();
@@ -131,11 +134,13 @@ public class Tapestry_Player : Tapestry_Entity {
                         else
                             objectInSights.Activate(this);
                     }
-                    /*else if (objectInSights.GetType() == typeof(Tapestry_Prop))
+                    else if (objectInSights.GetType() == typeof(Tapestry_Container))
                     {
-                        Tapestry_Prop p = (Tapestry_Prop)objectInSights;
-
-                    }*/
+                        Tapestry_Container c = (Tapestry_Container)objectInSights;
+                        if(inventoryUI == null)
+                            inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
+                        inventoryUI.Open(c.inventory, true);
+                    }
                     else
                         objectInSights.Activate(this);
                 }
