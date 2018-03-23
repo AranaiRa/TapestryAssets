@@ -24,7 +24,7 @@ public abstract class Tapestry_Activatable : MonoBehaviour {
                 hasEmitter = true;
                 emitter = transform.GetChild(i).gameObject.GetComponent<AudioSource>();
                 if (emitter == null)
-                    transform.GetChild(i).gameObject.AddComponent<AudioSource>();
+                    emitter = transform.GetChild(i).gameObject.AddComponent<AudioSource>();
             }
         }
 

@@ -38,7 +38,6 @@ public class Tapestry_Player : Tapestry_Entity {
                     if (pointContainer.transform.GetChild(j).name == "P_Attach")
                     {
                         attachPoint = pointContainer.transform.GetChild(j).gameObject;
-                        Debug.Log("Attach point set.");
                     }
                 }
             }
@@ -139,7 +138,15 @@ public class Tapestry_Player : Tapestry_Entity {
                         Tapestry_Container c = (Tapestry_Container)objectInSights;
                         if(inventoryUI == null)
                             inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
-                        inventoryUI.Open(c.inventory, true);
+                        if(c.inventory == null)
+                            Debug.Log("Oops, no inventory.");
+                        if (c.inventory.items.Count != 0)
+                        {
+                            Debug.Log(c.inventory.items.Count + " in target container.");
+                            inventoryUI.Open(c.inventory, true);
+                        }
+                        else
+                            Debug.Log("No items in target container.");
                     }
                     else
                         objectInSights.Activate(this);

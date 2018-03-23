@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 114369402364618080}
   - component: {fileID: 54918870235505338}
   m_Layer: 0
-  m_Name: item_key_ricketydoor
+  m_Name: item_key_chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,18 +154,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77cde2ffed4b2b140b40bab7fa75fc46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayName: Key
+  displayName: Chest Key
   isInteractable: 1
   displayNameWhenUnactivatable: 0
+  keywords: []
+  emitter: {fileID: 0}
   data:
     keywords: []
     owningEntity: {fileID: 0}
     owningFaction: {fileID: 0}
     size: 0
-    icon: {fileID: 0}
+    icon: {fileID: 21300000, guid: aa8682b27e635d24fa896c9897ed1c8a, type: 3}
     value: 0
-    prefabName: item_key_ricketydoor
-    displayName: Key
-    keyID: RicketyDoor
+    prefabName: item_key_chest
+    displayName: Chest Key
+    keyID: Chest
     isKey: 1
+  pickupSound: {fileID: 0}
+  collideSound: {fileID: 0}
   keyID: RicketyDoor

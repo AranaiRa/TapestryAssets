@@ -77,7 +77,10 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
         bool
             hasParticleContainer = false,
             hasLight = false,
-            hasEmissiveStatics = false;
+            hasEmissiveStatics = false,
+            hasParticlesIn = false,
+            hasParticlesActive = false,
+            hasParticlesOut = false;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -89,15 +92,24 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
                 {
                     if (particleSystemContainer.transform.GetChild(j).name == "T_PS_In")
                     {
+                        hasParticlesIn = true;
                         psys_in = particleSystemContainer.transform.GetChild(j).GetComponent<ParticleSystem>();
+                        if(psys_in == null)
+                            psys_in = particleSystemContainer.transform.GetChild(j).gameObject.AddComponent<ParticleSystem>();
                     }
                     if (particleSystemContainer.transform.GetChild(j).name == "T_PS_Active")
                     {
+                        hasParticlesActive = true;
                         psys_active = particleSystemContainer.transform.GetChild(j).GetComponent<ParticleSystem>();
+                        if (psys_active == null)
+                            psys_active = particleSystemContainer.transform.GetChild(j).gameObject.AddComponent<ParticleSystem>();
                     }
                     if (particleSystemContainer.transform.GetChild(j).name == "T_PS_Out")
                     {
+                        hasParticlesOut = true;
                         psys_out = particleSystemContainer.transform.GetChild(j).GetComponent<ParticleSystem>();
+                        if (psys_out == null)
+                            psys_out = particleSystemContainer.transform.GetChild(j).gameObject.AddComponent<ParticleSystem>();
                     }
                 }
             }
@@ -121,19 +133,25 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             particleSystemContainer.transform.SetParent(transform);
             particleSystemContainer.transform.localPosition = Vector3.zero;
             particleSystemContainer.name = "T_Particles";
-
+        }
+        if (!hasParticlesIn)
+        {
             psys_in = new GameObject().AddComponent<ParticleSystem>();
             psys_in.transform.SetParent(particleSystemContainer.transform);
             psys_in.transform.localPosition = Vector3.zero;
             psys_in.name = "T_PS_In";
             psys_in.Stop();
-
+        }
+        if (!hasParticlesActive)
+        {
             psys_active = new GameObject().AddComponent<ParticleSystem>();
             psys_active.transform.SetParent(particleSystemContainer.transform);
             psys_active.transform.localPosition = Vector3.zero;
             psys_active.name = "T_PS_Active";
             psys_in.Stop();
-
+        }
+        if (!hasParticlesOut)
+        {
             psys_out = new GameObject().AddComponent<ParticleSystem>();
             psys_out.transform.SetParent(particleSystemContainer.transform);
             psys_out.transform.localPosition = Vector3.zero;

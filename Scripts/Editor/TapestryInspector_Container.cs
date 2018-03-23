@@ -15,8 +15,6 @@ public class TapestryInspector_Container : TapestryInspector_Prop {
 
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
-            changeTimeTooltip = "The amount of time, in seconds, it takes for the door to open or close.",
-            changeCurveTooltip = "Animation controls for how the door eases between states.",
             interactableTooltip = "Can the player interact with this door?",
             displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
 
@@ -238,13 +236,13 @@ public class TapestryInspector_Container : TapestryInspector_Prop {
             }
         }
     }
-
-
-
+    
     protected void DrawSubTabAnimated(Tapestry_Container c)
     {
         string
             animatedTooltip = "Does this container have an open state and closed state?",
+            changeTimeTooltip = "The amount of time, in seconds, it takes for the door to open or close.",
+            changeCurveTooltip = "Animation controls for how the door eases between states.",
             openTransformTooltip = "The transform data for the container's open state. Don't worry about the actual numbers too much, but if they're the same as the closed values, you need to bake your open and closed states.",
             closedTransformTooltip = "The transform data for the container's closed state. Don't worry about the actual numbers too much, but if they're the same as the closed values, you need to bake your open and closed states.",
             openSoundTooltip = "The sound to play when the container opens, if any.",
@@ -258,6 +256,18 @@ public class TapestryInspector_Container : TapestryInspector_Prop {
         GUILayout.EndHorizontal();
         if (c.isAnimated)
         {
+            GUILayout.BeginVertical("box");
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Change Time", changeTimeTooltip));
+            c.openTime = EditorGUILayout.DelayedFloatField(c.openTime, GUILayout.Width(30));
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(new GUIContent("Change Curve", changeCurveTooltip));
+            c.curve = EditorGUILayout.CurveField(c.curve, GUILayout.Width(150));
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+
             GUILayout.BeginVertical("box");
 
             GUILayout.BeginHorizontal();
