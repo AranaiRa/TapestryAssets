@@ -50,7 +50,5 @@ public class Tapestry_Level : MonoBehaviour {
         }
         sun.color = Tapestry_WorldClock.EvaluateColor();
         RenderSettings.ambientSkyColor = Tapestry_WorldClock.EvaluateAmbientColor();
-        //RenderSettings.ambientIntensity = 1.0f;
-        //sky.SetFloat("sun size",Tapestry_WorldClock.EvaluateSunSize());
     }
 }

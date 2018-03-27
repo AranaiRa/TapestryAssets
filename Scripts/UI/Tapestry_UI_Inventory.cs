@@ -156,11 +156,12 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
 
     public void Open(Tapestry_Inventory inv, bool lootable = false)
     {
+        Debug.Log("Running Open method");
         Tapestry_WorldClock.isPaused = true;
         GetComponent<Image>().color = new Color(1, 1, 1, 1);
         itemNameText.color = new Color(1, 1, 1, 1);
-        itemNameText.text = player.inventory.items[selected].item.displayName;
-
+        itemNameText.text = inv.items[selected].item.displayName;
+        Debug.Log(inv.items.Count + " items");
         int total = inv.items.Count;
         currentRot = 0;
         selected = 0;

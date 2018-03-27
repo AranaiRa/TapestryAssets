@@ -16,6 +16,10 @@ public class Tapestry_Entity : Tapestry_Actor {
         isLifting = false;
     public GameObject
         attachPoint;
+    public int 
+        carrySmall = 8,
+        carryMedium = 3,
+        carryLarge = 1;
 
     protected float speed;
 

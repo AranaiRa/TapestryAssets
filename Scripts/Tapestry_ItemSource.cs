@@ -22,6 +22,8 @@ public class Tapestry_ItemSource : Tapestry_Activatable {
 
     protected override void Reset()
     {
+        displayName = "Item Source";
+
         bool
             hasHarvestable = false,
             hasUnharvestable = false;

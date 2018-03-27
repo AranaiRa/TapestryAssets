@@ -4,9 +4,12 @@ using UnityEngine;
 
 public abstract class Tapestry_Activatable : MonoBehaviour {
 
-    public string displayName = "";
+    public string 
+        displayName = "";
     public bool 
         isInteractable = true,
+        isPushable = false,
+        isLiftable = false,
         displayNameWhenUnactivatable = false;
     public List<string> keywords;
     public AudioSource
@@ -43,6 +46,16 @@ public abstract class Tapestry_Activatable : MonoBehaviour {
     }
 
     public virtual void Activate(Tapestry_Entity activatingEntity)
+    {
+
+    }
+
+    public virtual void Push(Tapestry_Entity activatingEntity)
+    {
+
+    }
+
+    public virtual void Lift(Tapestry_Entity activatingEntity)
     {
 
     }

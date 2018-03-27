@@ -42,7 +42,7 @@ public class TapestryInspector_InspectorHelper : Editor
         GUILayout.FlexibleSpace();
         if(GUILayout.Button("OK", GUILayout.Width(100)))
         {
-            DestroyImmediate(this);
+            DestroyImmediate(h);
         }
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();

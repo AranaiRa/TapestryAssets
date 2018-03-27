@@ -45,10 +45,11 @@ public class Tapestry_Container : Tapestry_Prop {
         jiggleTime = 0.4f;
 
     // Use this for initialization
-    void Start () {
-        if(inventory == null)
+    void Start ()
+    {
+        if (inventory == null)
             inventory = new Tapestry_Inventory(this.transform);
-        if(security == null)
+        if (security == null)
             security = new Tapestry_Lock(false, 0, "");
         if(curve == null)
             curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
@@ -56,7 +57,6 @@ public class Tapestry_Container : Tapestry_Prop {
 
     protected override void Reset()
     {
-        Debug.Log("Reset");
         displayName = "Container";
         inventory = new Tapestry_Inventory(this.transform);
         security = new Tapestry_Lock(false, 0, "");

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Tapestry_ItemStack {
 
     public Tapestry_ItemData item;

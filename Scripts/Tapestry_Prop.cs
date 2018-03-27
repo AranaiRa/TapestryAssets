@@ -10,7 +10,7 @@ public class Tapestry_Prop : Tapestry_Actor {
         destroyed,
         attachPoints;
     public bool 
-        isPushable, isLiftable, isDestructable, 
+        isDestructable, 
         gridAligned, allowLateral, allowPull,
         pushForcesThirdPerson, liftForcesThirdPerson;
     public int
@@ -40,7 +40,8 @@ public class Tapestry_Prop : Tapestry_Actor {
         pushDir;
 
 	void Start () {
-		
+        isInteractable = false;
+        displayNameWhenUnactivatable = true;
 	}
 	
 	void FixedUpdate () {
@@ -78,6 +79,9 @@ public class Tapestry_Prop : Tapestry_Actor {
 
     protected override void Reset()
     {
+        displayName = "Unnamed Prop";
+        isInteractable = false;
+        displayNameWhenUnactivatable = true;
         pushSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
         liftSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
         keywords = new List<string>();
@@ -382,14 +386,19 @@ public class Tapestry_Prop : Tapestry_Actor {
 
     public override void Activate(Tapestry_Entity activatingEntity)
     {
+        //base.Activate(activatingEntity);
+    }
+
+    public override void Push(Tapestry_Entity activatingEntity)
+    {
         if (isPushable)
         {
-            if(activatingEntity.isPushing && !isPushing)
+            if (activatingEntity.isPushing && !isPushing)
                 UnbindEntity(activatingEntity);
             else
                 BindEntityForPush(activatingEntity);
         }
-        //base.Activate(activatingEntity);
+        base.Lift(activatingEntity);
     }
 
     public void BindEntityForPush(Tapestry_Entity e)

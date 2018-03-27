@@ -65,6 +65,8 @@ public class Tapestry_Switch : Tapestry_Activatable {
             pivot.name = "T_Pivot";
             pivot.transform.localPosition = Vector3.zero;
         }
+
+        base.Reset();
     }
 
     // Use this for initialization
@@ -143,92 +145,98 @@ public class Tapestry_Switch : Tapestry_Activatable {
     public void EvaluateOnState()
     {
         hasFired = true;
-        Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
         isOn = true;
-        if (pingPong)
+        if (target != null)
         {
-            if (comp.GetType() == typeof(Tapestry_Door))
+            Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
+            if (pingPong)
             {
-                Tapestry_Door d = target.GetComponent<Tapestry_Door>();
-                if (data.pp_swapOpenState)
+                if (comp.GetType() == typeof(Tapestry_Door))
                 {
-                    if (d.GetIsOpen()) d.Close();
-                    else d.Open();
+                    Tapestry_Door d = target.GetComponent<Tapestry_Door>();
+                    if (data.pp_swapOpenState)
+                    {
+                        if (d.GetIsOpen()) d.Close();
+                        else d.Open();
+                    }
+                    if (data.pp_swapLockedState) d.security.isLocked = !d.security.isLocked;
+                    if (data.pp_swapBypassableState) d.security.canBeBypassed = !d.security.canBeBypassed;
+                    if (data.pp_swapInteractivityState) d.isInteractable = !d.isInteractable;
                 }
-                if (data.pp_swapLockedState) d.security.isLocked = !d.security.isLocked;
-                if (data.pp_swapBypassableState) d.security.canBeBypassed = !d.security.canBeBypassed;
-                if (data.pp_swapInteractivityState) d.isInteractable = !d.isInteractable;
-            }
-            if (comp.GetType() == typeof(Tapestry_AnimatedLight)) 
-            {
-                Tapestry_AnimatedLight al = target.GetComponent<Tapestry_AnimatedLight>();
-                if (data.pp_swapOpenState)
+                if (comp.GetType() == typeof(Tapestry_AnimatedLight))
                 {
-                    if (al.GetIsOn()) al.TurnOff();
-                    else al.TurnOn();
+                    Tapestry_AnimatedLight al = target.GetComponent<Tapestry_AnimatedLight>();
+                    if (data.pp_swapOpenState)
+                    {
+                        if (al.GetIsOn()) al.TurnOff();
+                        else al.TurnOn();
+                    }
+                    if (data.pp_swapInteractivityState) al.isInteractable = !al.isInteractable;
                 }
-                if (data.pp_swapInteractivityState) al.isInteractable = !al.isInteractable;
+                if (comp.GetType() == typeof(Tapestry_ItemSource))
+                {
+                    Tapestry_ItemSource i = target.GetComponent<Tapestry_ItemSource>();
+                    if (data.pp_swapInteractivityState) i.isInteractable = !i.isInteractable;
+                    if (data.pp_setSourceHarvestable) i.SetHarvestability(true);
+                }
             }
-            if (comp.GetType() == typeof(Tapestry_ItemSource))
+            else
             {
-                Tapestry_ItemSource i = target.GetComponent<Tapestry_ItemSource>();
-                if (data.pp_swapInteractivityState) i.isInteractable = !i.isInteractable;
-                if (data.pp_setSourceHarvestable) i.SetHarvestability(true);
+                if (comp.GetType() == typeof(Tapestry_Door))
+                {
+                    Tapestry_Door d = target.GetComponent<Tapestry_Door>();
+                    if (data.on_setOpen) d.Open();
+                    if (data.on_setClosed) d.Close();
+                    if (data.on_setLocked) d.security.isLocked = true;
+                    if (data.on_setUnlocked) d.security.isLocked = false;
+                    if (data.on_setBypassable) d.security.canBeBypassed = data.on_setBypassable;
+                    if (data.on_setInteractable) d.isInteractable = data.on_setInteractable;
+                }
+                if (comp.GetType() == typeof(Tapestry_AnimatedLight))
+                {
+                    Tapestry_AnimatedLight al = target.GetComponent<Tapestry_AnimatedLight>();
+                    if (data.on_setOpen) al.TurnOn();
+                    if (data.on_setClosed) al.TurnOff();
+                    if (data.on_setInteractable) al.isInteractable = data.on_setInteractable;
+                }
+                if (comp.GetType() == typeof(Tapestry_ItemSource))
+                {
+                    Tapestry_ItemSource i = target.GetComponent<Tapestry_ItemSource>();
+                    if (data.on_setInteractable) i.isInteractable = data.on_setInteractable;
+                }
             }
         }
         else
-        {
-            if (comp.GetType() == typeof(Tapestry_Door))
-            {
-                Tapestry_Door d = target.GetComponent<Tapestry_Door>();
-                if (data.on_setOpen) d.Open();
-                if (data.on_setClosed) d.Close();
-                if (data.on_setLocked) d.security.isLocked = true;
-                if (data.on_setUnlocked) d.security.isLocked = false;
-                if (data.on_setBypassable) d.security.canBeBypassed = data.on_setBypassable;
-                if (data.on_setInteractable) d.isInteractable = data.on_setInteractable;
-            }
-            if (comp.GetType() == typeof(Tapestry_AnimatedLight))
-            {
-                Tapestry_AnimatedLight al = target.GetComponent<Tapestry_AnimatedLight>();
-                if (data.on_setOpen) al.TurnOn();
-                if (data.on_setClosed) al.TurnOff();
-                if (data.on_setInteractable) al.isInteractable = data.on_setInteractable;
-            }
-            if (comp.GetType() == typeof(Tapestry_ItemSource))
-            {
-                Tapestry_ItemSource i = target.GetComponent<Tapestry_ItemSource>();
-                if (data.on_setInteractable) i.isInteractable = data.on_setInteractable;
-            }
-        }
+            Debug.Log("TAPESTRY WARNING: Switch does not have a target object. Did you forget to set one?");
     }
 
     public void EvaluateOffState()
     {
-        Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
         hasFired = true;
         isOn = false;
-        if (!pingPong)
+        if (target != null)
         {
-
+            Tapestry_Activatable comp = target.GetComponent<Tapestry_Activatable>();
+            if (comp.GetType() == typeof(Tapestry_Door))
+            {
+                Tapestry_Door d = target.GetComponent<Tapestry_Door>();
+                if (data.off_setOpen) d.Open();
+                if (data.off_setClosed) d.Close();
+                if (data.off_setLocked) d.security.isLocked = true;
+                if (data.off_setUnlocked) d.security.isLocked = false;
+                if (data.off_setBypassable) d.security.canBeBypassed = data.off_setBypassable;
+                if (data.off_setInteractable) d.isInteractable = data.off_setInteractable;
+            }
+            if (comp.GetType() == typeof(Tapestry_AnimatedLight))
+            {
+                Tapestry_AnimatedLight al = target.GetComponent<Tapestry_AnimatedLight>();
+                if (data.off_setOpen) al.TurnOn();
+                if (data.off_setClosed) al.TurnOff();
+                if (data.off_setInteractable) al.isInteractable = data.on_setInteractable;
+            }
         }
-        if (comp.GetType() == typeof(Tapestry_Door))
-        {
-            Tapestry_Door d = target.GetComponent<Tapestry_Door>();
-            if (data.off_setOpen) d.Open();
-            if (data.off_setClosed) d.Close();
-            if (data.off_setLocked) d.security.isLocked = true;
-            if (data.off_setUnlocked) d.security.isLocked = false;
-            if (data.off_setBypassable) d.security.canBeBypassed = data.off_setBypassable;
-            if (data.off_setInteractable) d.isInteractable = data.off_setInteractable;
-        }
-        if (comp.GetType() == typeof(Tapestry_AnimatedLight))
-        {
-            Tapestry_AnimatedLight al = target.GetComponent<Tapestry_AnimatedLight>();
-            if (data.off_setOpen) al.TurnOn();
-            if (data.off_setClosed) al.TurnOff();
-            if (data.off_setInteractable) al.isInteractable = data.on_setInteractable;
-        }
+        else
+            Debug.Log("TAPESTRY WARNING: Switch does not have a target object. Did you forget to set one?");
     }
 
     public void SwitchOn(bool instant = false)

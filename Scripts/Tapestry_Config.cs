@@ -32,7 +32,8 @@ public static class Tapestry_Config {
         KeyboardInput_Jump          = KeyCode.Space,
         KeyboardInput_CamTypeSwitch = KeyCode.Tab,
         KeyboardInput_Crouch        = KeyCode.LeftControl,
-        KeyboardInput_PushLift      = KeyCode.R,
+        KeyboardInput_Push          = KeyCode.R,
+        KeyboardInput_Lift          = KeyCode.T,
         KeyboardInput_RunWalkToggle = KeyCode.Z,
         KeyboardInput_Inventory     = KeyCode.I,
         KeyboardInput_InventoryDrop = KeyCode.Q;

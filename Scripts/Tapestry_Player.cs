@@ -6,7 +6,9 @@ public class Tapestry_Player : Tapestry_Entity {
 
     private bool
         runToggleLastFrame,
-        activateLastFrame;
+        activateLastFrame,
+        pushLastFrame,
+        liftLastFrame;
     public bool allowCameraMovement = true;
     public Tapestry_Activatable objectInSights;
     public Tapestry_UI_Inventory inventoryUI;
@@ -79,6 +81,8 @@ public class Tapestry_Player : Tapestry_Entity {
     private void HandleActivation()
     {
         bool activate = Input.GetKey(Tapestry_Config.KeyboardInput_Activate);
+        bool push = Input.GetKey(Tapestry_Config.KeyboardInput_Push);
+        bool lift = Input.GetKey(Tapestry_Config.KeyboardInput_Lift);
         objectInSights = null;
 
         RaycastHit hit;
@@ -89,7 +93,7 @@ public class Tapestry_Player : Tapestry_Entity {
             Tapestry_Config.EntityActivationDistance,
             ~LayerMask.GetMask("Ignore Raycast")
             );
-        if(rayHit)
+        if (rayHit)
         {
             objectInSights = hit.transform.gameObject.GetComponentInParent<Tapestry_Activatable>();
 
@@ -97,9 +101,9 @@ public class Tapestry_Player : Tapestry_Entity {
             {
                 objectInSights.Hover();
 
-                if(activateLastFrame && !activate && objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
+                if (activateLastFrame && !activate && objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
                 {
-                    if ((objectInSights.GetType() == typeof(Tapestry_Item)) || 
+                    if ((objectInSights.GetType() == typeof(Tapestry_Item)) ||
                         (objectInSights.GetType() == typeof(Tapestry_ItemKey)))
                     {
                         Tapestry_Item i = (Tapestry_Item)objectInSights;
@@ -112,7 +116,7 @@ public class Tapestry_Player : Tapestry_Entity {
                     else if (objectInSights.GetType() == typeof(Tapestry_Door))
                     {
                         Tapestry_Door d = (Tapestry_Door)objectInSights;
-                        if(d.security.isLocked)
+                        if (d.security.isLocked)
                         {
                             if (inventory == null)
                                 inventory = new Tapestry_Inventory(this.transform);
@@ -122,7 +126,7 @@ public class Tapestry_Player : Tapestry_Entity {
                                 if (inventory.ContainsKeyID(d.security.keyID))
                                 {
                                     d.security.isLocked = false;
-                                    if(d.consumeKeyOnUnlock)
+                                    if (d.consumeKeyOnUnlock)
                                     {
                                         inventory.RemoveKeyWithID(d.security.keyID);
                                     }
@@ -136,10 +140,8 @@ public class Tapestry_Player : Tapestry_Entity {
                     else if (objectInSights.GetType() == typeof(Tapestry_Container))
                     {
                         Tapestry_Container c = (Tapestry_Container)objectInSights;
-                        if(inventoryUI == null)
+                        if (inventoryUI == null)
                             inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
-                        if(c.inventory == null)
-                            Debug.Log("Oops, no inventory.");
                         if (c.inventory.items.Count != 0)
                         {
                             Debug.Log(c.inventory.items.Count + " in target container.");
@@ -151,11 +153,21 @@ public class Tapestry_Player : Tapestry_Entity {
                     else
                         objectInSights.Activate(this);
                 }
+                if (pushLastFrame && !push && objectInSights.GetComponent<Tapestry_Activatable>().isPushable)
+                {
+                    objectInSights.Push(this);
+                }
+                if (liftLastFrame && !lift && objectInSights.GetComponent<Tapestry_Activatable>().isLiftable)
+                {
+                    objectInSights.Lift(this);
+                }
             }
         }
 
         //End of frame
         activateLastFrame = activate;
+        pushLastFrame = push;
+        liftLastFrame = lift;
     }
 
     private void HandleMouselook()
@@ -186,47 +198,50 @@ public class Tapestry_Player : Tapestry_Entity {
 
     private void HandleMovement()
     {
-        Rigidbody rb = GetComponent<Rigidbody>();
-
-        bool runToggleThisFrame = Input.GetKey(Tapestry_Config.KeyboardInput_RunWalkToggle);
-        if (!runToggleThisFrame && runToggleLastFrame)
+        if (!Tapestry_WorldClock.isPaused)
         {
-            isRunning = !isRunning;
+            Rigidbody rb = GetComponent<Rigidbody>();
+
+            bool runToggleThisFrame = Input.GetKey(Tapestry_Config.KeyboardInput_RunWalkToggle);
+            if (!runToggleThisFrame && runToggleLastFrame)
+            {
+                isRunning = !isRunning;
+            }
+            bool fwd =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Fwd) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Fwd);
+            bool bck =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Back) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Back);
+            bool lft =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Left) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Left);
+            bool rgt =
+                Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_Right);
+
+            Vector2 direction = new Vector2();
+
+            if (fwd && !bck)
+                direction += GetFwd2D();
+            else if (bck && !fwd)
+                direction -= GetFwd2D();
+
+            if (rgt && !lft)
+                direction += GetRight2D();
+            else if (lft && !rgt)
+                direction -= GetRight2D();
+
+            if (isRunning)
+                direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed * personalTimeFactor;
+            else
+                direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed * personalTimeFactor;
+
+            rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
+
+            //end of frame
+            runToggleLastFrame = runToggleThisFrame;
         }
-        bool fwd =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Fwd) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Fwd);
-        bool bck =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Back) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Back);
-        bool lft =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Left) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Left);
-        bool rgt =
-            Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
-            Input.GetKey(Tapestry_Config.ControllerInput_Right);
-
-        Vector2 direction = new Vector2();
-
-        if (fwd && !bck)
-            direction += GetFwd2D();
-        else if (bck && !fwd)
-            direction -= GetFwd2D();
-
-        if (rgt && !lft)
-            direction += GetRight2D();
-        else if (lft && !rgt)
-            direction -= GetRight2D();
-
-        if (isRunning)
-            direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed * personalTimeFactor;
-        else
-            direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed * personalTimeFactor;
-
-        rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
-
-        //end of frame
-        runToggleLastFrame = runToggleThisFrame;
     }
 
     public Tapestry_Entity ClonePlayerAsEntity()

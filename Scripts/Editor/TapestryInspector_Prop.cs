@@ -17,8 +17,7 @@ public class TapestryInspector_Prop : Editor
 
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
-            interactableTooltip = "Can the player take this object to their inventory?",
-            displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?";
+            displayNameTooltip = "Should the object show its display name when the player's cursor is hovering over the object?";
 
         GUILayout.BeginVertical("box");
 
@@ -29,15 +28,10 @@ public class TapestryInspector_Prop : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        p.isInteractable = EditorGUILayout.Toggle(p.isInteractable, GUILayout.Width(12));
-        GUILayout.Label(new GUIContent("Interactable?", interactableTooltip));
-        GUILayout.Space(20);
-        if (!p.isInteractable)
-        {
-            p.displayNameWhenUnactivatable = EditorGUILayout.Toggle(p.displayNameWhenUnactivatable, GUILayout.Width(12));
-            GUILayout.Label(new GUIContent("Display Name Anyway?", displayNameTooltip));
-            GUILayout.FlexibleSpace();
-        }
+        p.displayNameWhenUnactivatable = EditorGUILayout.Toggle(p.displayNameWhenUnactivatable, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Display Name on Look?", displayNameTooltip));
+        GUILayout.FlexibleSpace();
+
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();

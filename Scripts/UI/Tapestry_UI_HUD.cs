@@ -9,6 +9,13 @@ public class Tapestry_UI_HUD : MonoBehaviour {
     public Text targetName;
     public Text debugelement_time;
     public Image InventoryPanel;
+    public Tapestry_UI_Fader
+        activateIndicator, pushIndicator, liftIndicator;
+
+    private void Start()
+    {
+        
+    }
 
     private void Reset()
     {
@@ -17,18 +24,40 @@ public class Tapestry_UI_HUD : MonoBehaviour {
 
     private void Update()
     {
-        if(player.objectInSights != null)
+        if (player.objectInSights != null)
         {
-            if (player.objectInSights.GetComponent<Tapestry_Activatable>().isInteractable ||
-                player.objectInSights.GetComponent<Tapestry_Activatable>().displayNameWhenUnactivatable)
+            if (player.objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
             {
                 targetName.text = player.objectInSights.displayName;
                 targetName.gameObject.SetActive(true);
+                if(activateIndicator.readyToFadeIn)
+                    activateIndicator.FadeIn();
+            }
+            else if (player.objectInSights.GetComponent<Tapestry_Activatable>().displayNameWhenUnactivatable)
+            {
+                targetName.text = player.objectInSights.displayName;
+                targetName.gameObject.SetActive(true);
+            }
+            if (player.objectInSights.GetComponent<Tapestry_Activatable>().isPushable)
+            {
+                if(pushIndicator.readyToFadeIn)
+                    pushIndicator.FadeIn();
+            }
+            if (player.objectInSights.GetComponent<Tapestry_Activatable>().isLiftable)
+            {
+                if(liftIndicator.readyToFadeIn)
+                    liftIndicator.FadeIn();
             }
         }
         else
         {
             targetName.gameObject.SetActive(false);
+            if(activateIndicator.readyToFadeOut)
+                activateIndicator.FadeOut();
+            if(pushIndicator.readyToFadeOut)
+                pushIndicator.FadeOut();
+            if(liftIndicator.readyToFadeOut)
+                liftIndicator.FadeOut();
         }
 
         string h = Tapestry_WorldClock.worldTime.Hour.ToString();
