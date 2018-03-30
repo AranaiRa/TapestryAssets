@@ -36,7 +36,8 @@ public static class Tapestry_Config {
         KeyboardInput_Lift          = KeyCode.T,
         KeyboardInput_RunWalkToggle = KeyCode.Z,
         KeyboardInput_Inventory     = KeyCode.I,
-        KeyboardInput_InventoryDrop = KeyCode.Q;
+        KeyboardInput_InventoryDrop = KeyCode.Q,
+        KeyboardInput_Cancel        = KeyCode.Escape;
     //TODO: Figure out actual controller input
     public static KeyCode
         ControllerInput_Fwd           = KeyCode.Joystick1Button0,

@@ -36,11 +36,16 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     protected override void Reset()
     {
-        inventory = new Tapestry_Inventory(this.transform);
-        damageProfile = new Tapestry_DamageProfile();
-        attributeProfile = new Tapestry_AttributeProfile();
-        skillProfile = new Tapestry_SkillProfile();
-        keywords = new List<string>();
+        if (inventory == null)
+            inventory = new Tapestry_Inventory(this.transform);
+        if(damageProfile == null)
+            damageProfile = new Tapestry_DamageProfile();
+        if(attributeProfile == null)
+            attributeProfile = new Tapestry_AttributeProfile();
+        if(skillProfile == null)
+            skillProfile = new Tapestry_SkillProfile();
+        if(keywords == null)
+            keywords = new List<string>();
 
         for (int i = 0; i < transform.childCount; i++)
         {

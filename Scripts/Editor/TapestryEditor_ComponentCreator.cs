@@ -538,6 +538,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
             Tapestry_Container c = main.AddComponent<Tapestry_Container>();
 
+            c.isInteractable = true;
             c.isAnimated = true;
             c.BakeClosedState();
             pivot.transform.localRotation = Quaternion.Euler(-10, 0, 0);

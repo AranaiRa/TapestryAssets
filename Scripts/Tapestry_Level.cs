@@ -6,6 +6,7 @@ public class Tapestry_Level : MonoBehaviour {
     public Light sun;
     public Material sky;
     public Color tempColor;
+    public Tapestry_UI_Inventory inventoryUI;
 
     private void Reset()
     {

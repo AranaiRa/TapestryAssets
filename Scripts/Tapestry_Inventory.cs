@@ -16,20 +16,26 @@ public class Tapestry_Inventory {
 
     public void AddItem(Tapestry_Item item, int quantity)
     {
+        AddItem(item.data, quantity);
+    }
+
+    public void AddItem(Tapestry_ItemData item, int quantity)
+    {
         if (item != null)
         {
             bool added = false;
-            for(int i=0;i<items.Count;i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                if(items[i].item.Compare(item.data))
+                if (items[i].item.Compare(item))
                 {
                     items[i].quantity += quantity;
                     added = true;
                     break;
                 }
             }
-            if(!added)
-                items.Add(new Tapestry_ItemStack(item.data, quantity));
+            if (!added)
+                items.Add(new Tapestry_ItemStack(item, quantity));
+            items.Sort();
         }
     }
 
@@ -106,6 +112,7 @@ public class Tapestry_Inventory {
                 }
             }
         }
+        items.Sort();
     }
 
     public void RemoveKeyWithID(string id, int amount = 1)

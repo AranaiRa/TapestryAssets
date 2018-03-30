@@ -24,7 +24,17 @@ public class Tapestry_UI_HUD : MonoBehaviour {
 
     private void Update()
     {
-        if (player.objectInSights != null)
+        if(Tapestry_WorldClock.isPaused)
+        {
+            targetName.gameObject.SetActive(false);
+            if (!activateIndicator.readyToFadeIn)
+                activateIndicator.FadeOut(true);
+            if (!pushIndicator.readyToFadeIn)
+                pushIndicator.FadeOut(true);
+            if (!liftIndicator.readyToFadeIn)
+                liftIndicator.FadeOut(true);
+        }
+        else if (player.objectInSights != null)
         {
             if (player.objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
             {

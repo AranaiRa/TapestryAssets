@@ -8,26 +8,32 @@ public class Tapestry_Player : Tapestry_Entity {
         runToggleLastFrame,
         activateLastFrame,
         pushLastFrame,
-        liftLastFrame;
+        liftLastFrame,
+        openLastFrame;
     public bool allowCameraMovement = true;
     public Tapestry_Activatable objectInSights;
     public Tapestry_UI_Inventory inventoryUI;
 
     protected override void Reset()
     {
-        inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
+        inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
         base.Reset();
     }
 
     // Use this for initialization
     void Start ()
     {
-        inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
-        inventory = new Tapestry_Inventory(this.transform);
-        damageProfile = new Tapestry_DamageProfile();
-        attributeProfile = new Tapestry_AttributeProfile();
-        skillProfile = new Tapestry_SkillProfile();
-        keywords = new List<string>();
+        inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
+        if (inventory == null)
+            inventory = new Tapestry_Inventory(this.transform);
+        if(damageProfile == null)
+            damageProfile = new Tapestry_DamageProfile();
+        if(attributeProfile == null)
+            attributeProfile = new Tapestry_AttributeProfile();
+        if(skillProfile == null)
+            skillProfile = new Tapestry_SkillProfile();
+        if(keywords == null)
+            keywords = new List<string>();
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -55,6 +61,7 @@ public class Tapestry_Player : Tapestry_Entity {
             HandleMouselook();
             HandleActivation();
         }
+        HandleInventory();
     }
 
     private void FixedUpdate()
@@ -142,13 +149,9 @@ public class Tapestry_Player : Tapestry_Entity {
                         Tapestry_Container c = (Tapestry_Container)objectInSights;
                         if (inventoryUI == null)
                             inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
-                        if (c.inventory.items.Count != 0)
-                        {
-                            Debug.Log(c.inventory.items.Count + " in target container.");
-                            inventoryUI.Open(c.inventory, true);
-                        }
-                        else
-                            Debug.Log("No items in target container.");
+                        
+                        Debug.Log(c.inventory.items.Count + " in target container.");
+                        inventoryUI.Open(inventory, c.inventory, "Inventory", c.displayName);
                     }
                     else
                         objectInSights.Activate(this);
@@ -242,6 +245,30 @@ public class Tapestry_Player : Tapestry_Entity {
             //end of frame
             runToggleLastFrame = runToggleThisFrame;
         }
+    }
+
+    private void HandleInventory()
+    {
+        if (inventoryUI == null)
+            inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
+
+        bool open = Input.GetKey(Tapestry_Config.KeyboardInput_Inventory);
+
+        if (openLastFrame && !open)
+        {
+            if (inventoryUI.IsOpen)
+                inventoryUI.Close();
+            else
+                inventoryUI.Open(inventory);
+        }
+        if(Input.GetKey(Tapestry_Config.KeyboardInput_Cancel))
+        {
+            if (inventoryUI.IsOpen)
+                inventoryUI.Close();
+        }
+
+        //End of frame
+        openLastFrame = open;
     }
 
     public Tapestry_Entity ClonePlayerAsEntity()

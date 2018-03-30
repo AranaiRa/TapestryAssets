@@ -1,201 +1,129 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.PostProcessing;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Tapestry_UI_Inventory : MonoBehaviour {
-
-    public Tapestry_Player player;
-    public GameObject itemDisplayPrefab;
-    public Text itemNameText;
-    public static float itemRadius = 200.0f;
-    public float
-        delayTime = 0.07f;
-    public bool
-        isWindowOpen = false;
-    public List<Tapestry_UI_Inventory_ItemDisplay> itemDisplays = new List<Tapestry_UI_Inventory_ItemDisplay>();
-
-    private float
-        timeOpenClose,
-        timeRotationInputDelay,
-        timeRotation,
-        currentRot = 0,
-        targetRot;
-    private int
-        selected = 0;
-    private bool
-        isRotating = false,
-        blockDrops = false;
     
-	void Start ()
+    public Tapestry_UI_InventoryDisplayTextElement displayPrefab;
+    public Tapestry_UI_InventoryDisplay 
+        left,
+        right;
+    private bool 
+        _isOpen,
+        activateLastFrame;
+    private Tapestry_Inventory
+        leftInv,
+        rightInv;
+    private string
+        leftName,
+        rightName;
+
+    public bool IsOpen
     {
-        itemNameText.text = "";
-    }
-	
-	void Update () {
-        if (isWindowOpen)
+        get
         {
-            HandleDisplayRotation();
-            HandleUseDrop();
+            return _isOpen;
         }
-        HandleOpenClose();
+    }
+
+    private void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+        HandleInteract();
 	}
 
-    private void HandleDisplayRotation()
+    public void HandleInteract()
     {
-        bool rotLeft =
-            Input.GetKeyDown(Tapestry_Config.KeyboardInput_Left) ||
-            (Input.GetAxis("Mouse ScrollWheel") > 0) &&
-            timeRotationInputDelay == 0;
-        bool rotRight =
-            Input.GetKeyDown(Tapestry_Config.KeyboardInput_Right) ||
-            (Input.GetAxis("Mouse ScrollWheel") < 0) &&
-            timeRotationInputDelay == 0;
+        bool activate = 
+            Input.GetKey(Tapestry_Config.KeyboardInput_Activate) ||
+            Input.GetMouseButton(0);
 
-        if (rotLeft)
+        if (activateLastFrame && !activate)
         {
-            timeRotationInputDelay = delayTime;
-            isRotating = true;
-
-            int prev = selected;
-
-            selected--;
-            if (selected < 0)
-                selected = itemDisplays.Count - 1;
-
-            itemDisplays[prev].FadeOut();
-            itemDisplays[selected].FadeIn();
-
-            targetRot = currentRot + ((Mathf.PI * 2) / itemDisplays.Count);
-            timeRotation = 0;
-        }
-        else if (rotRight)
-        {
-            timeRotationInputDelay = delayTime;
-            isRotating = true;
-
-            int prev = selected;
-
-            selected++;
-            if (selected >= itemDisplays.Count)
-                selected = 0;
-
-            itemDisplays[prev].FadeOut();
-            itemDisplays[selected].FadeIn();
-
-            targetRot = currentRot - ((Mathf.PI * 2) / itemDisplays.Count);
-            timeRotation = 0;
-        }
-        else if (timeRotationInputDelay > 0)
-        {
-            timeRotationInputDelay -= Time.deltaTime;
-            if (timeRotationInputDelay < 0) timeRotationInputDelay = 0;
-        }
-
-        float theta;
-        if (isRotating)
-        {
-            timeRotation += Time.deltaTime;
-            if (timeRotation > delayTime)
+            Tapestry_UI_InventoryDisplayTextElement active = null;
+            sbyte side = 0;
+            foreach(Tapestry_UI_InventoryDisplayTextElement e in left.elements)
             {
-                timeRotation = delayTime;
-                currentRot = targetRot;
-                theta = targetRot;
-                isRotating = false;
-                itemNameText.text = player.inventory.items[selected].item.displayName;
+                if(e.Active)
+                {
+                    active = e;
+                    side = -1;
+                    break;
+                }
             }
-            theta = Mathf.Lerp(currentRot, targetRot, timeRotation / delayTime);
+            if(side != -1)
+            {
+                foreach (Tapestry_UI_InventoryDisplayTextElement e in right.elements)
+                {
+                    if (e.Active)
+                    {
+                        active = e;
+                        side = 1;
+                        break;
+                    }
+                }
+            }
+            if(active != null)
+            {
+                Debug.Log("Clicked on \"" + active.title.text + "\"");
+
+                if (side == 1)
+                {
+                    leftInv.AddItem(active.GetData(), 1);
+                    rightInv.RemoveItem(active.GetData(), 1);
+                    Open(leftInv, rightInv, leftName, rightName);
+                }
+                else if (side == -1 && rightInv != null)
+                {
+                    rightInv.AddItem(active.GetData(), 1);
+                    leftInv.RemoveItem(active.GetData(), 1);
+                    Open(leftInv, rightInv, leftName, rightName);
+                }
+            }
+        }
+
+        //End of frame
+        activateLastFrame = activate;
+    }
+
+    public void Open(Tapestry_Inventory _leftInv, Tapestry_Inventory _rightInv = null, string _leftName = "Inventory", string _rightName = "Target")
+    {
+        left.Clear();
+        right.Clear();
+        this.gameObject.SetActive(true);
+        _isOpen = true;
+        Tapestry_WorldClock.isPaused = true;
+        left.Init(displayPrefab, _leftInv, _leftName);
+        leftInv = _leftInv;
+        leftName = _leftName;
+
+        if(_rightInv == null)
+        {
+            right.gameObject.SetActive(false);
         }
         else
-            theta = currentRot;
-
-        foreach (Tapestry_UI_Inventory_ItemDisplay id in itemDisplays)
         {
-            id.UpdatePosition(theta);
+            right.gameObject.SetActive(true);
+            right.Init(displayPrefab, _rightInv, _rightName);
+            rightInv = _rightInv;
+            rightName = _rightName;
         }
-    }
-
-    private void HandleUseDrop()
-    {
-        bool drop =
-            Input.GetKey(Tapestry_Config.KeyboardInput_InventoryDrop) &&
-            !isRotating;
-
-        if(drop && !blockDrops)
-        {
-            timeOpenClose = delayTime;
-            isWindowOpen = !isWindowOpen;
-            blockDrops = true;
-
-            player.inventory.DropItem(player.inventory.items[selected].item);
-            Close();
-        }
-    }
-
-    private void HandleOpenClose()
-    {
-        if (Input.GetKey(Tapestry_Config.KeyboardInput_Inventory) && timeOpenClose == 0)
-        {
-            timeOpenClose = delayTime;
-            isWindowOpen = !isWindowOpen;
-
-            if (isWindowOpen)
-            {
-                Open(player.inventory);
-            }
-            else
-            {
-                Close();
-            }
-        }
-
-        timeOpenClose -= Time.deltaTime;
-        if (timeOpenClose < 0) timeOpenClose = 0;
-    }
-
-    public void Open(Tapestry_Inventory inv, bool lootable = false)
-    {
-        Debug.Log("Running Open method");
-        Tapestry_WorldClock.isPaused = true;
-        GetComponent<Image>().color = new Color(1, 1, 1, 1);
-        itemNameText.color = new Color(1, 1, 1, 1);
-        itemNameText.text = inv.items[selected].item.displayName;
-        Debug.Log(inv.items.Count + " items");
-        int total = inv.items.Count;
-        currentRot = 0;
-        selected = 0;
-
-        for (int i = 0; i < total; i++)
-        {
-            GameObject go = GameObject.Instantiate(itemDisplayPrefab);
-            go.transform.SetParent(this.transform);
-            Tapestry_UI_Inventory_ItemDisplay id = go.GetComponent<Tapestry_UI_Inventory_ItemDisplay>();
-
-            id.iconImage.sprite = inv.items[i].item.icon;
-            id.quantityText.text = inv.items[i].quantity.ToString();
-
-            id.index = i;
-            id.total = total;
-            id.UpdatePosition(0);
-            itemDisplays.Add(id);
-        }
-
-        itemDisplays[selected].FadeIn(true);
     }
 
     public void Close()
     {
+        this.gameObject.SetActive(false);
+        _isOpen = false;
         Tapestry_WorldClock.isPaused = false;
-        GetComponent<Image>().color = new Color(1, 1, 1, 0);
-        itemNameText.color = new Color(1, 1, 1, 0);
-
-        for (int i=itemDisplays.Count-1; i>=0; i--)
-        {
-            Destroy(itemDisplays[i].gameObject);
-            itemDisplays.RemoveAt(i);
-        }
-
-        blockDrops = false;
+        left.Clear();
+        right.Clear();
+        leftInv = null;
+        rightInv = null;
     }
 }
