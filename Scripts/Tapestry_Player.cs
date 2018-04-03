@@ -16,6 +16,8 @@ public class Tapestry_Player : Tapestry_Entity {
 
     protected override void Reset()
     {
+        if (effects == null)
+            effects = new List<Tapestry_Effect>();
         inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
         base.Reset();
     }
@@ -34,12 +36,13 @@ public class Tapestry_Player : Tapestry_Entity {
             skillProfile = new Tapestry_SkillProfile();
         if(keywords == null)
             keywords = new List<string>();
+        if (effects == null)
+            effects = new List<Tapestry_Effect>();
 
         for (int i = 0; i < transform.childCount; i++)
         {
             if (transform.GetChild(i).name == "T_Points")
             {
-                Debug.Log("Points container found.");
                 GameObject pointContainer = transform.GetChild(i).gameObject;
                 for (int j = 0; j < pointContainer.transform.childCount; j++)
                 {
@@ -52,9 +55,9 @@ public class Tapestry_Player : Tapestry_Entity {
         }
         isRunning = true;
 	}
-	
+    bool debugLastFrame;
 	// Update is called once per frame
-	void Update ()
+	protected override void Update ()
     {
         if (!Tapestry_WorldClock.isPaused)
         {
@@ -62,6 +65,30 @@ public class Tapestry_Player : Tapestry_Entity {
             HandleActivation();
         }
         HandleInventory();
+        HandlePlayerEffects();
+        base.Update();
+
+        //TEMP
+        bool debug = Input.GetKey(KeyCode.Space);
+
+        if (debugLastFrame && !debug)
+        {
+            Tapestry_Effect e = new Tapestry_Effect(this.transform);
+            e.shape = new Tapestry_EffectBuilder_Shape_Ray(e, 50);
+            e.duration = Tapestry_EffectBuilder_Duration.Instant;
+            e.payload = new Tapestry_EffectBuilder_Payload_Damage(e, Tapestry_DamageType.Burning, 200, 300);
+
+            List<Tapestry_Actor> targets = e.shape.GetAffectedTargets();
+
+            foreach(Tapestry_Actor t in targets)
+            {
+                Debug.Log("post: hit " + t.name);
+                e.target = t;
+                t.AddEffect(e);
+            }
+        }
+
+        debugLastFrame = debug;
     }
 
     private void FixedUpdate()
@@ -83,6 +110,11 @@ public class Tapestry_Player : Tapestry_Entity {
         dir.x = transform.right.x;
         dir.y = transform.right.z;
         return dir.normalized;
+    }
+
+    private void HandlePlayerEffects()
+    {
+
     }
 
     private void HandleActivation()

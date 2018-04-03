@@ -404,6 +404,8 @@ public class TapestryInspector_Prop : Editor
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
+
+            p.damageProfile.DrawInspector();
         }
 
         GUILayout.EndVertical();

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [System.Serializable]
 public class Tapestry_DamageProfile {
@@ -42,5 +43,36 @@ public class Tapestry_DamageProfile {
     public float GetMit(Tapestry_DamageType type)
     {
         return dict[type].Mitigation;
+    }
+
+    public void DrawInspector()
+    {
+        GUILayout.BeginVertical("box");
+                
+        string resTooltip = "Resistance: All incoming damage of this type is reduced by the listed value (EG: 0.5 will reduce damage by 50%, -0.5 will increase it by 50%).";
+        string mitTooltip = "Mitigation: Damage taken subtracts this amount after Resistance is applied.";
+
+        foreach (var v in Enum.GetValues(typeof(Tapestry_DamageType)))
+        {
+            Tapestry_DamageType val = (Tapestry_DamageType)v;
+
+            GUILayout.BeginHorizontal();
+
+            GUILayout.Label(val.ToString(), GUILayout.Width(70));
+
+            GUILayout.FlexibleSpace();
+                    
+            GUILayout.Label(new GUIContent("RES", resTooltip), GUILayout.Width(30));
+            SetRes(val, EditorGUILayout.FloatField(GetRes(val), GUILayout.Width(40)));
+
+            GUILayout.FlexibleSpace();
+                    
+            GUILayout.Label(new GUIContent("MIT", mitTooltip), GUILayout.Width(30));
+            SetMit(val, EditorGUILayout.FloatField(GetMit(val), GUILayout.Width(40)));
+
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.EndVertical();
     }
 }

@@ -7,8 +7,7 @@ public class Tapestry_UI_HUD : MonoBehaviour {
 
     public Tapestry_Player player;
     public Text targetName;
-    public Text debugelement_time;
-    public Image InventoryPanel;
+    //public Text debugelement_time;
     public Tapestry_UI_Fader
         activateIndicator, pushIndicator, liftIndicator;
 
@@ -77,6 +76,6 @@ public class Tapestry_UI_HUD : MonoBehaviour {
         string s = Tapestry_WorldClock.worldTime.Second.ToString();
         if (s.Length == 1)
             s = "0" + s;
-        debugelement_time.text = h+":"+m+":"+s;
+        //debugelement_time.text = h+":"+m+":"+s;
     }
 }

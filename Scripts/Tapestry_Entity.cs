@@ -26,12 +26,14 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     // Use this for initialization
     void Start () {
-        
-	}
+        if(effects == null)
+            effects = new List<Tapestry_Effect>();
+    }
 	
 	// Update is called once per frame
-	void Update () {
-
+	protected override void Update () {
+        HandleEntityEffects();
+        base.Update();
     }
 
     protected override void Reset()
@@ -46,6 +48,8 @@ public class Tapestry_Entity : Tapestry_Actor {
             skillProfile = new Tapestry_SkillProfile();
         if(keywords == null)
             keywords = new List<string>();
+        if (effects == null)
+            effects = new List<Tapestry_Effect>();
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -63,6 +67,11 @@ public class Tapestry_Entity : Tapestry_Actor {
         }
 
         base.Reset();
+    }
+
+    private void HandleEntityEffects()
+    {
+
     }
 
     public override Tapestry_HealthState GetHealthState()

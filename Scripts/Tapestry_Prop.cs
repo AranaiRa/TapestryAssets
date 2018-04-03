@@ -51,6 +51,12 @@ public class Tapestry_Prop : Tapestry_Actor {
         }
 	}
 
+    public override void DealDamage(Tapestry_DamageType type, float amount)
+    {
+        if(isDestructable)
+            base.DealDamage(type, amount);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (isPushing)

@@ -86,9 +86,10 @@ public class Tapestry_Container : Tapestry_Prop {
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         HandleAnimation();
+        base.Update();
     }
 
     protected void HandleAnimation()

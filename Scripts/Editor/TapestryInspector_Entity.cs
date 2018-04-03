@@ -140,7 +140,7 @@ public class TapestryInspector_Entity : Editor {
                         GUILayout.EndHorizontal();
                     }
                 }
-                if(indexToRemove != -1)
+                if (indexToRemove != -1)
                 {
                     if (e.inventory.items.Count == 1)
                         e.inventory.items.Clear();
@@ -150,7 +150,7 @@ public class TapestryInspector_Entity : Editor {
                 GUILayout.EndVertical();
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                if(GUILayout.Button("+", GUILayout.Width(20)))
+                if (GUILayout.Button("+", GUILayout.Width(20)))
                 {
                     if (itemToAdd != null)
                     {
@@ -159,7 +159,7 @@ public class TapestryInspector_Entity : Editor {
                     }
                 }
                 itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
-                
+
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }
@@ -182,7 +182,7 @@ public class TapestryInspector_Entity : Editor {
                     GUILayout.FlexibleSpace();
 
                     GUILayout.Label(new GUIContent("Score:", scoreTooltip));
-                    e.skillProfile.SetScore(val,EditorGUILayout.IntField(e.skillProfile.GetScore(val), GUILayout.Width(40)));
+                    e.skillProfile.SetScore(val, EditorGUILayout.IntField(e.skillProfile.GetScore(val), GUILayout.Width(40)));
 
                     GUILayout.FlexibleSpace();
 
@@ -198,34 +198,8 @@ public class TapestryInspector_Entity : Editor {
             {
                 if (e.damageProfile == null)
                     e.damageProfile = new Tapestry_DamageProfile();
-                
-                GUILayout.BeginVertical("box");
-                
-                string resTooltip = "Resistance: All incoming damage of this type is reduced by the listed value (EG: 0.5 will reduce damage by 50%, -0.5 will increase it by 50%).";
-                string mitTooltip = "Mitigation: Damage taken subtracts this amount after Resistance is applied.";
 
-                foreach (var v in Enum.GetValues(typeof(Tapestry_DamageType)))
-                {
-                    Tapestry_DamageType val = (Tapestry_DamageType)v;
-
-                    GUILayout.BeginHorizontal();
-
-                    GUILayout.Label(val.ToString(), GUILayout.Width(70));
-
-                    GUILayout.FlexibleSpace();
-                    
-                    GUILayout.Label(new GUIContent("RES", resTooltip), GUILayout.Width(30));
-                    e.damageProfile.SetRes(val, EditorGUILayout.FloatField(e.damageProfile.GetRes(val), GUILayout.Width(40)));
-
-                    GUILayout.FlexibleSpace();
-                    
-                    GUILayout.Label(new GUIContent("MIT", mitTooltip), GUILayout.Width(30));
-                    e.damageProfile.SetMit(val, EditorGUILayout.FloatField(e.damageProfile.GetMit(val), GUILayout.Width(40)));
-
-                    GUILayout.EndHorizontal();
-                }
-
-                GUILayout.EndVertical();
+                e.damageProfile.DrawInspector();
             }
             if (toolbarNames[toolbarActive] == "Other")
             {
@@ -273,7 +247,7 @@ public class TapestryInspector_Entity : Editor {
 
                 GUILayout.EndVertical();
                 GUILayout.BeginHorizontal();
-                if(GUILayout.Button("+", GUILayout.Width(20)))
+                if (GUILayout.Button("+", GUILayout.Width(20)))
                 {
                     if (keywordToAdd != "")
                     {

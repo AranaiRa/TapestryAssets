@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_Effect : MonoBehaviour {
+[System.Serializable]
+public class Tapestry_Effect {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public bool hideEffectDisplay = false;
+    public ITapestry_EffectBuilder_Shape shape;
+    public Tapestry_EffectBuilder_Duration duration;
+    public ITapestry_EffectBuilder_Payload payload;
+    public Transform initiator;
+    public Tapestry_Actor target;
+    
+	public Tapestry_Effect(Transform initiator)
+    {
+        this.initiator = initiator;
+    }
+}
+
+public enum Tapestry_EffectBuilder_Duration
+{
+    Instant,
+    ActualTime, WorldTime,
+    UntilEventRegistered, Permanent
 }
