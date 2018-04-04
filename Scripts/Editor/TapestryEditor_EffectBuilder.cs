@@ -7,8 +7,13 @@ using UnityEditor;
 
 public class TapestryEditor_EffectBuilder : EditorWindow
 {
-    Dictionary<string, Type>
-        shapes,
+    static Tapestry_Effect effect;
+    int
+        dSel,
+        durSel,
+        pSel;
+    static Dictionary<string, Type>
+        deliveries,
         payloads;
     public Vector2 scrollPos;
 
@@ -16,52 +21,88 @@ public class TapestryEditor_EffectBuilder : EditorWindow
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(TapestryEditor_EffectBuilder), true, "Tapestry Effect Builder", true);
+        Debug.Log("running setup");
+        effect = new Tapestry_Effect(null);
+        HandleEffectBuilderClassRegistry();
     }
 
     private void OnGUI()
     {
-        HandleShapeRegistry();
+        if (effect == null)
+            effect = new Tapestry_Effect(null);
+        if (deliveries == null || payloads == null)
+            HandleEffectBuilderClassRegistry();
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false);
+        
+        GUIStyle title = GUIStyle.none;
+        title.fontStyle = FontStyle.Bold;
+        title.fontSize = 14;
 
         EditorGUILayout.BeginVertical("box");
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Delivery");
+        GUILayout.Label("Duration", title);
         GUILayout.FlexibleSpace();
-        EditorGUILayout.Popup(0, shapes.Keys.ToArray());
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.BeginVertical("box");
-        GUILayout.Label("None Selected");
-        EditorGUILayout.EndVertical();
-        EditorGUILayout.EndVertical();
-
-        EditorGUILayout.BeginVertical("box");
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Duration");
+        effect.duration = (Tapestry_EffectBuilder_Duration)EditorGUILayout.EnumPopup(effect.duration);
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical("box");
+
         EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Payload");
+        GUILayout.Label("Delivery", title);
+        GUILayout.FlexibleSpace();
+        dSel = EditorGUILayout.Popup(dSel, deliveries.Keys.ToArray());
         EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.BeginVertical("box");
-        GUILayout.Label("None Selected");
+        Type dType = deliveries[deliveries.Keys.ToArray()[dSel]];
+        if (effect.delivery == null)
+            effect.delivery = (Tapestry_EffectBuilder_Delivery)Activator.CreateInstance(dType);
+        if (effect.delivery.GetType() != dType)
+            effect.delivery = (Tapestry_EffectBuilder_Delivery)Activator.CreateInstance(dType);
+        effect.delivery.DrawInspector();
         EditorGUILayout.EndVertical();
+
+        EditorGUILayout.EndVertical();
+
+        EditorGUILayout.BeginVertical("box");
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Payload", title);
+        GUILayout.FlexibleSpace();
+        pSel = EditorGUILayout.Popup(pSel, payloads.Keys.ToArray());
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginVertical("box");
+        //GUILayout.Label("None Selected");
+        Type pType = payloads[payloads.Keys.ToArray()[pSel]];
+        if(effect.payload == null)
+            effect.payload = (Tapestry_EffectBuilder_Payload)Activator.CreateInstance(pType);
+        if (effect.payload.GetType() != pType)
+            effect.payload = (Tapestry_EffectBuilder_Payload)Activator.CreateInstance(pType);
+        effect.payload.DrawInspector();
+        EditorGUILayout.EndVertical();
+
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndScrollView();
     }
 
-    private void HandleShapeRegistry()
+    private static void HandleEffectBuilderClassRegistry()
     {
-        shapes = new Dictionary<string, Type>();
-        foreach(var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        deliveries = new Dictionary<string, Type>();
+        payloads = new Dictionary<string, Type>();
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
         {
             foreach (var type in assembly.GetTypes())
             {
-                if(type.GetInterface("ITapestry_EffectBuilder_Shape") != null)
+                if (type.BaseType == typeof(Tapestry_EffectBuilder_Delivery))
                 {
-                    shapes.Add(type.Name.Substring(29,type.Name.Length-29), type);
+                    deliveries.Add(type.Name.Substring(32, type.Name.Length - 32), type);
+                }
+                if (type.BaseType == typeof(Tapestry_EffectBuilder_Payload))
+                {
+                    payloads.Add(type.Name.Substring(31, type.Name.Length - 31), type);
                 }
             }
         }

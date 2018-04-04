@@ -74,11 +74,11 @@ public class Tapestry_Player : Tapestry_Entity {
         if (debugLastFrame && !debug)
         {
             Tapestry_Effect e = new Tapestry_Effect(this.transform);
-            e.shape = new Tapestry_EffectBuilder_Shape_Ray(e, 50);
+            e.delivery = new Tapestry_EffectBuilder_Delivery_Ray();
             e.duration = Tapestry_EffectBuilder_Duration.Instant;
-            e.payload = new Tapestry_EffectBuilder_Payload_Damage(e, Tapestry_DamageType.Burning, 200, 300);
+            e.payload = new Tapestry_EffectBuilder_Payload_Damage();
 
-            List<Tapestry_Actor> targets = e.shape.GetAffectedTargets();
+            List<Tapestry_Actor> targets = e.delivery.GetAffectedTargets();
 
             foreach(Tapestry_Actor t in targets)
             {

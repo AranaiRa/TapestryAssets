@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_ActorValue : MonoBehaviour {
+[System.Serializable]
+public class Tapestry_ActorValue {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    float
+        baseValue;
+    List<float>
+        bonusTypeAdditive,
+        bonusTypeAdditiveMultiplicative,
+        bonusTypeMultiplicative;
+
+    public Tapestry_ActorValue(float baseValue)
+    {
+
+    }
 }

@@ -4,80 +4,47 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Tapestry_EffectBuilder_Payload_Damage : ITapestry_EffectBuilder_Payload
+public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payload
 {
     public Tapestry_DamageType type;
     public float 
         amountMin,
         amountMax;
-    [SerializeField]
-    private bool
-        isStackable = true;
-    [SerializeField]
-    private Tapestry_Effect
-        parent;
-    public Tapestry_Effect Parent
-    {
-        get
-        {
-            return parent;
-        }
 
-        set
-        {
-            parent = value;
-        }
-    }
-    public bool IsStackable
+    public Tapestry_EffectBuilder_Payload_Damage()
     {
-        get
-        {
-            return isStackable;
-        }
-
-        set
-        {
-            isStackable = value;
-        }
-    }
-    public bool AffectsEntitiesOnly
-    {
-        get { return false; }
-    }
-    public bool AffectsPropsOnly
-    {
-        get { return false; }
+        amountMin = 10;
+        amountMax = 40;
+        type = Tapestry_DamageType.Crushing;
     }
 
-    public Tapestry_EffectBuilder_Payload_Damage(Tapestry_Effect parent, Tapestry_DamageType type, float amountMin, float amountMax)
-    {
-        this.parent = parent;
-        this.type = type;
-        this.amountMin = amountMin;
-        this.amountMax = amountMax;
-    }
-
-    public void Apply()
+    public override void Apply()
     {
         float amount = Random.Range(amountMin, amountMax);
         parent.target.DealDamage(type, amount);
         Debug.Log("Dealing " + amount + " raw " + type.ToString() + " damage to " + parent.target.name);
     }
 
-    public void DrawInspector()
+    public override string ToString()
+    {
+        string export = "[<PAYLOAD:DAMAGE> ";
+
+        if (amountMin != amountMax)
+            export += amountMin + "-" + amountMax + " ";
+        else
+            export += amountMin + " ";
+        
+        export += type.ToString() + "]";
+
+        return export;
+    }
+
+    public override void DrawInspector()
     {
         GUILayout.BeginVertical("box");
 
         GUILayout.BeginHorizontal();
-        GUIStyle title = GUIStyle.none;
-        title.fontSize = 18;
-        title.fontStyle = FontStyle.Bold;
-        title.padding = new RectOffset(2, 2, 2, 4);
-        GUILayout.Label("DAMAGE", title);
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
+        GUILayout.Space(40);
         GUILayout.Label("Min", GUILayout.Width(30));
         amountMin = EditorGUILayout.DelayedFloatField(amountMin, GUILayout.Width(42));
         if (amountMin < 0)

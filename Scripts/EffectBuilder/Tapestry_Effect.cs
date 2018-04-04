@@ -6,9 +6,9 @@ using UnityEngine;
 public class Tapestry_Effect {
 
     public bool hideEffectDisplay = false;
-    public ITapestry_EffectBuilder_Shape shape;
+    public Tapestry_EffectBuilder_Delivery delivery;
     public Tapestry_EffectBuilder_Duration duration;
-    public ITapestry_EffectBuilder_Payload payload;
+    public Tapestry_EffectBuilder_Payload payload;
     public Transform initiator;
     public Tapestry_Actor target;
     
