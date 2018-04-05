@@ -28,7 +28,16 @@ public class Tapestry_EffectBuilder_Delivery_Ray : Tapestry_EffectBuilder_Delive
         }
         return targets;
     }
-    
+
+    public override string ToString()
+    {
+        string export = "[<DELIVERY:RAY> ";
+
+        export += maxDistance + "m]";
+
+        return export;
+    }
+
     public override void DrawInspector()
     {
         GUILayout.BeginVertical("box");

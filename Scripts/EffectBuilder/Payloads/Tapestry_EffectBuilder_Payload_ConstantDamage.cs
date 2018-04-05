@@ -34,15 +34,15 @@ public class Tapestry_EffectBuilder_Payload_ConstantDamage : Tapestry_EffectBuil
 
     public override string ToString()
     {
-        string export = "[<PAYLOAD:CONSTANT_DAMAGE> ";
+        string export = "<b>CONSTANT DAMAGE</b>: ";
 
         if (amountMin != amountMax)
             export += amountMin + "-" + amountMax + " ";
         else
             export += amountMin + " ";
 
-        export += type.ToString() + "@";
-        export += interval + "sec intervals]";
+        export += type.ToString() + " @ ";
+        export += interval + "sec pulse";
 
         return export;
     }

@@ -27,14 +27,14 @@ public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payl
 
     public override string ToString()
     {
-        string export = "[<PAYLOAD:DAMAGE> ";
+        string export = "<b>DAMAGE</b>: ";
 
         if (amountMin != amountMax)
             export += amountMin + "-" + amountMax + " ";
         else
             export += amountMin + " ";
         
-        export += type.ToString() + "]";
+        export += type.ToString();
 
         return export;
     }

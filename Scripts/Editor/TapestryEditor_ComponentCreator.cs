@@ -123,17 +123,17 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         GUILayout.FlexibleSpace();
 
         GUILayout.EndHorizontal();
-        /*GUILayout.BeginHorizontal();
+        GUILayout.BeginHorizontal();
 
         GUILayout.FlexibleSpace();
-        //
+        DrawEffectZoneButton();
         GUILayout.FlexibleSpace();
         //
         GUILayout.FlexibleSpace();
         //
         GUILayout.FlexibleSpace();
 
-        GUILayout.EndHorizontal();*/
+        GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
     }
@@ -931,6 +931,37 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 main.transform.position = Vector3.zero;
 
             main.AddComponent<Tapestry_AnimatedLight>();
+        }
+    }
+
+    private void DrawEffectZoneButton()
+    {
+        if (GUILayout.Button("Effect Zone", GUILayout.Width(buttonWidth)))
+        {
+            GameObject main = new GameObject();
+            main.name = "T_EffectZone";
+            /*if (includeHelpers)
+            {
+                string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to target the door.";
+                main.AddComponent<Tapestry_InspectorHelper>();
+                main.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
+            }*/
+
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/pointHelperGizmo"));
+            gizmo.name = "Point Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+            gizmo.transform.localPosition = Vector3.zero;
+
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
+
+            Tapestry_EffectZone ez = main.AddComponent<Tapestry_EffectZone>();
+            BoxCollider bc = main.AddComponent<BoxCollider>();
+            bc.center = new Vector3(0, 1, 0);
+            bc.size = new Vector3(2, 2, 2);
+            bc.isTrigger = true;
         }
     }
 

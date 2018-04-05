@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public abstract class Tapestry_EffectBuilder_Payload {
 
     public Tapestry_Effect parent;

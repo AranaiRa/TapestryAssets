@@ -16,25 +16,40 @@ public class TapestryEditor_EffectBuilder : EditorWindow
         deliveries,
         payloads;
     public Vector2 scrollPos;
-
-    [MenuItem("Tapestry/Effect Builder")]
+    
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(TapestryEditor_EffectBuilder), true, "Tapestry Effect Builder", true);
-        Debug.Log("running setup");
-        effect = new Tapestry_Effect(null);
         HandleEffectBuilderClassRegistry();
+    }
+
+    public static void RegisterEffect(Tapestry_Effect e)
+    {
+        effect = null;
+        effect = e;
+    }
+
+    public static Tapestry_Effect GetEffect()
+    {
+        return effect;
     }
 
     private void OnGUI()
     {
         if (effect == null)
             effect = new Tapestry_Effect(null);
+        if (effect.delivery == null)
+            effect.delivery = new Tapestry_EffectBuilder_Delivery_Self();
+        if (effect.payload == null)
+            effect.payload = new Tapestry_EffectBuilder_Payload_Damage();
         if (deliveries == null || payloads == null)
             HandleEffectBuilderClassRegistry();
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false);
-        
-        GUIStyle title = GUIStyle.none;
+
+        dSel = Array.IndexOf(deliveries.Values.ToArray(), effect.delivery.GetType());
+        pSel = Array.IndexOf(payloads.Values.ToArray(), effect.payload.GetType());
+
+        GUIStyle title = new GUIStyle();
         title.fontStyle = FontStyle.Bold;
         title.fontSize = 14;
 
@@ -56,9 +71,7 @@ public class TapestryEditor_EffectBuilder : EditorWindow
 
         EditorGUILayout.BeginVertical("box");
         Type dType = deliveries[deliveries.Keys.ToArray()[dSel]];
-        if (effect.delivery == null)
-            effect.delivery = (Tapestry_EffectBuilder_Delivery)Activator.CreateInstance(dType);
-        if (effect.delivery.GetType() != dType)
+        if (effect.delivery == null || effect.delivery.GetType() != dType)
             effect.delivery = (Tapestry_EffectBuilder_Delivery)Activator.CreateInstance(dType);
         effect.delivery.DrawInspector();
         EditorGUILayout.EndVertical();
@@ -76,9 +89,7 @@ public class TapestryEditor_EffectBuilder : EditorWindow
         EditorGUILayout.BeginVertical("box");
         //GUILayout.Label("None Selected");
         Type pType = payloads[payloads.Keys.ToArray()[pSel]];
-        if(effect.payload == null)
-            effect.payload = (Tapestry_EffectBuilder_Payload)Activator.CreateInstance(pType);
-        if (effect.payload.GetType() != pType)
+        if(effect.payload == null || effect.payload.GetType() != pType)
             effect.payload = (Tapestry_EffectBuilder_Payload)Activator.CreateInstance(pType);
         effect.payload.DrawInspector();
         EditorGUILayout.EndVertical();
