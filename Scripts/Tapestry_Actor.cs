@@ -26,7 +26,7 @@ public class Tapestry_Actor : Tapestry_Activatable {
         {
             Tapestry_Effect e = effects[i];
 
-            e.payload.Apply();
+            e.payload.Apply(this);
 
             if (e.duration == Tapestry_EffectBuilder_Duration.Instant)
                 effects.Remove(e);

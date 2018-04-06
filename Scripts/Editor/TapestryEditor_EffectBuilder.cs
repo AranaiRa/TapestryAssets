@@ -37,16 +37,13 @@ public class TapestryEditor_EffectBuilder : EditorWindow
     private void OnGUI()
     {
         if (effect == null)
-            effect = new Tapestry_Effect(null);
-        if (effect.delivery == null)
-            effect.delivery = new Tapestry_EffectBuilder_Delivery_Self();
+            effect = new Tapestry_Effect();
         if (effect.payload == null)
             effect.payload = new Tapestry_EffectBuilder_Payload_Damage();
         if (deliveries == null || payloads == null)
             HandleEffectBuilderClassRegistry();
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, false);
-
-        dSel = Array.IndexOf(deliveries.Values.ToArray(), effect.delivery.GetType());
+        
         pSel = Array.IndexOf(payloads.Values.ToArray(), effect.payload.GetType());
 
         GUIStyle title = new GUIStyle();
@@ -68,13 +65,6 @@ public class TapestryEditor_EffectBuilder : EditorWindow
         GUILayout.FlexibleSpace();
         dSel = EditorGUILayout.Popup(dSel, deliveries.Keys.ToArray());
         EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginVertical("box");
-        Type dType = deliveries[deliveries.Keys.ToArray()[dSel]];
-        if (effect.delivery == null || effect.delivery.GetType() != dType)
-            effect.delivery = (Tapestry_EffectBuilder_Delivery)Activator.CreateInstance(dType);
-        effect.delivery.DrawInspector();
-        EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndVertical();
 

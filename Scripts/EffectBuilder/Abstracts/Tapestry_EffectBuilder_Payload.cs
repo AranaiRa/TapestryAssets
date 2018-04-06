@@ -10,7 +10,7 @@ public abstract class Tapestry_EffectBuilder_Payload {
     public bool AffectsEntitiesOnly;
     public bool AffectsPropsOnly;
 
-    public virtual void Apply()
+    public virtual void Apply(Tapestry_Actor target)
     {
         throw new System.NotImplementedException();
     }

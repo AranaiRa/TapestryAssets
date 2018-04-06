@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_EffectDistributor : MonoBehaviour {
+public abstract class Tapestry_EffectDistributor {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    Tapestry_EffectBuilder_Delivery delivery;
+    Tapestry_Effect effect;
+    Transform initiator;
 }

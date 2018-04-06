@@ -18,11 +18,11 @@ public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payl
         type = Tapestry_DamageType.Crushing;
     }
 
-    public override void Apply()
+    public override void Apply(Tapestry_Actor target)
     {
         float amount = Random.Range(amountMin, amountMax);
-        parent.target.DealDamage(type, amount);
-        Debug.Log("Dealing " + amount + " raw " + type.ToString() + " damage to " + parent.target.name);
+        target.DealDamage(type, amount);
+        Debug.Log("Dealing " + amount + " raw " + type.ToString() + " damage to " + target.name);
     }
 
     public override string ToString()

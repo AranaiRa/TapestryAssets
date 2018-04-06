@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Tapestry_EffectZone : MonoBehaviour {
 
+    [SerializeField]
     public Tapestry_Effect effect;
 
     private void Reset()
     {
-        effect = new Tapestry_Effect(this.transform);
+        effect = new Tapestry_Effect();
     }
 
     // Use this for initialization
@@ -30,6 +31,9 @@ public class Tapestry_EffectZone : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
-        Tapestry_Actor a = other.GetComponent<Tapestry_Actor>();
+        if(effect.duration != Tapestry_EffectBuilder_Duration.Instant)
+        {
+            Tapestry_Actor a = other.GetComponent<Tapestry_Actor>();
+        }
     }
 }

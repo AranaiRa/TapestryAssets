@@ -55,7 +55,7 @@ public class Tapestry_Player : Tapestry_Entity {
         }
         isRunning = true;
 	}
-    bool debugLastFrame;
+
 	// Update is called once per frame
 	protected override void Update ()
     {
@@ -67,28 +67,6 @@ public class Tapestry_Player : Tapestry_Entity {
         HandleInventory();
         HandlePlayerEffects();
         base.Update();
-
-        //TEMP
-        bool debug = Input.GetKey(KeyCode.Space);
-
-        if (debugLastFrame && !debug)
-        {
-            Tapestry_Effect e = new Tapestry_Effect(this.transform);
-            e.delivery = new Tapestry_EffectBuilder_Delivery_Ray();
-            e.duration = Tapestry_EffectBuilder_Duration.Instant;
-            e.payload = new Tapestry_EffectBuilder_Payload_Damage();
-
-            List<Tapestry_Actor> targets = e.delivery.GetAffectedTargets();
-
-            foreach(Tapestry_Actor t in targets)
-            {
-                Debug.Log("post: hit " + t.name);
-                e.target = t;
-                t.AddEffect(e);
-            }
-        }
-
-        debugLastFrame = debug;
     }
 
     private void FixedUpdate()

@@ -14,19 +14,20 @@ public class Tapestry_EffectBuilder_Delivery_Ray : Tapestry_EffectBuilder_Delive
 
     public override List<Tapestry_Actor> GetAffectedTargets()
     {
-        List<Tapestry_Actor> targets = new List<Tapestry_Actor>();
-        RaycastHit hit;
-        Physics.Raycast(parent.target.transform.position, parent.target.transform.forward, out hit, maxDistance, ~LayerMask.GetMask("Ignore Raycast"));
-        if(hit.collider != null)
-        {
-            Debug.Log("pre: hit \"" + hit.collider.gameObject.name + "\"");
-            Tapestry_Actor a = hit.collider.gameObject.GetComponentInParent<Tapestry_Actor>();
-            if (a != null)
-            {
-                targets.Add(a);
-            }
-        }
-        return targets;
+        //List<Tapestry_Actor> targets = new List<Tapestry_Actor>();
+        //RaycastHit hit;
+        //Physics.Raycast(parent.initiator.transform.position, parent.target.transform.forward, out hit, maxDistance, ~LayerMask.GetMask("Ignore Raycast"));
+        //if(hit.collider != null)
+        //{
+        //    Debug.Log("pre: hit \"" + hit.collider.gameObject.name + "\"");
+        //    Tapestry_Actor a = hit.collider.gameObject.GetComponentInParent<Tapestry_Actor>();
+        //    if (a != null)
+        //    {
+        //        targets.Add(a);
+        //    }
+        //}
+        //return targets;
+        throw new System.NotImplementedException();
     }
 
     public override string ToString()
