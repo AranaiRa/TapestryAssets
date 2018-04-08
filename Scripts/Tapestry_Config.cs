@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public static class Tapestry_Config {
 
@@ -65,4 +66,26 @@ public static class Tapestry_Config {
         SunTwilightBleed = 0.15f,
         SunSizeMidday = 0.05f,
         SunSizeTwilight = 0.88f;
+    public static Dictionary<string, Type> payloads;
+    
+    public static Dictionary<string, Type> GetPayloadTypes()
+    {
+        HandleEffectBuilderClassRegistry();
+        return payloads;
+    }
+
+    private static void HandleEffectBuilderClassRegistry()
+    {
+        payloads = new Dictionary<string, Type>();
+        foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            foreach (var type in assembly.GetTypes())
+            {
+                if (type.BaseType == typeof(Tapestry_EffectBuilder_Payload))
+                {
+                    payloads.Add(type.Name.Substring(31, type.Name.Length - 31), type);
+                }
+            }
+        }
+    }
 }

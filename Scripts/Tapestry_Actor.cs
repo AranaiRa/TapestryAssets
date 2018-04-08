@@ -57,12 +57,15 @@ public class Tapestry_Actor : Tapestry_Activatable {
         amount -= damageProfile.GetMit(type);
         if(amount >= threshold)
         {
-            Debug.Log("dealing " + amount + " adjusted " + type.ToString() + " to " + name);
-            Debug.Log("pre health:"+health);
             health -= amount;
             health = Mathf.Clamp(health, 0, 1000);
-            Debug.Log("post health:" + health);
         }
+    }
+
+    public virtual void Heal(float amount)
+    {
+        health += amount;
+        health = Mathf.Clamp(health, 0, 1000);
     }
 }
 

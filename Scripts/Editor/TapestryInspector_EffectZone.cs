@@ -1,27 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(Tapestry_EffectZone))]
 public class TapestryInspector_EffectZone : Editor {
 
+    int pSel;
+    bool startup = true;
+
     public override void OnInspectorGUI()
     {
         Tapestry_EffectZone e = target as Tapestry_EffectZone;
-        if (e && ReferenceEquals(e.effect, null))
-        {
+
+        if (ReferenceEquals(e.effect, null))
             e.effect = new Tapestry_Effect();
-            Debug.Log("checking for whether this thing is nullshit");
-        }
+        if (ReferenceEquals(e.effect.payload, null))
+            e.effect.payload = (Tapestry_EffectBuilder_Payload)ScriptableObject.CreateInstance("Tapestry_EffectBuilder_Payload_Damage");
 
-        if(e.effect.DrawInspector())
+        if (startup)
         {
-            Debug.Log((e.effect == null));
-            TapestryEditor_EffectBuilder.RegisterEffect(e.effect, e);
-            TapestryEditor_EffectBuilder.ShowWindow();
+            pSel = ArrayUtility.IndexOf(Tapestry_Config.GetPayloadTypes().Values.ToArray(), e.effect.payload.GetType());
+            startup = false;
         }
 
-        base.OnInspectorGUI();
+        pSel = e.effect.DrawInspector(pSel);
+
+        DrawDefaultInspector();
     }
 }

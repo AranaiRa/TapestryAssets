@@ -1,28 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Tapestry_Effect : UnityEngine.Object {
-    
+public class Tapestry_Effect {
+
+    public string name;
     public Sprite sprite;
     public bool 
         hideEffectDisplay = false;
-    [SerializeField]
     public Tapestry_EffectBuilder_Duration duration;
-    [SerializeField]
     public Tapestry_EffectBuilder_Payload payload;
-
-    [SerializeField]
+    
     private float
         time;
 
 	public Tapestry_Effect()
     {
-        Debug.Log("Creating new effect");
+        name = "Effect";
         duration = Tapestry_EffectBuilder_Duration.Instant;
-        payload = new Tapestry_EffectBuilder_Payload_Damage();
     }
 
     public void Apply(Tapestry_Actor target)
@@ -36,46 +35,45 @@ public class Tapestry_Effect : UnityEngine.Object {
         return export;
     }
 
-    public bool DrawInspector()
+    public int DrawInspector(int pSel)
     {
-        bool buttonActive = false;
-
-        GUIStyle wrapped = new GUIStyle();
-        wrapped.richText = true;
-        wrapped.wordWrap = true;
+        if (ReferenceEquals(payload, null))
+            payload = (Tapestry_EffectBuilder_Payload_Damage)ScriptableObject.CreateInstance("Tapestry_EffectBuilder_Payload_Damage");
+        Dictionary<string, Type> payloads = Tapestry_Config.GetPayloadTypes();
 
         GUIStyle title = new GUIStyle();
         title.fontStyle = FontStyle.Bold;
-        title.fontSize = 16;
-        title.alignment = TextAnchor.MiddleLeft;
+        title.fontSize = 14;
 
-        GUILayout.BeginVertical("box");
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Effect", title);
+        EditorGUILayout.BeginVertical("box");
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Duration", title);
         GUILayout.FlexibleSpace();
-        buttonActive = GUILayout.Button("Builder", GUILayout.Width(60));
-        GUILayout.EndHorizontal();
+        duration = (Tapestry_EffectBuilder_Duration)EditorGUILayout.EnumPopup(duration);
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
 
-        GUILayout.BeginHorizontal();
+        if (duration != Tapestry_EffectBuilder_Duration.Instant)
+            payload.exposeTimeControls = true;
 
-        GUILayout.BeginVertical("box");
-        GUILayout.BeginHorizontal("box");
-        GUILayout.Label("<b>DURATION</b>: " + duration.ToString(), wrapped);
-        GUILayout.EndHorizontal();
+        EditorGUILayout.BeginVertical("box");
 
-        GUILayout.BeginHorizontal("box");
-        if (payload == null)
-            GUILayout.Label("<b>PAYLOAD</b>: Null", wrapped);
-        else
-            GUILayout.Label(payload.ToString(), wrapped);
-        GUILayout.EndHorizontal();
-        GUILayout.EndVertical();
-        GUILayout.EndHorizontal();
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Payload", title);
+        GUILayout.FlexibleSpace();
+        pSel = EditorGUILayout.Popup(pSel, payloads.Keys.ToArray());
+        EditorGUILayout.EndHorizontal();
 
-        GUILayout.EndVertical();
+        EditorGUILayout.BeginVertical("box");
+        Type pType = payloads[payloads.Keys.ToArray()[pSel]];
+        if (ReferenceEquals(payload, null) || payload.GetType() != pType)
+            payload = (Tapestry_EffectBuilder_Payload)ScriptableObject.CreateInstance(pType.ToString());
+        payload.DrawInspector();
+        EditorGUILayout.EndVertical();
 
-        return buttonActive;
+        EditorGUILayout.EndVertical();
+
+        return pSel;
     }
 }
 

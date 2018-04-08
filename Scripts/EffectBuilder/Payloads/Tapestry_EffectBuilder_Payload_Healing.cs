@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payload
+public class Tapestry_EffectBuilder_Payload_Healing : Tapestry_EffectBuilder_Payload
 {
-    public Tapestry_DamageType type;
-    public float 
+    public float
         amountMin,
         amountMax,
         pulse;
@@ -15,12 +14,11 @@ public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payl
     private float
         time;
 
-    public Tapestry_EffectBuilder_Payload_Damage()
+    public Tapestry_EffectBuilder_Payload_Healing()
     {
-        amountMin = 10;
-        amountMax = 40;
+        amountMin = 100;
+        amountMax = 400;
         pulse = 0.5f;
-        type = Tapestry_DamageType.Crushing;
     }
 
     public override void Apply(Tapestry_Actor target)
@@ -37,7 +35,7 @@ public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payl
         if (execute)
         {
             float amount = Random.Range(amountMin, amountMax);
-            target.DealDamage(type, amount);
+            target.Heal(amount);
             if (exposeTimeControls)
                 time = pulse;
         }
@@ -58,11 +56,9 @@ public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payl
         if (amountMax < amountMin)
             amountMax = amountMin;
         GUILayout.FlexibleSpace();
-        GUILayout.Label("Type");
-        type = (Tapestry_DamageType)EditorGUILayout.EnumPopup(type, GUILayout.Width(64));
         GUILayout.EndHorizontal();
 
-        if(exposeTimeControls)
+        if (exposeTimeControls)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Space(40);

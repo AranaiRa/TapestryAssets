@@ -6,16 +6,17 @@ using UnityEditor;
 [CustomEditor(typeof(testscript))]
 public class testinspector : Editor {
 
+    int pSel;
+
     public override void OnInspectorGUI()
     {
         testscript ts = target as testscript;
-        
-        if (ts.e.DrawInspector())
-        {
-            Debug.Log(ts.e.ToString()+" | "+(ReferenceEquals(ts.e, null)));
-            Debug.Log(ts.e.payload.ToString() + " | " + (ReferenceEquals(ts.e, null)));
-            //TapestryEditor_EffectBuilder.RegisterEffect(ts.e);
-            //TapestryEditor_EffectBuilder.ShowWindow();
-        }
+
+        pSel = ts.e.DrawInspector(pSel);
+
+        GUILayout.Label("has payload? " + (ts.e.payload != null));
+        GUILayout.Label("payload type? " + ts.e.payload.GetType().ToString());
+
+        DrawDefaultInspector();
     }
 }

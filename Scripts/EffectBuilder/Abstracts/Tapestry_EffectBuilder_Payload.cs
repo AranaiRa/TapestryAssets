@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Tapestry_EffectBuilder_Payload : UnityEngine.Object {
-
-    public Tapestry_Effect parent;
-    public bool IsStackable;
-    public bool AffectsEntitiesOnly;
+public class Tapestry_EffectBuilder_Payload : ScriptableObject {
+    
     public bool AffectsPropsOnly;
+    public bool
+        isStackable = false,
+        exposeTimeControls = false;
 
     public virtual void Apply(Tapestry_Actor target)
     {
         throw new System.NotImplementedException();
     }
-
+    
     public virtual void DrawInspector()
     {
         GUILayout.BeginVertical("box");
