@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Tapestry_EffectBuilder_Payload {
+public abstract class Tapestry_EffectBuilder_Payload : UnityEngine.Object {
 
     public Tapestry_Effect parent;
     public bool IsStackable;

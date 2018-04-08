@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Tapestry_Effect {
-
-    public string name;
+public class Tapestry_Effect : UnityEngine.Object {
+    
     public Sprite sprite;
     public bool 
         hideEffectDisplay = false;
+    [SerializeField]
     public Tapestry_EffectBuilder_Duration duration;
+    [SerializeField]
     public Tapestry_EffectBuilder_Payload payload;
 
     [SerializeField]

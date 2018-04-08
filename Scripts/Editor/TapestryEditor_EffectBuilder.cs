@@ -4,15 +4,17 @@ using System.Linq;
 using System;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 
 public class TapestryEditor_EffectBuilder : EditorWindow
 {
-    static Tapestry_Effect effect;
+    public static Tapestry_Effect effect;
+    public static MonoBehaviour container;
     int
         dSel,
         durSel,
         pSel;
-    static Dictionary<string, Type>
+    public static Dictionary<string, Type>
         deliveries,
         payloads;
     public Vector2 scrollPos;
@@ -23,10 +25,12 @@ public class TapestryEditor_EffectBuilder : EditorWindow
         HandleEffectBuilderClassRegistry();
     }
 
-    public static void RegisterEffect(Tapestry_Effect e)
+    public static void RegisterEffect(Tapestry_Effect e, MonoBehaviour c)
     {
-        effect = null;
+        //effect = null;
         effect = e;
+        container = c;
+        Debug.Log("effect is null? " + (e == null));
     }
 
     public static Tapestry_Effect GetEffect()
@@ -36,9 +40,9 @@ public class TapestryEditor_EffectBuilder : EditorWindow
 
     private void OnGUI()
     {
-        if (effect == null)
+        if (ReferenceEquals(effect, null))
             effect = new Tapestry_Effect();
-        if (effect.payload == null)
+        if (ReferenceEquals(effect.payload, null))
             effect.payload = new Tapestry_EffectBuilder_Payload_Damage();
         if (deliveries == null || payloads == null)
             HandleEffectBuilderClassRegistry();
@@ -58,15 +62,15 @@ public class TapestryEditor_EffectBuilder : EditorWindow
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
 
-        EditorGUILayout.BeginVertical("box");
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Delivery", title);
-        GUILayout.FlexibleSpace();
-        dSel = EditorGUILayout.Popup(dSel, deliveries.Keys.ToArray());
-        EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.EndVertical();
+        //EditorGUILayout.BeginVertical("box");
+        //
+        //EditorGUILayout.BeginHorizontal();
+        //GUILayout.Label("Delivery", title);
+        //GUILayout.FlexibleSpace();
+        //dSel = EditorGUILayout.Popup(dSel, deliveries.Keys.ToArray());
+        //EditorGUILayout.EndHorizontal();
+        //
+        //EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical("box");
 
@@ -87,6 +91,22 @@ public class TapestryEditor_EffectBuilder : EditorWindow
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndScrollView();
+
+        if (GUI.changed)
+        {
+            Debug.Log("beep");
+            //EditorUtility.SetDirty(container);
+            //Undo.RegisterCompleteObjectUndo(container, "Change Effect parameters");
+            Undo.RecordObject(effect.payload, "Changed Payload parameters");
+            //Undo.RecordObject(effect.duration)
+            EditorUtility.SetDirty(effect.payload);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Debug.Log("window closed");
+        effect = null;
     }
 
     private static void HandleEffectBuilderClassRegistry()

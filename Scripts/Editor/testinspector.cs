@@ -9,8 +9,13 @@ public class testinspector : Editor {
     public override void OnInspectorGUI()
     {
         testscript ts = target as testscript;
-
-        ts.s.DrawInspector();
-        ts.d.DrawInspector();
+        
+        if (ts.e.DrawInspector())
+        {
+            Debug.Log(ts.e.ToString()+" | "+(ReferenceEquals(ts.e, null)));
+            Debug.Log(ts.e.payload.ToString() + " | " + (ReferenceEquals(ts.e, null)));
+            //TapestryEditor_EffectBuilder.RegisterEffect(ts.e);
+            //TapestryEditor_EffectBuilder.ShowWindow();
+        }
     }
 }

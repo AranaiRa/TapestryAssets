@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class testscript : MonoBehaviour {
-
-    public Tapestry_EffectBuilder_Payload_Damage d;
-    public Tapestry_EffectBuilder_Delivery_Ray s;
+    
+    public Tapestry_Effect e;
 
     private void Reset()
     {
-        s = new Tapestry_EffectBuilder_Delivery_Ray();
-        d = new Tapestry_EffectBuilder_Payload_Damage();
+        e = new Tapestry_Effect();
+        //e.name = "buttfarts";
+        string json = JsonUtility.ToJson(e);
+        Debug.Log(json);
     }
 }
