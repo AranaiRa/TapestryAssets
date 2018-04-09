@@ -23,7 +23,7 @@ public class Tapestry_ItemData {
 
     }
 
-    public bool Compare(Tapestry_ItemData data)
+    public bool IsEqual(Tapestry_ItemData data)
     {
         bool check = true;
         if (prefabName != data.prefabName) check = check && false;

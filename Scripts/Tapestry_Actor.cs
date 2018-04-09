@@ -17,18 +17,18 @@ public class Tapestry_Actor : Tapestry_Activatable {
 	
 	// Update is called once per frame
 	protected virtual void Update () {
-        HandleActorEffects();
+        HandleEffects();
 	}
 
-    private void HandleActorEffects()
+    private void HandleEffects()
     {
         for (int i = effects.Count - 1; i >= 0; i--)
         {
             Tapestry_Effect e = effects[i];
 
-            e.payload.Apply(this);
+            e.Apply(this);
 
-            if (e.duration == Tapestry_EffectBuilder_Duration.Instant)
+            if(e.readyForRemoval)//if (e.duration == Tapestry_EffectBuilder_Duration.Instant)
                 effects.Remove(e);
         }
     }

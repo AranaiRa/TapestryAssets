@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Tapestry_TimeIndex {
 
@@ -163,6 +164,11 @@ public class Tapestry_TimeIndex {
         return ti;
     }
 
+    public Tapestry_TimeIndex GetIndexFromOffset(Tapestry_TimeIndex ti)
+    {
+        return GetIndexFromOffset(ti.second, ti.minute, ti.hour, ti.date, ti.month, ti.year);
+    }
+
     public float ProgressUntilNextDay(float partialSeconds)
     {
         float prog = (float)hour / hoursPerDay;
@@ -170,5 +176,32 @@ public class Tapestry_TimeIndex {
         prog += ((float)second / secondsPerMinute) / minutesPerHour / hoursPerDay;
         prog += partialSeconds / secondsPerMinute / minutesPerHour / hoursPerDay;
         return prog;
+    }
+
+    public void DrawInspector(bool useMonths=false, bool useYears=false)
+    {
+        if (useYears)
+        {
+            year = EditorGUILayout.DelayedIntField(year, GUILayout.Width(28));
+            GUILayout.Label("Years");
+            GUILayout.FlexibleSpace();
+        }
+        if (useMonths)
+        {
+            month = EditorGUILayout.DelayedIntField(month, GUILayout.Width(28));
+            GUILayout.Label("Months");
+            GUILayout.FlexibleSpace();
+        }
+        date = EditorGUILayout.DelayedIntField(date, GUILayout.Width(28));
+        GUILayout.Label("Days");
+        GUILayout.FlexibleSpace();
+        hour = EditorGUILayout.DelayedIntField(hour, GUILayout.Width(28));
+        GUILayout.Label("Hours");
+        GUILayout.FlexibleSpace();
+        minute = EditorGUILayout.DelayedIntField(minute, GUILayout.Width(28));
+        GUILayout.Label("Minutes");
+        GUILayout.FlexibleSpace();
+        second = EditorGUILayout.DelayedIntField(second, GUILayout.Width(28));
+        GUILayout.Label("Seconds");
     }
 }

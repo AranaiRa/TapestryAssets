@@ -71,7 +71,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
             }
             if(active != null)
             {
-                Debug.Log("Clicked on \"" + active.title.text + "\"");
+                //Debug.Log("Clicked on \"" + active.title.text + "\"");
 
                 if (side == 1)
                 {

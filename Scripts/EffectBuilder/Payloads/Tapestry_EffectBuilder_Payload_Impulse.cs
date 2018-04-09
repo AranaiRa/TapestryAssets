@@ -37,7 +37,7 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
         dir.x = EditorGUILayout.DelayedFloatField(dir.x, GUILayout.Width(64));
         GUILayout.Label("Y");
         dir.y = EditorGUILayout.DelayedFloatField(dir.y, GUILayout.Width(64));
-        GUILayout.Label("X");
+        GUILayout.Label("Z");
         dir.z = EditorGUILayout.DelayedFloatField(dir.z, GUILayout.Width(64));
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
@@ -63,13 +63,6 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
 
         if (exposeTimeControls)
         {
-            //GUILayout.BeginHorizontal();
-            //GUILayout.Space(40);
-            //GUILayout.Label("Pulse Every ");
-            //pulse = EditorGUILayout.DelayedFloatField(pulse, GUILayout.Width(42));
-            //GUILayout.Label("Seconds");
-            //GUILayout.FlexibleSpace();
-            //GUILayout.EndHorizontal();
         }
 
         GUILayout.EndVertical();

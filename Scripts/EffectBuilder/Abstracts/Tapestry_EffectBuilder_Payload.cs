@@ -4,9 +4,9 @@ using UnityEngine;
 
 [System.Serializable]
 public class Tapestry_EffectBuilder_Payload : ScriptableObject {
-    
-    public bool AffectsPropsOnly;
+
     public bool
+        mustBeInstant = false,
         isStackable = false,
         exposeTimeControls = false;
 
@@ -14,7 +14,7 @@ public class Tapestry_EffectBuilder_Payload : ScriptableObject {
     {
         throw new System.NotImplementedException();
     }
-    
+
     public virtual void DrawInspector()
     {
         GUILayout.BeginVertical("box");

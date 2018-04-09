@@ -5,6 +5,7 @@ using UnityEngine;
 public class Tapestry_EffectZone : MonoBehaviour {
     
     public Tapestry_Effect effect;
+    public bool removeEffectOnTriggerLeave = true;
 
     private void Reset()
     {
@@ -25,7 +26,7 @@ public class Tapestry_EffectZone : MonoBehaviour {
     {
         Tapestry_Actor a = other.GetComponentInParent<Tapestry_Actor>();
         if(a != null)
-            a.AddEffect(effect);
+            a.AddEffect(effect.Clone());
     }
 
     private void OnTriggerExit(Collider other)

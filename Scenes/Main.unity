@@ -5212,7 +5212,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 23
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -17777,8 +17777,11 @@ MonoBehaviour:
     name: Effect
     sprite: {fileID: 0}
     hideEffectDisplay: 0
+    readyForRemoval: 0
     duration: 0
-    payload: {fileID: 1542649856}
+    payload: {fileID: 516237829}
+    decayTime: 3
+  removeEffectOnTriggerLeave: 1
 --- !u!4 &411750432
 Transform:
   m_ObjectHideFlags: 0
@@ -18278,7 +18281,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 26
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -22587,6 +22590,22 @@ Transform:
   m_Father: {fileID: 569124890}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &516237829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 519dda68905754f4f8e101c0b0847814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mustBeInstant: 1
+  isStackable: 0
+  exposeTimeControls: 0
+  newPos: {x: 0, y: 10, z: 1}
+  newRot: 0
 --- !u!1 &518334202
 GameObject:
   m_ObjectHideFlags: 0
@@ -22914,7 +22933,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad7580f6dd8f3c54ab38f8750632bdc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AffectsPropsOnly: 0
+  mustBeInstant: 0
   isStackable: 0
   exposeTimeControls: 1
   type: 12
@@ -40792,7 +40811,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8576b399b24c3c84891fc6f4d6d2b581, type: 3}
       propertyPath: m_RootOrder
-      value: 31
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 8576b399b24c3c84891fc6f4d6d2b581, type: 3}
       propertyPath: m_LocalScale.x
@@ -49047,8 +49066,11 @@ MonoBehaviour:
     name: Effect
     sprite: {fileID: 0}
     hideEffectDisplay: 0
+    readyForRemoval: 0
     duration: 4
     payload: {fileID: 551910412}
+    decayTime: 30
+  removeEffectOnTriggerLeave: 1
 --- !u!4 &1036222102
 Transform:
   m_ObjectHideFlags: 0
@@ -53258,7 +53280,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 27
+      value: 26
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -58522,7 +58544,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 24
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -66878,6 +66900,30 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 1376595230759620, guid: 674cb4781c793a24184ad39809ebf867, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224078434762567960, guid: 674cb4781c793a24184ad39809ebf867,
+        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224078434762567960, guid: 674cb4781c793a24184ad39809ebf867,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224625994155367296, guid: 674cb4781c793a24184ad39809ebf867,
+        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224625994155367296, guid: 674cb4781c793a24184ad39809ebf867,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 674cb4781c793a24184ad39809ebf867, type: 2}
   m_IsPrefabParent: 0
@@ -66901,23 +66947,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.0000005, y: 2.0000005, z: 0.024999991}
   m_Center: {x: -0.00000071525574, y: -0.0000009536743, z: 0.0124999955}
---- !u!114 &1542649856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f464aa682f16c14f9791b53e071f187, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AffectsPropsOnly: 0
-  isStackable: 0
-  exposeTimeControls: 0
-  dir: {x: 0, y: 1, z: 0}
-  strength: 10
-  useLocalDirection: 0
 --- !u!4 &1543746183 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: f9ebe7c57231a6249af4ff4b0aae6425, type: 3}
@@ -67076,7 +67105,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 30
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -67248,7 +67277,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 29
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -80262,7 +80291,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 25
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
@@ -80884,7 +80913,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_RootOrder
-      value: 28
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 56ecf01ef2d084c499dc5310b59f6eb0, type: 3}
       propertyPath: m_LocalScale.x
