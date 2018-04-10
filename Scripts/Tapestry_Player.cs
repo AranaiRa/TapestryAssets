@@ -249,7 +249,7 @@ public class Tapestry_Player : Tapestry_Entity {
                 direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed * personalTimeFactor;
             else
                 direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed * personalTimeFactor;
-
+            
             rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
 
             //end of frame

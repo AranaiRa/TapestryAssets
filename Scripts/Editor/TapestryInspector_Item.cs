@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,10 +8,24 @@ using UnityEditor;
 public class TapestryInspector_Item : Editor
 {
     string keywordToAdd;
+    int pSel;
+    bool startup = true;
 
     public override void OnInspectorGUI()
     {
         Tapestry_Item i = target as Tapestry_Item;
+
+        if (startup)
+        { 
+            if (!ReferenceEquals(i.data.effect, null))
+            {
+                if (!ReferenceEquals(i.data.effect.payload, null))
+                    pSel = ArrayUtility.IndexOf(Tapestry_Config.GetPayloadTypes().Values.ToArray(), i.data.effect.payload.GetType());
+            }
+            else
+                pSel = 0;
+            startup = false;
+        }
 
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
@@ -47,6 +61,8 @@ public class TapestryInspector_Item : Editor
 
         DrawSubTabItemData(i);
 
+        DrawSubTabEffect(i);
+
         DrawSubTabKeywords(i);
 
         i.data.prefabName = i.transform.name;
@@ -78,6 +94,27 @@ public class TapestryInspector_Item : Editor
         i.data.size = (Tapestry_ItemSize)EditorGUILayout.EnumPopup(Tapestry_ItemSize.Negligible, GUILayout.Width(100));
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+
+        GUILayout.EndVertical();
+    }
+
+    protected void DrawSubTabEffect(Tapestry_Item i)
+    {
+        string
+            isConsumableTooltip = "Is this object consumable?";
+
+        if(ReferenceEquals(i.data.effect, null))
+            i.data.effect = (Tapestry_Effect)ScriptableObject.CreateInstance("Tapestry_Effect");
+
+        GUILayout.BeginVertical("box");
+        GUILayout.BeginHorizontal();
+        i.data.useEffect = EditorGUILayout.Toggle(i.data.useEffect, GUILayout.Width(12));
+        GUILayout.Label(new GUIContent("Consumable?", isConsumableTooltip));
+        GUILayout.EndHorizontal();
+        if(i.data.useEffect)
+        {
+            pSel = i.data.effect.DrawInspector(pSel);
+        }
 
         GUILayout.EndVertical();
     }

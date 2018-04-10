@@ -9,7 +9,7 @@ public class testscript : MonoBehaviour {
 
     private void Reset()
     {
-        e = new Tapestry_Effect();
+        e = (Tapestry_Effect)ScriptableObject.CreateInstance("Tapestry_Effect");
         e.payload = new Tapestry_EffectBuilder_Payload_Damage();
         d = new Tapestry_EffectBuilder_Payload_Damage();
         //e.name = "buttfarts";

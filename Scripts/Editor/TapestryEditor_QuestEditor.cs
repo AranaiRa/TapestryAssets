@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class TapestryEditor_QuestEditor : EditorWindow
 {
-    [MenuItem("Tapestry/Quests")]
+    //[MenuItem("Tapestry/Quests")]
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(TapestryEditor_QuestEditor), true, "Tapestry Quests", true);

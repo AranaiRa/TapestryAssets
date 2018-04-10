@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEditor;
 
 [System.Serializable]
-public class Tapestry_Effect {
+public class Tapestry_Effect : ScriptableObject {
 
-    public string name;
+    public string displayName;
     public Sprite sprite;
     public bool 
         hideEffectDisplay = false,
@@ -23,7 +23,7 @@ public class Tapestry_Effect {
 
 	public Tapestry_Effect()
     {
-        name = "Effect";
+        displayName = "Effect";
         duration = Tapestry_EffectBuilder_Duration.Instant;
     }
 
@@ -58,6 +58,12 @@ public class Tapestry_Effect {
         title.fontSize = 14;
 
         EditorGUILayout.BeginVertical("box");
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Effect", title);
+        displayName = EditorGUILayout.DelayedTextField(displayName);
+        GUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginVertical("box");
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Duration", title);
         GUILayout.FlexibleSpace();
@@ -73,7 +79,6 @@ public class Tapestry_Effect {
         if (duration == Tapestry_EffectBuilder_Duration.Timed)
         {
             payload.exposeTimeControls = true;
-            EditorGUILayout.BeginVertical("box");
             EditorGUILayout.BeginHorizontal("box");
 
             GUILayout.Space(40);
@@ -82,7 +87,6 @@ public class Tapestry_Effect {
             GUILayout.FlexibleSpace();
 
             EditorGUILayout.EndHorizontal();
-            EditorGUILayout.EndVertical();
         }
         else
             payload.exposeTimeControls = false;
@@ -90,22 +94,22 @@ public class Tapestry_Effect {
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical("box");
-
+        
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Payload", title);
         GUILayout.FlexibleSpace();
         pSel = EditorGUILayout.Popup(pSel, payloads.Keys.ToArray());
         EditorGUILayout.EndHorizontal();
-
-        EditorGUILayout.BeginVertical("box");
+        
         Type pType = payloads[payloads.Keys.ToArray()[pSel]];
         if (ReferenceEquals(payload, null) || payload.GetType() != pType)
             payload = (Tapestry_EffectBuilder_Payload)ScriptableObject.CreateInstance(pType.ToString());
         payload.DrawInspector();
+        
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndVertical();
-        
+
         return pSel;
     }
 }

@@ -10,6 +10,7 @@ public class Tapestry_UI_HUD : MonoBehaviour {
     //public Text debugelement_time;
     public Tapestry_UI_Fader
         activateIndicator, pushIndicator, liftIndicator;
+    public Image gaugeHealth, gaugeStamina;
 
     private void Start()
     {
@@ -69,13 +70,7 @@ public class Tapestry_UI_HUD : MonoBehaviour {
                 liftIndicator.FadeOut();
         }
 
-        string h = Tapestry_WorldClock.worldTime.Hour.ToString();
-        string m = Tapestry_WorldClock.worldTime.Minute.ToString();
-        if (m.Length == 1)
-            m = "0" + m;
-        string s = Tapestry_WorldClock.worldTime.Second.ToString();
-        if (s.Length == 1)
-            s = "0" + s;
-        //debugelement_time.text = h+":"+m+":"+s;
+        gaugeHealth.fillAmount = (player.health / 1000f);
+        gaugeStamina.fillAmount = (player.stamina / 1000f);
     }
 }

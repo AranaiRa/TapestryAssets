@@ -9,7 +9,7 @@ public class Tapestry_EffectZone : MonoBehaviour {
 
     private void Reset()
     {
-        effect = new Tapestry_Effect();
+        effect = (Tapestry_Effect)ScriptableObject.CreateInstance("Tapestry_Effect");
     }
 
     // Use this for initialization

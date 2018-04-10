@@ -14,9 +14,9 @@ public class TapestryInspector_EffectZone : Editor {
     public override void OnInspectorGUI()
     {
         Tapestry_EffectZone e = target as Tapestry_EffectZone;
-
+        
         if (ReferenceEquals(e.effect, null))
-            e.effect = new Tapestry_Effect();
+            e.effect = (Tapestry_Effect)ScriptableObject.CreateInstance("Tapestry_Effect");
         if (ReferenceEquals(e.effect.payload, null))
             e.effect.payload = (Tapestry_EffectBuilder_Payload)ScriptableObject.CreateInstance("Tapestry_EffectBuilder_Payload_Damage");
 

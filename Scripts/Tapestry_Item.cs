@@ -28,6 +28,11 @@ public class Tapestry_Item : Tapestry_Activatable {
 		
 	}
 
+    public virtual void Use(Tapestry_Actor target)
+    {
+
+    }
+
     public override void Activate(Tapestry_Entity activatingEntity)
     {
         Destroy(this.gameObject);

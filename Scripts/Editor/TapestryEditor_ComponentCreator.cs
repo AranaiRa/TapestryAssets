@@ -26,7 +26,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         DrawInitPanel();
         DrawOptionsPanel();
         DrawButtonsPanel();
-        //DrawNonWorldObjectsPanel();
+        DrawNonWorldObjectsPanel();
     }
 
     private void DrawInitPanel()
@@ -969,7 +969,20 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Item", GUILayout.Width(buttonWidth)))
         {
+            GameObject main = new GameObject();
+            main.name = "T_Item";
 
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
+            gizmo.name = "Location Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+            
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
+
+            Tapestry_Item i = main.AddComponent<Tapestry_Item>();
+            i.displayName = "Unnamed Item";
         }
     }
 
@@ -977,7 +990,20 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Key", GUILayout.Width(buttonWidth)))
         {
+            GameObject main = new GameObject();
+            main.name = "T_Item";
 
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
+            gizmo.name = "Location Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
+
+            Tapestry_Item i = main.AddComponent<Tapestry_Item>();
+            i.displayName = "Unnamed Key";
         }
     }
 

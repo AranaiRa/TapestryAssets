@@ -71,19 +71,36 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
             }
             if(active != null)
             {
-                //Debug.Log("Clicked on \"" + active.title.text + "\"");
+                Debug.Log("Clicked on \"" + active.title.text + "\", side="+side);
 
                 if (side == 1)
                 {
+                    Debug.Log("Clicked on right side");
                     leftInv.AddItem(active.GetData(), 1);
                     rightInv.RemoveItem(active.GetData(), 1);
                     Open(leftInv, rightInv, leftName, rightName);
                 }
-                else if (side == -1 && rightInv != null)
+                else if (side == -1)
                 {
-                    rightInv.AddItem(active.GetData(), 1);
-                    leftInv.RemoveItem(active.GetData(), 1);
-                    Open(leftInv, rightInv, leftName, rightName);
+                    Debug.Log("Clicked on left side");
+                    if (rightInv == null)
+                    {
+                        Debug.Log("no right inventory");
+                        if (active.GetData().useEffect)
+                        {
+                            Debug.Log("Adding effect, deducting item");
+                            FindObjectOfType<Tapestry_Player>().AddEffect(active.GetData().effect);
+                            leftInv.RemoveItem(active.GetData(), 1);
+                            Open(leftInv, rightInv, leftName, rightName);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("has right inventory tho");
+                        rightInv.AddItem(active.GetData(), 1);
+                        leftInv.RemoveItem(active.GetData(), 1);
+                        Open(leftInv, rightInv, leftName, rightName);
+                    }
                 }
             }
         }

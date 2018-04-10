@@ -16,7 +16,9 @@ public class Tapestry_ItemData {
         displayName,
         keyID;
     public bool
-        isKey;
+        isKey,
+        useEffect;
+    public Tapestry_Effect effect;
 
     public Tapestry_ItemData()
     {
@@ -37,6 +39,10 @@ public class Tapestry_ItemData {
         if (isKey)
         {
             if(keyID != data.keyID) check = check && false;
+        }
+        if (useEffect && data.useEffect)
+        {
+            if (!effect.Equals(data.effect)) check = check && false;
         }
         return check;
     }
