@@ -174,9 +174,11 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             canvas.name = "Canvas";
 
             GameObject floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            floor.name = "FLOOR";
             floor.transform.SetParent(geo.transform);
             floor.transform.localScale = new Vector3(100, 0.5f, 100);
             floor.transform.localPosition = new Vector3(0, -0.25f, 0);
+            floor.GetComponent<Renderer>().material = (Material)Resources.Load("Technical/mat_init_floor");
 
             GameObject player = (GameObject)Instantiate(Resources.Load("Technical/T_Player"));
             player.name = "T_Player";
@@ -199,6 +201,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
         GUILayout.EndHorizontal();
 
+        GUILayout.EndVertical();
+
+        GUILayout.BeginVertical("box");
+        DrawTiledAssetGeneratorButton();
         GUILayout.EndVertical();
     }
 
@@ -573,6 +579,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             cube1.transform.SetParent(main.transform);
             cube1.transform.localPosition = new Vector3(0, 0.05f, 0);
             cube1.transform.localScale = new Vector3(1.5f, 0.1f, 1.5f);
+            DestroyImmediate(cube1.gameObject.GetComponent<BoxCollider>());
             if (includeHelpers)
             {
                 string msg = "Replace me with any parts of your Switch that don't move!\n\nIf you have multiple objects that don't move, consider creating an empty game object to use as a folder.";
@@ -616,7 +623,9 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 main.transform.position = Vector3.zero;
 
             Tapestry_SwitchContact s = main.AddComponent<Tapestry_SwitchContact>();
-            s.pingPong = true;
+            s.pingPong = false;
+            s.isInteractable = false;
+            s.displayNameWhenUnactivatable = true;
             s.displayName = "Unnamed Switch";
 
             BoxCollider bc = main.AddComponent<BoxCollider>();
@@ -847,7 +856,8 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             else if (createAtOrigin)
                 main.transform.position = Vector3.zero;
 
-            main.AddComponent<Tapestry_ItemSource>();
+            Tapestry_ItemSource i = main.AddComponent<Tapestry_ItemSource>();
+            i.displayName = "Unnamed Item Source";
         }
     }
 
@@ -930,7 +940,9 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             else if (createAtOrigin)
                 main.transform.position = Vector3.zero;
 
-            main.AddComponent<Tapestry_AnimatedLight>();
+            Tapestry_AnimatedLight l = main.AddComponent<Tapestry_AnimatedLight>();
+            l.toggleOnActivate = true;
+            l.displayName = "Unnamed Light";
         }
     }
 
@@ -1002,8 +1014,28 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             else if (createAtOrigin)
                 main.transform.position = Vector3.zero;
 
-            Tapestry_Item i = main.AddComponent<Tapestry_Item>();
+            Tapestry_ItemKey i = main.AddComponent<Tapestry_ItemKey>();
             i.displayName = "Unnamed Key";
+        }
+    }
+
+    private void DrawTiledAssetGeneratorButton()
+    {
+        if (GUILayout.Button("Tiled Asset Generator"))
+        {
+            GameObject main = new GameObject();
+            main.name = "T_TiledAssetGenerator";
+
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
+            gizmo.name = "Location Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
+
+            main.AddComponent<Tapestry_TiledAssetGenerator>();
         }
     }
 

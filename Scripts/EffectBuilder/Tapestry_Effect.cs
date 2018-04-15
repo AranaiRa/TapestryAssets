@@ -23,7 +23,7 @@ public class Tapestry_Effect : ScriptableObject {
 
 	public Tapestry_Effect()
     {
-        displayName = "Effect";
+        displayName = "Unnamed Effect";
         duration = Tapestry_EffectBuilder_Duration.Instant;
     }
 
@@ -88,6 +88,8 @@ public class Tapestry_Effect : ScriptableObject {
 
             EditorGUILayout.EndHorizontal();
         }
+        else if (duration == Tapestry_EffectBuilder_Duration.Permanent)
+            payload.exposeTimeControls = true;
         else
             payload.exposeTimeControls = false;
 

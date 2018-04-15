@@ -49,12 +49,12 @@ public class Tapestry_EffectBuilder_Payload_Damage : Tapestry_EffectBuilder_Payl
 
         GUILayout.BeginHorizontal();
         GUILayout.Space(40);
-        GUILayout.Label("Range");
-        amountMin = EditorGUILayout.DelayedFloatField(amountMin, GUILayout.Width(42));
+        GUILayout.Label("Damage Spread");
+        amountMin = EditorGUILayout.DelayedFloatField(amountMin, GUILayout.Width(36));
         if (amountMin < 0)
             amountMin = 0;
         GUILayout.Label("-");
-        amountMax = EditorGUILayout.DelayedFloatField(amountMax, GUILayout.Width(42));
+        amountMax = EditorGUILayout.DelayedFloatField(amountMax, GUILayout.Width(36));
         if (amountMax < amountMin)
             amountMax = amountMin;
         GUILayout.FlexibleSpace();
