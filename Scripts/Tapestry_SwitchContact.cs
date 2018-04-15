@@ -40,19 +40,7 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
 
             if (a != null)
             {
-                bool keywordMatch = false;
-
-                foreach (string kw in a.keywords)
-                {
-                    if (keywords.Contains(kw))
-                    {
-                        keywordMatch = true;
-                        touching.Add(other);
-                        break;
-                    }
-                }
-
-                if (keywordMatch)
+                if (a.keywords.ContainsOne(keywords))
                 {
                     if (!isOn)
                         SwitchOn();

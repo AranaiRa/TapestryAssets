@@ -7,7 +7,6 @@ public class Tapestry_EffectBuilder_Payload : ScriptableObject {
 
     public bool
         mustBeInstant = false,
-        isStackable = false,
         exposeTimeControls = false;
 
     public virtual void Apply(Tapestry_Actor target)

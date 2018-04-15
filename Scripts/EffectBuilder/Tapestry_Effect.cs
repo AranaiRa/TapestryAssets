@@ -12,11 +12,13 @@ public class Tapestry_Effect : ScriptableObject {
     public Sprite sprite;
     public bool 
         hideEffectDisplay = false,
-        readyForRemoval = false;
+        readyForRemoval = false,
+        canBeStacked = false;
     public Tapestry_EffectBuilder_Duration duration;
     public Tapestry_EffectBuilder_Payload payload;
     public float
         decayTime = 30f;
+    public Tapestry_KeywordRegistry keywords;
 
     private float
         time;
@@ -51,6 +53,8 @@ public class Tapestry_Effect : ScriptableObject {
     {
         if (ReferenceEquals(payload, null))
             payload = (Tapestry_EffectBuilder_Payload_Damage)ScriptableObject.CreateInstance("Tapestry_EffectBuilder_Payload_Damage");
+        if (ReferenceEquals(keywords, null))
+            keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
         Dictionary<string, Type> payloads = Tapestry_Config.GetPayloadTypes();
 
         GUIStyle title = new GUIStyle();
@@ -59,8 +63,15 @@ public class Tapestry_Effect : ScriptableObject {
 
         EditorGUILayout.BeginVertical("box");
         GUILayout.BeginHorizontal();
-        GUILayout.Label("Effect", title);
+        GUILayout.Label("Effect", title, GUILayout.Width(60));
         displayName = EditorGUILayout.DelayedTextField(displayName);
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Space(65);
+        canBeStacked = EditorGUILayout.Toggle(canBeStacked, GUILayout.Width(12));
+        GUILayout.Label("Can be stacked?");
+        GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
         EditorGUILayout.BeginVertical("box");
@@ -109,6 +120,8 @@ public class Tapestry_Effect : ScriptableObject {
         payload.DrawInspector();
         
         EditorGUILayout.EndVertical();
+
+        keywords.DrawInspector();
 
         EditorGUILayout.EndVertical();
 

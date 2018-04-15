@@ -91,57 +91,9 @@ public class TapestryInspector_SwitchContact : TapestryInspector_Switch {
 
     private void DrawSubTabKeywords(Tapestry_SwitchContact s)
     {
-        if (s.keywords == null)
-            s.keywords = new List<string>();
+        if (ReferenceEquals(s.keywords, null))
+            s.keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
 
-        int indexToRemove = -1;
-        GUILayout.BeginVertical("box");
-        GUILayout.Label("Keywords");
-        GUILayout.BeginVertical("box");
-        if (s.keywords.Count == 0)
-        {
-            GUILayout.Label("No keywords associated with this Contact Switch.");
-        }
-        else
-        {
-            for (int i = 0; i < s.keywords.Count; i++)
-            {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("-", GUILayout.Width(20)))
-                {
-                    indexToRemove = i;
-                }
-                s.keywords[i] = EditorGUILayout.DelayedTextField(s.keywords[i]);
-                GUILayout.EndHorizontal();
-            }
-        }
-        if (indexToRemove != -1)
-        {
-            if (s.keywords.Count == 1)
-                s.keywords.Clear();
-            else
-                s.keywords.RemoveAt(indexToRemove);
-        }
-
-        GUILayout.EndVertical();
-
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("+", GUILayout.Width(20)))
-        {
-            if (keywordToAdd != "")
-            {
-                s.keywords.Add(keywordToAdd);
-                keywordToAdd = null;
-            }
-        }
-        keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
-        GUILayout.EndHorizontal();
-
-        GUIStyle ww = GUIStyle.none;
-        ww.wordWrap = true;
-        ww.alignment = TextAnchor.UpperCenter;
-        GUILayout.Label("If this list is not empty, only objects with one of the provided keywords can activate the Contact Switch.", ww);
-
-        GUILayout.EndVertical();
+        s.keywords.DrawInspector();
     }
 }

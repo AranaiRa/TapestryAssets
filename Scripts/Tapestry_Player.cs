@@ -26,16 +26,16 @@ public class Tapestry_Player : Tapestry_Entity {
     void Start ()
     {
         inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
-        if (inventory == null)
-            inventory = new Tapestry_Inventory(this.transform);
-        if(damageProfile == null)
+        if (ReferenceEquals(inventory, null))
+            inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
+        if (damageProfile == null)
             damageProfile = new Tapestry_DamageProfile();
         if(attributeProfile == null)
             attributeProfile = new Tapestry_AttributeProfile();
         if(skillProfile == null)
             skillProfile = new Tapestry_SkillProfile();
         if(keywords == null)
-            keywords = new List<string>();
+            keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
         if (effects == null)
             effects = new List<Tapestry_Effect>();
 
@@ -124,8 +124,8 @@ public class Tapestry_Player : Tapestry_Entity {
                         (objectInSights.GetType() == typeof(Tapestry_ItemKey)))
                     {
                         Tapestry_Item i = (Tapestry_Item)objectInSights;
-                        if (inventory == null)
-                            inventory = new Tapestry_Inventory(this.transform);
+                        if (ReferenceEquals(inventory, null))
+                            inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
 
                         inventory.AddItem(i, 1);
                         objectInSights.Activate(this);
@@ -135,8 +135,8 @@ public class Tapestry_Player : Tapestry_Entity {
                         Tapestry_Door d = (Tapestry_Door)objectInSights;
                         if (d.security.isLocked)
                         {
-                            if (inventory == null)
-                                inventory = new Tapestry_Inventory(this.transform);
+                            if (ReferenceEquals(inventory, null))
+                                inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
 
                             if (!d.GetIsOpen())
                             {

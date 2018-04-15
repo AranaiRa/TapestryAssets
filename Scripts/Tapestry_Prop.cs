@@ -90,7 +90,7 @@ public class Tapestry_Prop : Tapestry_Actor {
         displayNameWhenUnactivatable = true;
         pushSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
         liftSpeedCurve = new AnimationCurve(new Keyframe(0, 0, 0, 1), new Keyframe(1, 1, 1, 0));
-        keywords = new List<string>();
+        keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
 
         bool
             hasIntact = false, hasBroken = false, hasDestroyed = false, hasAttachPoints = false;

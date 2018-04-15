@@ -239,8 +239,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1957099611922242}
-  m_LocalRotation: {x: -0, y: -0.9923731, z: -0, w: 0.12327111}
-  m_LocalPosition: {x: 5.98, y: 1.76, z: -12.96}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4167088936776846}
@@ -248,7 +248,7 @@ Transform:
   - {fileID: 4137512045240136}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -165.83801, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4211101615286332
 Transform:
   m_ObjectHideFlags: 1
@@ -555,99 +555,14 @@ MonoBehaviour:
   isPushable: 0
   isLiftable: 0
   displayNameWhenUnactivatable: 0
-  keywords: []
+  keywords: {fileID: 0}
   emitter: {fileID: 0}
   health: 1000
   threshold: 0
   personalTimeFactor: 1
   effects: []
   stamina: 1000
-  inventory:
-    items:
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: aca6a6eabe942cf4f89e9ff2a59b2ec1, type: 3}
-        value: 0
-        prefabName: item_clutter_ingot_copper
-        displayName: Copper Ingot
-        keyID: 
-        isKey: 0
-      quantity: 1
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: f53fbc911487b1e419fb3128b4809d4f, type: 3}
-        value: 0
-        prefabName: item_clutter_ingot_gold
-        displayName: Gold Ingot
-        keyID: 
-        isKey: 0
-      quantity: 1
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: aa8682b27e635d24fa896c9897ed1c8a, type: 3}
-        value: 0
-        prefabName: item_key_chest
-        displayName: Chest Key
-        keyID: Chest
-        isKey: 1
-      quantity: 1
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: aa8682b27e635d24fa896c9897ed1c8a, type: 3}
-        value: 0
-        prefabName: item_key_ricketydoor
-        displayName: Key
-        keyID: RicketyDoor
-        isKey: 1
-      quantity: 1
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: cd929b464c4ccb14f8f920ff8ca1d5cb, type: 3}
-        value: 0
-        prefabName: item_mushroom_amanita01
-        displayName: Small Amanita Cap
-        keyID: 
-        isKey: 0
-      quantity: 1
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: 4dcd665d0f10812408c94af467a80155, type: 3}
-        value: 0
-        prefabName: item_mushroom_amanita02
-        displayName: Amanita Cap
-        keyID: 
-        isKey: 0
-      quantity: 1
-    - item:
-        keywords: []
-        owningEntity: {fileID: 0}
-        owningFaction: {fileID: 0}
-        size: 0
-        icon: {fileID: 21300000, guid: 99a5a69695253d542ae9321c5eb834b6, type: 3}
-        value: 0
-        prefabName: item_mushroom_amanita03
-        displayName: Large Amanita Cap
-        keyID: 
-        isKey: 0
-      quantity: 1
+  inventory: {fileID: 0}
   attributeProfile:
     ActionSpeed: 1
     CriticalHitRate: 0.045

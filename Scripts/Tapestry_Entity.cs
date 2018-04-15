@@ -38,16 +38,16 @@ public class Tapestry_Entity : Tapestry_Actor {
 
     protected override void Reset()
     {
-        if (inventory == null)
-            inventory = new Tapestry_Inventory(this.transform);
-        if(damageProfile == null)
+        if (ReferenceEquals(inventory, null))
+            inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
+        if (damageProfile == null)
             damageProfile = new Tapestry_DamageProfile();
         if(attributeProfile == null)
             attributeProfile = new Tapestry_AttributeProfile();
         if(skillProfile == null)
             skillProfile = new Tapestry_SkillProfile();
-        if(keywords == null)
-            keywords = new List<string>();
+        if (keywords == null)
+            keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
         if (effects == null)
             effects = new List<Tapestry_Effect>();
 

@@ -112,56 +112,10 @@ public class TapestryInspector_Entity : Editor {
         {
             if (toolbarNames[toolbarActive] == "Inventory")
             {
-                if (e.inventory == null)
-                    e.inventory = new Tapestry_Inventory(e.transform);
+                if (ReferenceEquals(e.inventory, null))
+                    e.inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
 
-                int indexToRemove = -1;
-                GUILayout.BeginVertical("box");
-                GUILayout.Label("Inventory");
-                GUILayout.BeginVertical("box");
-                if (e.inventory.items.Count == 0)
-                    GUILayout.Label("No items in inventory.");
-                else
-                {
-                    for (int i = 0; i < e.inventory.items.Count; i++)
-                    {
-                        Tapestry_ItemStack stack = e.inventory.items[i];
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("-", GUILayout.Width(20)))
-                        {
-                            indexToRemove = i;
-                        }
-                        GUILayout.FlexibleSpace();
-                        stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Label("x", GUILayout.Width(12));
-                        GUILayout.FlexibleSpace();
-                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(300));
-                        GUILayout.EndHorizontal();
-                    }
-                }
-                if (indexToRemove != -1)
-                {
-                    if (e.inventory.items.Count == 1)
-                        e.inventory.items.Clear();
-                    else
-                        e.inventory.items.RemoveAt(indexToRemove);
-                }
-                GUILayout.EndVertical();
-                GUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                if (GUILayout.Button("+", GUILayout.Width(20)))
-                {
-                    if (itemToAdd != null)
-                    {
-                        e.inventory.AddItem(itemToAdd, 1);
-                        itemToAdd = null;
-                    }
-                }
-                itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
-
-                GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
+                e.inventory.DrawInspector();
             }
             if (toolbarNames[toolbarActive] == "Skills")
             {
@@ -214,50 +168,9 @@ public class TapestryInspector_Entity : Editor {
                 GUILayout.EndVertical();
 
                 if (e.keywords == null)
-                    e.keywords = new List<string>();
+                    e.keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
 
-                int indexToRemove = -1;
-                GUILayout.BeginVertical("box");
-                GUILayout.Label("Keywords");
-                GUILayout.BeginVertical("box");
-                if (e.keywords.Count == 0)
-                {
-                    GUILayout.Label("No keywords associated with this Entity.");
-                }
-                else
-                {
-                    for (int i = 0; i < e.keywords.Count; i++)
-                    {
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("-", GUILayout.Width(20)))
-                        {
-                            indexToRemove = i;
-                        }
-                        e.keywords[i] = EditorGUILayout.DelayedTextField(e.keywords[i]);
-                        GUILayout.EndHorizontal();
-                    }
-                }
-                if (indexToRemove != -1)
-                {
-                    if (e.keywords.Count == 1)
-                        e.keywords.Clear();
-                    else
-                        e.keywords.RemoveAt(indexToRemove);
-                }
-
-                GUILayout.EndVertical();
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("+", GUILayout.Width(20)))
-                {
-                    if (keywordToAdd != "")
-                    {
-                        e.keywords.Add(keywordToAdd);
-                        keywordToAdd = null;
-                    }
-                }
-                keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
-                GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
+                e.keywords.DrawInspector();
             }
         }
     }

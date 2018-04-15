@@ -78,7 +78,7 @@ public class Tapestry_ItemList {
 
     public Tapestry_Inventory GenerateInventory(Transform source)
     {
-        Tapestry_Inventory export = new Tapestry_Inventory(source);
+        Tapestry_Inventory export = new Tapestry_Inventory();
 
         export.items = GenerateItems();
 

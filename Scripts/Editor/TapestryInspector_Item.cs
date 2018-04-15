@@ -121,52 +121,9 @@ public class TapestryInspector_Item : Editor
 
     protected void DrawSubTabKeywords(Tapestry_Item i)
     {
-        if (i.keywords == null)
-            i.keywords = new List<string>();
+        if (ReferenceEquals(i.keywords, null))
+            i.keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
 
-        int indexToRemove = -1;
-        GUILayout.BeginVertical("box");
-        GUILayout.Label("Keywords");
-        GUILayout.BeginVertical("box");
-        if (i.keywords.Count == 0)
-        {
-            GUILayout.Label("No keywords associated with this Item.");
-        }
-        else
-        {
-            for (int j = 0; j < i.keywords.Count; j++)
-            {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("-", GUILayout.Width(20)))
-                {
-                    indexToRemove = j;
-                }
-                i.keywords[j] = EditorGUILayout.DelayedTextField(i.keywords[j]);
-                GUILayout.EndHorizontal();
-            }
-        }
-        if (indexToRemove != -1)
-        {
-            if (i.keywords.Count == 1)
-                i.keywords.Clear();
-            else
-                i.keywords.RemoveAt(indexToRemove);
-        }
-
-        GUILayout.EndVertical();
-
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button("+", GUILayout.Width(20)))
-        {
-            if (keywordToAdd != "")
-            {
-                i.keywords.Add(keywordToAdd);
-                keywordToAdd = null;
-            }
-        }
-        keywordToAdd = EditorGUILayout.TextField(keywordToAdd);
-        GUILayout.EndHorizontal();
-
-        GUILayout.EndVertical();
+        i.keywords.DrawInspector();
     }
 }

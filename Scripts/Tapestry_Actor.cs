@@ -47,8 +47,8 @@ public class Tapestry_Actor : Tapestry_Activatable {
 
     public virtual void AddEffect(Tapestry_Effect effect)
     {
-        //temp: filter effects that don't work on actors
-        effects.Add(effect);
+        if(effect.canBeStacked || !effects.Contains(effect))
+            effects.Add(effect);
     }
 
     public virtual void DealDamage(Tapestry_DamageType type, float amount)

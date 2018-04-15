@@ -1,16 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [System.Serializable]
-public class Tapestry_Inventory {
+public class Tapestry_Inventory : ScriptableObject {
 
     public List<Tapestry_ItemStack> items;
-    private Transform source;
+    private Tapestry_Item itemToAdd;
 
-    public Tapestry_Inventory(Transform source)
+    public Tapestry_Inventory()
     {
-        this.source = source;
         items = new List<Tapestry_ItemStack>();
     }
 
@@ -23,6 +23,8 @@ public class Tapestry_Inventory {
     {
         if (item != null)
         {
+            if(items == null)
+                items = new List<Tapestry_ItemStack>();
             bool added = false;
             for (int i = 0; i < items.Count; i++)
             {
@@ -67,7 +69,7 @@ public class Tapestry_Inventory {
         return check;
     }
 
-    public void DropItem(Tapestry_ItemData id, int amount = 1)
+    public void DropItem(Transform centerpoint, Tapestry_ItemData id, int amount = 1)
     {
         if (amount >= 0)
         {
@@ -78,7 +80,7 @@ public class Tapestry_Inventory {
                     if (amount > stack.quantity)
                         amount = stack.quantity;
                     GameObject clone = GameObject.Instantiate(Resources.Load("Items/"+stack.item.prefabName) as GameObject);
-                    clone.transform.position = source.position + source.forward * Tapestry_Config.ItemDropDistance;
+                    clone.transform.position = centerpoint.position + centerpoint.forward * Tapestry_Config.ItemDropDistance;
                     clone.transform.rotation = Quaternion.Euler(0, Random.Range(0, 360), 0);
                     
                     stack.quantity -= amount;
@@ -135,5 +137,56 @@ public class Tapestry_Inventory {
                 }
             }
         }
+    }
+
+    public void DrawInspector()
+    {
+        int indexToRemove = -1;
+        GUILayout.BeginVertical("box");
+        GUILayout.Label("Inventory");
+        GUILayout.BeginVertical("box");
+        if (items.Count == 0)
+            GUILayout.Label("No items in inventory.");
+        else
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                Tapestry_ItemStack stack = items[i];
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("-", GUILayout.Width(20)))
+                {
+                    indexToRemove = i;
+                }
+                GUILayout.FlexibleSpace();
+                stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("x", GUILayout.Width(12));
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(270));
+                GUILayout.EndHorizontal();
+            }
+        }
+        if (indexToRemove != -1)
+        {
+            if (items.Count == 1)
+                items.Clear();
+            else
+                items.RemoveAt(indexToRemove);
+        }
+        GUILayout.EndVertical();
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("+", GUILayout.Width(20)))
+        {
+            if (itemToAdd != null)
+            {
+                AddItem(itemToAdd, 1);
+                itemToAdd = null;
+            }
+        }
+        itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
+
+        GUILayout.EndHorizontal();
+        GUILayout.EndVertical();
     }
 }

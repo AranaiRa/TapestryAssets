@@ -47,8 +47,8 @@ public class Tapestry_Container : Tapestry_Prop {
     // Use this for initialization
     void Start ()
     {
-        if (inventory == null)
-            inventory = new Tapestry_Inventory(this.transform);
+        if (ReferenceEquals(inventory, null))
+            inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
         if (security == null)
             security = new Tapestry_Lock(false, 0, "");
         if(curve == null)
@@ -58,7 +58,6 @@ public class Tapestry_Container : Tapestry_Prop {
     protected override void Reset()
     {
         displayName = "Container";
-        inventory = new Tapestry_Inventory(this.transform);
         security = new Tapestry_Lock(false, 0, "");
         curve = new AnimationCurve(new Keyframe(0, 0, 0, 0), new Keyframe(1, 1, 0, 0));
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Tapestry_Activatable : MonoBehaviour {
+public class Tapestry_Activatable : MonoBehaviour {
 
     public string 
         displayName = "";
@@ -11,7 +11,7 @@ public abstract class Tapestry_Activatable : MonoBehaviour {
         isPushable = false,
         isLiftable = false,
         displayNameWhenUnactivatable = false;
-    public List<string> keywords;
+    public Tapestry_KeywordRegistry keywords;
     public AudioSource
         emitter;
 
