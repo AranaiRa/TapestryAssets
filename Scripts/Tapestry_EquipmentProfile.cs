@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_EquipmentProfile : MonoBehaviour {
+public class Tapestry_EquipmentProfile : ScriptableObject {
 
     private Tapestry_ItemEquippable 
         leftHand, rightHand,
@@ -10,15 +10,10 @@ public class Tapestry_EquipmentProfile : MonoBehaviour {
         eyes, ears, neck, shoulders,
         wrists, fingers, waist, back;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public Tapestry_EquipmentProfile()
+    {
+
+    }
 
     public Tapestry_ItemEquippable GetInSlot(Tapestry_EquipSlot slot)
     {
@@ -108,7 +103,7 @@ public class Tapestry_EquipmentProfile : MonoBehaviour {
 
 public enum Tapestry_EquipSlot
 {
-    LeftHand, RightHand,
+    LeftHand, RightHand, BothHands, EitherHand,
     Head, Body, Hands, Legs, Feet,
     Eyes, Ears, Neck, Shoulders,
     Wrist, Fingers, Waist, Back

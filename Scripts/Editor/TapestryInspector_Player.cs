@@ -134,6 +134,8 @@ public class TapestryInspector_Player : Editor
                 DrawSubTabKeywords(e);
             }
         }
+
+        base.DrawDefaultInspector();
     }
 
     private void DrawTabInventory(Tapestry_Player e)

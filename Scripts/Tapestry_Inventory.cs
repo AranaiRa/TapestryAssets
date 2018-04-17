@@ -21,8 +21,9 @@ public class Tapestry_Inventory : ScriptableObject {
 
     public void AddItem(Tapestry_ItemData item, int quantity)
     {
+        Debug.Log("Running add method");
         if (item != null)
-        {
+        {   
             if(items == null)
                 items = new List<Tapestry_ItemStack>();
             bool added = false;
@@ -141,9 +142,13 @@ public class Tapestry_Inventory : ScriptableObject {
 
     public void DrawInspector()
     {
+        GUIStyle title = new GUIStyle();
+        title.fontStyle = FontStyle.Bold;
+        title.fontSize = 14;
+
         int indexToRemove = -1;
         GUILayout.BeginVertical("box");
-        GUILayout.Label("Inventory");
+        GUILayout.Label("Inventory", title);
         GUILayout.BeginVertical("box");
         if (items.Count == 0)
             GUILayout.Label("No items in inventory.");

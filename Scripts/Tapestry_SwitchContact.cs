@@ -27,7 +27,10 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(keywords.Count == 0)
+        if (ReferenceEquals(keywords, null))
+            keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
+
+        if (keywords.Count == 0)
         {
             touching.Add(other);
 
@@ -51,6 +54,9 @@ public class Tapestry_SwitchContact : Tapestry_Switch {
 
     private void OnTriggerExit(Collider other)
     {
+        if (ReferenceEquals(keywords, null))
+            keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
+
         if (keywords.Count == 0)
         {
             touching.Remove(other);

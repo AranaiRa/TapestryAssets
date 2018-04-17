@@ -4,16 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 
-[CustomEditor(typeof(Tapestry_Item))]
-public class TapestryInspector_Item : Editor
+[CustomEditor(typeof(Tapestry_ItemEquippable))]
+public class TapestryInspector_ItemHoldable : TapestryInspector_Item
 {
-    protected string keywordToAdd;
-    protected int pSel;
-    protected bool startup = true;
-
     public override void OnInspectorGUI()
     {
-        Tapestry_Item i = target as Tapestry_Item;
+        Tapestry_ItemEquippable i = target as Tapestry_ItemEquippable;
+        i.data.isHoldable = true;
 
         if (startup)
         { 
@@ -68,62 +65,24 @@ public class TapestryInspector_Item : Editor
         i.data.prefabName = i.transform.name;
     }
 
-    protected virtual void DrawSubTabItemData(Tapestry_Item i)
+    protected override void DrawSubTabEffect(Tapestry_Item i)
     {
         string
-            owningEntityTooltip = "What entity, if any, owns this object?",
-            owningFactionTooltip = "What faction, if any, owns this object? If a faction owns the object, all Entities within the faction count as owning it.",
-            iconTooltip = "What sprite is displayed in HUD elements (such as the inventory screen)",
-            sizeTooltip = "What size is this object? Entities can carry as many Negligable sized objects as they like, but larger objects have limitations.";
+            effectOnHoldTooltip = "Does this object apply an Effect to the holder while held?";
 
-        GUILayout.BeginVertical("box");
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(new GUIContent("Owner", owningEntityTooltip));
-        i.data.owningEntity = (Tapestry_Entity)EditorGUILayout.ObjectField(i.data.owningEntity, typeof(Tapestry_Entity), true, GUILayout.Width(140));
-        GUILayout.FlexibleSpace();
-        GUILayout.Label(new GUIContent("Faction", owningFactionTooltip));
-        i.data.owningFaction = (Tapestry_Faction)EditorGUILayout.ObjectField(i.data.owningFaction, typeof(Tapestry_Faction), true, GUILayout.Width(140));
-        GUILayout.EndHorizontal();
-
-        GUILayout.BeginHorizontal();
-        GUILayout.Label(new GUIContent("Icon", iconTooltip));
-        i.data.icon = (Sprite)EditorGUILayout.ObjectField(i.data.icon, typeof(Sprite), true, GUILayout.Width(140));
-        GUILayout.FlexibleSpace();
-        GUILayout.Label(new GUIContent("Size", sizeTooltip));
-        i.data.size = (Tapestry_ItemSize)EditorGUILayout.EnumPopup(Tapestry_ItemSize.Negligible, GUILayout.Width(100));
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
-        GUILayout.EndVertical();
-    }
-
-    protected virtual void DrawSubTabEffect(Tapestry_Item i)
-    {
-        string
-            isConsumableTooltip = "Is this object consumable?";
-
-        if(ReferenceEquals(i.data.effect, null))
+        if (ReferenceEquals(i.data.effect, null))
             i.data.effect = (Tapestry_Effect)ScriptableObject.CreateInstance("Tapestry_Effect");
 
         GUILayout.BeginVertical("box");
         GUILayout.BeginHorizontal();
         i.data.useEffect = EditorGUILayout.Toggle(i.data.useEffect, GUILayout.Width(12));
-        GUILayout.Label(new GUIContent("Consumable?", isConsumableTooltip));
+        GUILayout.Label(new GUIContent("Apply Effect While Held?", effectOnHoldTooltip));
         GUILayout.EndHorizontal();
-        if(i.data.useEffect)
+        if (i.data.useEffect)
         {
             pSel = i.data.effect.DrawInspector(pSel);
         }
 
         GUILayout.EndVertical();
-    }
-
-    protected virtual void DrawSubTabKeywords(Tapestry_Item i)
-    {
-        if (ReferenceEquals(i.keywords, null))
-            i.keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
-
-        i.keywords.DrawInspector();
     }
 }

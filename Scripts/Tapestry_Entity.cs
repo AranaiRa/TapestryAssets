@@ -9,6 +9,7 @@ public class Tapestry_Entity : Tapestry_Actor {
     public Tapestry_Inventory inventory;
     public Tapestry_AttributeProfile attributeProfile;
     public Tapestry_SkillProfile skillProfile;
+    public Tapestry_EquipmentProfile equipmentProfile;
     public Tapestry_Prop pushTarget;
     public bool
         isRunning = false,
@@ -20,6 +21,9 @@ public class Tapestry_Entity : Tapestry_Actor {
         carrySmall = 8,
         carryMedium = 3,
         carryLarge = 1;
+    public GameObject
+        holdContainerLeft,
+        holdContainerRight;
 
     protected float speed;
 
@@ -28,6 +32,8 @@ public class Tapestry_Entity : Tapestry_Actor {
     void Start () {
         if(effects == null)
             effects = new List<Tapestry_Effect>();
+        if (ReferenceEquals(equipmentProfile, null))
+            equipmentProfile = (Tapestry_EquipmentProfile)ScriptableObject.CreateInstance("Tapestry_EquipmentProfile");
     }
 	
 	// Update is called once per frame
@@ -88,6 +94,20 @@ public class Tapestry_Entity : Tapestry_Actor {
         else if (stamina > 200) return Tapestry_StaminaState.Winded;
         else if (stamina > 0) return Tapestry_StaminaState.Exhausted;
         else return Tapestry_StaminaState.Unconscious;
+    }
+
+    public virtual void Equip(Tapestry_ItemData item, Tapestry_EquipSlot slot)
+    {
+        if (ReferenceEquals(equipmentProfile, null))
+            equipmentProfile = (Tapestry_EquipmentProfile)ScriptableObject.CreateInstance("Tapestry_EquipmentProfile");
+
+        foreach(Tapestry_ItemStack id in inventory.items)
+        {
+            if(id.item.Equals(item))
+            {
+                Debug.Log("Item exists");
+            }
+        }
     }
 }
 

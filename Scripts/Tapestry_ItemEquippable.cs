@@ -1,20 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
-public class Tapestry_ItemEquippable : MonoBehaviour {
+public class Tapestry_ItemEquippable : Tapestry_Item {
 
-    public Tapestry_EquipSlot slot = Tapestry_EquipSlot.RightHand;
-    public Dictionary<Tapestry_Entity, Mesh> fits;
-    public Tapestry_Effect effect;
+    public bool isTwoHanded = false;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    protected override void Reset()
+    {
+        base.Reset();
+        data.isHoldable = true;
+    }
 }

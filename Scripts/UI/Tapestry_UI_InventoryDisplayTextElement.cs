@@ -11,7 +11,12 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
         size,
         title;
     public Image
-        highlight;
+        highlight,
+        equipIcon;
+    public Sprite
+        spriteLeft,
+        spriteRight,
+        spriteBoth;
     private bool
         active;
     private Tapestry_ItemData data;
@@ -28,6 +33,7 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
     {
         active = false;
         highlight.gameObject.SetActive(false);
+        equipIcon.gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -59,6 +65,29 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
             size.text = "–";
         quantity.text = data.quantity.ToString();
         title.text = data.item.displayName;
+    }
+
+    public void SetEquippedState(int state)
+    {
+        if (state == 0)
+        {
+            equipIcon.gameObject.SetActive(false);
+        }
+        else if (state == 1)
+        {
+            equipIcon.sprite = spriteLeft;
+            equipIcon.gameObject.SetActive(true);
+        }
+        else if (state == 2)
+        {
+            equipIcon.sprite = spriteRight;
+            equipIcon.gameObject.SetActive(true);
+        }
+        else if (state == 3)
+        {
+            equipIcon.sprite = spriteBoth;
+            equipIcon.gameObject.SetActive(true);
+        }
     }
 
     public Tapestry_ItemData GetData()

@@ -51,6 +51,12 @@ public class Tapestry_Actor : Tapestry_Activatable {
             effects.Add(effect);
     }
 
+    public virtual void RemoveEffect(Tapestry_Effect effect)
+    {
+        if (effects.Contains(effect))
+            effects.Remove(effect);
+    }
+
     public virtual void DealDamage(Tapestry_DamageType type, float amount)
     {
         amount *= (1 + damageProfile.GetRes(type));

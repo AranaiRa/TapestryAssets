@@ -196,9 +196,9 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         GUILayout.FlexibleSpace();
         DrawItemButton();
         GUILayout.FlexibleSpace();
-        DrawKeyButton();
+        DrawItemHoldableButton();
         GUILayout.FlexibleSpace();
-
+        DrawKeyButton();
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();
@@ -969,7 +969,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             else if (createAtOrigin)
                 main.transform.position = Vector3.zero;
 
-            Tapestry_EffectZone ez = main.AddComponent<Tapestry_EffectZone>();
+            main.AddComponent<Tapestry_EffectZone>();
             BoxCollider bc = main.AddComponent<BoxCollider>();
             bc.center = new Vector3(0, 1, 0);
             bc.size = new Vector3(2, 2, 2);
@@ -995,6 +995,33 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
             Tapestry_Item i = main.AddComponent<Tapestry_Item>();
             i.displayName = "Unnamed Item";
+        }
+    }
+
+    private void DrawItemHoldableButton()
+    {
+        if (GUILayout.Button("Holdable Item", GUILayout.Width(buttonWidth)))
+        {
+            GameObject main = new GameObject();
+            main.name = "T_HoldableItem";
+
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
+            gizmo.name = "Location Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+
+            GameObject cyl = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            cyl.name = "Cyllinder";
+            cyl.transform.localScale = new Vector3(0.03f, 0.5f, 0.03f);
+            cyl.transform.SetParent(main.transform);
+            cyl.transform.localPosition = new Vector3(0, 0.25f, 0);
+
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
+
+            Tapestry_ItemEquippable i = main.AddComponent<Tapestry_ItemEquippable>();
+            i.displayName = "Unnamed Holdable Item";
         }
     }
 

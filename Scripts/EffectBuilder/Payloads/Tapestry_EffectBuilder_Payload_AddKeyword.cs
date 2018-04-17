@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_ItemHoldable : MonoBehaviour {
-
-    public bool isTwoHanded = false;
+public class Tapestry_EffectBuilder_Payload_AddKeyword : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

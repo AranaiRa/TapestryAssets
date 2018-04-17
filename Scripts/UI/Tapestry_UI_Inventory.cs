@@ -19,6 +19,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
     private string
         leftName,
         rightName;
+    private Tapestry_Player player;
 
     public bool IsOpen
     {
@@ -30,7 +31,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
 
     private void Start()
     {
-
+        gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -71,32 +72,43 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
             }
             if(active != null)
             {
-                Debug.Log("Clicked on \"" + active.title.text + "\", side="+side);
+                //Debug.Log("Clicked on \"" + active.title.text + "\", side="+side);
 
                 if (side == 1)
                 {
-                    Debug.Log("Clicked on right side");
                     leftInv.AddItem(active.GetData(), 1);
                     rightInv.RemoveItem(active.GetData(), 1);
                     Open(leftInv, rightInv, leftName, rightName);
                 }
                 else if (side == -1)
                 {
-                    Debug.Log("Clicked on left side");
                     if (rightInv == null)
                     {
-                        Debug.Log("no right inventory");
-                        if (active.GetData().useEffect)
+                        //Debug.Log("No right inventory");
+                        if (active.GetData().isHoldable)
                         {
-                            Debug.Log("Adding effect, deducting item");
-                            FindObjectOfType<Tapestry_Player>().AddEffect(active.GetData().effect);
-                            leftInv.RemoveItem(active.GetData(), 1);
-                            Open(leftInv, rightInv, leftName, rightName);
+                            //Debug.Log("Is a holdable");
+                            player.Equip(active.GetData(), Tapestry_EquipSlot.LeftHand);
+                            active.SetEquippedState(1);
+                            foreach(Tapestry_UI_InventoryDisplayTextElement te in left.elements)
+                            {
+                                if(te.GetData() != player.equippedLeft && te.GetData() != player.equippedRight)
+                                    te.SetEquippedState(0);
+                            }
+                        }
+                        else
+                        {
+                            //Debug.Log("Is a normal");
+                            if (active.GetData().useEffect)
+                            {
+                                player.AddEffect(active.GetData().effect);
+                                leftInv.RemoveItem(active.GetData(), 1);
+                                Open(leftInv, rightInv, leftName, rightName);
+                            }
                         }
                     }
                     else
                     {
-                        Debug.Log("has right inventory tho");
                         rightInv.AddItem(active.GetData(), 1);
                         leftInv.RemoveItem(active.GetData(), 1);
                         Open(leftInv, rightInv, leftName, rightName);
@@ -119,8 +131,9 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
         left.Init(displayPrefab, _leftInv, _leftName);
         leftInv = _leftInv;
         leftName = _leftName;
+        player = FindObjectOfType<Tapestry_Player>();
 
-        if(_rightInv == null)
+        if (_rightInv == null)
         {
             right.gameObject.SetActive(false);
         }
@@ -130,6 +143,20 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
             right.Init(displayPrefab, _rightInv, _rightName);
             rightInv = _rightInv;
             rightName = _rightName;
+        }
+
+        foreach(Tapestry_UI_InventoryDisplayTextElement te in left.elements)
+        {
+            if (player.equippedLeft != null && te.GetData() != null)
+            {
+                Debug.Log("Comparing " + te.GetData().displayName + " to " + player.equippedLeft.displayName);
+                if (te.GetData().Equals(player.equippedLeft))
+                {
+                    Debug.Log("It's a match!");
+                    player.Equip(te.GetData(), Tapestry_EquipSlot.LeftHand);
+                    te.SetEquippedState(1);
+                }
+            }
         }
     }
 

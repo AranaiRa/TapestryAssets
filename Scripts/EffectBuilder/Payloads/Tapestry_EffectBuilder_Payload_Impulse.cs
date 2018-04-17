@@ -22,7 +22,6 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
         if(rb != null)
         {
             rb.velocity = dir * strength;
-            Debug.Log("setting velocity to " + (dir * strength));
         }
     }
 

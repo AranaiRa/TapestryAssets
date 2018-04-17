@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,6 +17,7 @@ public class Tapestry_ItemData {
         keyID;
     public bool
         isKey,
+        isHoldable,
         useEffect;
     public Tapestry_Effect effect;
 

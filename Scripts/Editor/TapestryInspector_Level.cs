@@ -8,7 +8,7 @@ public class TapestryInspector_Level : Editor {
 
     public override void OnInspectorGUI()
     {
-        Tapestry_Level l = target as Tapestry_Level;
+        //Tapestry_Level l = target as Tapestry_Level;
         
         EditorGUILayout.BeginHorizontal("box");
         GUILayout.Label("Day Length (DEBUG)");

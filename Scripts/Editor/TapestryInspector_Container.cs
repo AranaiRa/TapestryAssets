@@ -127,61 +127,14 @@ public class TapestryInspector_Container : TapestryInspector_Prop {
                 if (ReferenceEquals(p.inventory, null))
                     p.inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
 
-                int indexToRemove = -1;
-                GUILayout.BeginVertical("box");
-                GUILayout.Label("Inventory");
-                GUILayout.BeginVertical("box");
-                if (p.inventory.items.Count == 0)
-                    GUILayout.Label("No items in inventory.");
-                else
-                {
-                    for (int i = 0; i < p.inventory.items.Count; i++)
-                    {
-                        Tapestry_ItemStack stack = p.inventory.items[i];
-                        GUILayout.BeginHorizontal();
-                        if (GUILayout.Button("-", GUILayout.Width(20)))
-                        {
-                            indexToRemove = i;
-                        }
-                        GUILayout.FlexibleSpace();
-                        stack.quantity = EditorGUILayout.DelayedIntField(stack.quantity, GUILayout.Width(36));
-                        GUILayout.FlexibleSpace();
-                        GUILayout.Label("x", GUILayout.Width(12));
-                        GUILayout.FlexibleSpace();
-                        EditorGUILayout.TextField(stack.item.displayName, GUILayout.Width(300));
-                        GUILayout.EndHorizontal();
-                    }
-                }
-                if(indexToRemove != -1)
-                {
-                    if (p.inventory.items.Count == 1)
-                        p.inventory.items.Clear();
-                    else
-                        p.inventory.items.RemoveAt(indexToRemove);
-                }
-                GUILayout.EndVertical();
-                GUILayout.BeginHorizontal();
-                GUILayout.FlexibleSpace();
-                if(GUILayout.Button("+", GUILayout.Width(20)))
-                {
-                    if (itemToAdd != null)
-                    {
-                        if (p.inventory.ContainsItem(itemToAdd) == false)
-                            p.inventory.AddItem(itemToAdd, 1);
-                        itemToAdd = null;
-                    }
-                }
-                itemToAdd = (Tapestry_Item)EditorGUILayout.ObjectField(itemToAdd, typeof(Tapestry_Item), true, GUILayout.Width(300));
-                
-                GUILayout.EndHorizontal();
-                GUILayout.EndVertical();
+                p.inventory.DrawInspector();
             }
             if (toolbarNames[toolbarActive] == "Other")
             {
                 GUILayout.BeginVertical("box");
                 GUILayout.Label("Time");
                 GUILayout.BeginHorizontal("box");
-                string timeTooltip = "What time scale this entity operates at. 1.0 is normal timp.";
+                string timeTooltip = "What time scale this entity operates at. 1.0 is normal time.";
 
                 GUILayout.Label(new GUIContent("Factor", timeTooltip));
                 p.personalTimeFactor = EditorGUILayout.DelayedFloatField(p.personalTimeFactor);

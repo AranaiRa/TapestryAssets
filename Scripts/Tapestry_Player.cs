@@ -13,6 +13,9 @@ public class Tapestry_Player : Tapestry_Entity {
     public bool allowCameraMovement = true;
     public Tapestry_Activatable objectInSights;
     public Tapestry_UI_Inventory inventoryUI;
+    public Tapestry_ItemData
+        equippedLeft,
+        equippedRight;
 
     protected override void Reset()
     {
@@ -120,8 +123,7 @@ public class Tapestry_Player : Tapestry_Entity {
 
                 if (activateLastFrame && !activate && objectInSights.GetComponent<Tapestry_Activatable>().isInteractable)
                 {
-                    if ((objectInSights.GetType() == typeof(Tapestry_Item)) ||
-                        (objectInSights.GetType() == typeof(Tapestry_ItemKey)))
+                    if ((typeof(Tapestry_Item).IsAssignableFrom(objectInSights.GetType())))
                     {
                         Tapestry_Item i = (Tapestry_Item)objectInSights;
                         if (ReferenceEquals(inventory, null))
@@ -283,7 +285,57 @@ public class Tapestry_Player : Tapestry_Entity {
 
     public Tapestry_Entity ClonePlayerAsEntity()
     {
-        Debug.Log("TODO: ClonePlayerAsEntity");
-        return new Tapestry_Entity();
+        throw new System.NotImplementedException();
+    }
+
+    public override void Equip(Tapestry_ItemData item, Tapestry_EquipSlot slot)
+    {
+        Debug.Log("Running Equip block");
+
+        if (slot == Tapestry_EquipSlot.LeftHand || slot == Tapestry_EquipSlot.RightHand)
+        {
+            GameObject obj = (GameObject)Instantiate(Resources.Load("Items/"+item.prefabName));
+
+            if (slot == Tapestry_EquipSlot.LeftHand)
+            {
+                Unequip(Tapestry_EquipSlot.LeftHand);
+                obj.transform.SetParent(holdContainerLeft.transform);
+                if (equippedLeft != null)
+                    equippedLeft = item;
+            }
+            if (slot == Tapestry_EquipSlot.RightHand)
+            {
+                Unequip(Tapestry_EquipSlot.LeftHand);
+                obj.transform.SetParent(holdContainerRight.transform);
+                if (equippedRight != null)
+                    equippedRight = item;
+            }
+            obj.transform.localPosition = Vector3.zero;
+            obj.transform.localRotation = Quaternion.identity;
+
+            obj.layer = 8;
+            foreach (Transform t in obj.transform)
+            {
+                t.gameObject.layer = 8;
+            }
+            foreach (Collider c in obj.GetComponentsInChildren<Collider>())
+            {
+                if(!c.isTrigger)
+                    c.enabled = false;
+            }
+        }
+        else
+            Debug.Log("TAPESTRY ERROR: Holdable items can only be equipped in the left or right hand!");
+    }
+
+    private void Unequip(Tapestry_EquipSlot slot)
+    {
+        if(slot == Tapestry_EquipSlot.LeftHand)
+        {
+            foreach(Transform child in holdContainerLeft.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
     }
 }
