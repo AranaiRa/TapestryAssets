@@ -101,13 +101,22 @@ public class Tapestry_Entity : Tapestry_Actor {
         if (ReferenceEquals(equipmentProfile, null))
             equipmentProfile = (Tapestry_EquipmentProfile)ScriptableObject.CreateInstance("Tapestry_EquipmentProfile");
 
-        foreach(Tapestry_ItemStack id in inventory.items)
+        //foreach(Tapestry_ItemStack id in inventory.items)
+        for (int i = inventory.items.Count - 1; i >= 0; i--)
         {
-            if(id.item.Equals(item))
+            if(inventory.items[i].item.Equals(item))
             {
                 Debug.Log("Item exists");
+                equipmentProfile.Equip(slot, item);
+                inventory.RemoveItem(item, 1);
             }
         }
+    }
+
+    public virtual void Unequip(Tapestry_EquipSlot slot)
+    {
+        inventory.AddItem(equipmentProfile.GetInSlot(slot), 1);
+        equipmentProfile.Equip(slot, null);
     }
 }
 

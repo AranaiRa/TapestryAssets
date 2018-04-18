@@ -4,18 +4,42 @@ using UnityEngine;
 
 public class Tapestry_EquipmentProfile : ScriptableObject {
 
-    private Tapestry_ItemEquippable 
+    private Tapestry_ItemData
         leftHand, rightHand,
         head, body, hands, legs, feet,
         eyes, ears, neck, shoulders,
         wrists, fingers, waist, back;
+
+    public bool HasNoItemsEquipped
+    {
+        get
+        {
+            bool has = false;
+            if (leftHand != null) has = has || true;
+            if (rightHand != null) has = has || true;
+            if (head != null) has = has || true;
+            if (body != null) has = has || true;
+            if (hands != null) has = has || true;
+            if (legs != null) has = has || true;
+            if (feet != null) has = has || true;
+            if (eyes != null) has = has || true;
+            if (ears != null) has = has || true;
+            if (neck != null) has = has || true;
+            if (shoulders != null) has = has || true;
+            if (wrists != null) has = has || true;
+            if (fingers != null) has = has || true;
+            if (waist != null) has = has || true;
+            if (back != null) has = has || true;
+            return has;
+        }
+    }
 
     public Tapestry_EquipmentProfile()
     {
 
     }
 
-    public Tapestry_ItemEquippable GetInSlot(Tapestry_EquipSlot slot)
+    public Tapestry_ItemData GetInSlot(Tapestry_EquipSlot slot)
     {
         switch(slot)
         {
@@ -48,10 +72,10 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
             case Tapestry_EquipSlot.Back:
                 return back;
         }
-        return new Tapestry_ItemEquippable();
+        return null;
     }
 
-    public void Equip(Tapestry_EquipSlot slot, Tapestry_ItemEquippable item)
+    public void Equip(Tapestry_EquipSlot slot, Tapestry_ItemData item)
     {
         switch (slot)
         {
@@ -98,6 +122,29 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
                 back = item;
                 break;
         }
+    }
+
+    public Dictionary<Tapestry_EquipSlot, Tapestry_ItemStack> ToDict()
+    {
+        Dictionary<Tapestry_EquipSlot, Tapestry_ItemStack> isd = new Dictionary<Tapestry_EquipSlot, Tapestry_ItemStack>();
+
+        if (leftHand != null)  isd.Add(Tapestry_EquipSlot.LeftHand, new Tapestry_ItemStack(leftHand, 1));
+        if (rightHand != null) isd.Add(Tapestry_EquipSlot.RightHand, new Tapestry_ItemStack(rightHand, 1));
+        if (head != null)      isd.Add(Tapestry_EquipSlot.Head, new Tapestry_ItemStack(head, 1));
+        if (body != null)      isd.Add(Tapestry_EquipSlot.Body, new Tapestry_ItemStack(body, 1));
+        if (hands != null)     isd.Add(Tapestry_EquipSlot.Hands, new Tapestry_ItemStack(hands, 1));
+        if (legs != null)      isd.Add(Tapestry_EquipSlot.Legs, new Tapestry_ItemStack(legs, 1));
+        if (feet != null)      isd.Add(Tapestry_EquipSlot.Feet, new Tapestry_ItemStack(feet, 1));
+        if (eyes != null)      isd.Add(Tapestry_EquipSlot.Eyes, new Tapestry_ItemStack(eyes, 1));
+        if (ears != null)      isd.Add(Tapestry_EquipSlot.Ears, new Tapestry_ItemStack(ears, 1));
+        if (neck != null)      isd.Add(Tapestry_EquipSlot.Neck, new Tapestry_ItemStack(neck, 1));
+        if (shoulders != null) isd.Add(Tapestry_EquipSlot.Shoulders, new Tapestry_ItemStack(shoulders, 1));
+        if (wrists != null)    isd.Add(Tapestry_EquipSlot.Wrist, new Tapestry_ItemStack(wrists, 1));
+        if (fingers != null)   isd.Add(Tapestry_EquipSlot.Fingers, new Tapestry_ItemStack(fingers, 1));
+        if (waist != null)     isd.Add(Tapestry_EquipSlot.Waist, new Tapestry_ItemStack(waist, 1));
+        if (back != null)      isd.Add(Tapestry_EquipSlot.Back, new Tapestry_ItemStack(back, 1));
+
+        return isd;
     }
 }
 

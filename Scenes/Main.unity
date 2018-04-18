@@ -9149,6 +9149,7 @@ MonoBehaviour:
     isHoldable: 0
     useEffect: 0
     effect: {fileID: 0}
+  equippedItemContainer: {fileID: 1791544612}
 --- !u!4 &249611070 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4445792456823632, guid: 00538e078eab72f43a012b48b3fc2e8e,
@@ -66454,6 +66455,16 @@ Prefab:
         type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224230010694970742, guid: 674cb4781c793a24184ad39809ebf867,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224565987394566390, guid: 674cb4781c793a24184ad39809ebf867,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000030517578
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 674cb4781c793a24184ad39809ebf867, type: 2}

@@ -13,6 +13,8 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
     private bool 
         _isOpen,
         activateLastFrame;
+    private Tapestry_EquipmentProfile 
+        equipment;
     private Tapestry_Inventory
         leftInv,
         rightInv;
@@ -78,7 +80,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
                 {
                     leftInv.AddItem(active.GetData(), 1);
                     rightInv.RemoveItem(active.GetData(), 1);
-                    Open(leftInv, rightInv, leftName, rightName);
+                    Open(leftInv, equipment, rightInv, leftName, rightName);
                 }
                 else if (side == -1)
                 {
@@ -103,7 +105,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
                             {
                                 player.AddEffect(active.GetData().effect);
                                 leftInv.RemoveItem(active.GetData(), 1);
-                                Open(leftInv, rightInv, leftName, rightName);
+                                Open(leftInv, equipment, rightInv, leftName, rightName);
                             }
                         }
                     }
@@ -111,7 +113,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
                     {
                         rightInv.AddItem(active.GetData(), 1);
                         leftInv.RemoveItem(active.GetData(), 1);
-                        Open(leftInv, rightInv, leftName, rightName);
+                        Open(leftInv, null, rightInv, leftName, rightName);
                     }
                 }
             }
@@ -121,17 +123,18 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
         activateLastFrame = activate;
     }
 
-    public void Open(Tapestry_Inventory _leftInv, Tapestry_Inventory _rightInv = null, string _leftName = "Inventory", string _rightName = "Target")
+    public void Open(Tapestry_Inventory _leftInv, Tapestry_EquipmentProfile _equip, Tapestry_Inventory _rightInv = null, string _leftName = "Inventory", string _rightName = "Target")
     {
         left.Clear();
         right.Clear();
         this.gameObject.SetActive(true);
         _isOpen = true;
         Tapestry_WorldClock.isPaused = true;
-        left.Init(displayPrefab, _leftInv, _leftName);
+        left.Init(displayPrefab, _leftInv, _leftName, _equip);
         leftInv = _leftInv;
         leftName = _leftName;
         player = FindObjectOfType<Tapestry_Player>();
+        equipment = _equip;
 
         if (_rightInv == null)
         {

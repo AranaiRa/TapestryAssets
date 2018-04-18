@@ -16,6 +16,10 @@ public class Tapestry_Player : Tapestry_Entity {
     public Tapestry_ItemData
         equippedLeft,
         equippedRight;
+    public GameObject
+        equippedItemContainer;
+
+    private float heldItemXDecay;
 
     protected override void Reset()
     {
@@ -163,7 +167,7 @@ public class Tapestry_Player : Tapestry_Entity {
                             inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
                         
                         Debug.Log(c.inventory.items.Count + " in target container.");
-                        inventoryUI.Open(inventory, c.inventory, "Inventory", c.displayName);
+                        inventoryUI.Open(inventory, equipmentProfile, c.inventory, "Inventory", c.displayName);
                     }
                     else
                         objectInSights.Activate(this);
@@ -190,22 +194,31 @@ public class Tapestry_Player : Tapestry_Entity {
         if (allowCameraMovement)
         {
             //Mouselook
-            float invertX = 1;
-            if (Tapestry_Config.InvertPlayerCameraY)
-                invertX = -1;
-            float rotVert = Camera.main.transform.localRotation.eulerAngles.x;
-            rotVert += Input.GetAxis("Mouse Y") * Tapestry_Config.PlayerCameraSensitivityY * invertX;
             float invertY = 1;
-            if (Tapestry_Config.InvertPlayerCameraX)
+            if (Tapestry_Config.InvertPlayerCameraY)
                 invertY = -1;
+            float rotVert = Camera.main.transform.localRotation.eulerAngles.x;
+            rotVert += Input.GetAxis("Mouse Y") * Tapestry_Config.PlayerCameraSensitivityY * invertY;
+            float invertX = 1;
+            if (Tapestry_Config.InvertPlayerCameraX)
+                invertX = -1;
             Camera.main.transform.localRotation = Quaternion.Euler(rotVert, 0, 0);
-
+            float rotVertReduced;
+            if (rotVert < 180)
+                rotVertReduced = rotVert / 15f;
+            else
+                rotVertReduced = (rotVert - 360f) / 15f;
+            equippedItemContainer.transform.localRotation = Quaternion.Euler(-rotVertReduced, 0, 0);
+            
             if (!isPushing)
             {
                 float rotHori = transform.rotation.eulerAngles.y;
-                rotHori += Input.GetAxis("Mouse X") * Tapestry_Config.PlayerCameraSensitivityX * invertY;
+                rotHori += Input.GetAxis("Mouse X") * Tapestry_Config.PlayerCameraSensitivityX * invertX;
                 transform.rotation = Quaternion.Euler(0, rotHori, 0);
+                heldItemXDecay -= Input.GetAxis("Mouse X") * Tapestry_Config.PlayerCameraSensitivityX * invertX / 9f;
             }
+            equippedItemContainer.transform.localRotation = Quaternion.Euler(-rotVertReduced, heldItemXDecay, 0);
+            heldItemXDecay *= 0.85f;
 
             //Controller
         }
@@ -271,7 +284,7 @@ public class Tapestry_Player : Tapestry_Entity {
             if (inventoryUI.IsOpen)
                 inventoryUI.Close();
             else
-                inventoryUI.Open(inventory);
+                inventoryUI.Open(inventory, equipmentProfile);
         }
         if(Input.GetKey(Tapestry_Config.KeyboardInput_Cancel))
         {
@@ -292,20 +305,22 @@ public class Tapestry_Player : Tapestry_Entity {
     {
         Debug.Log("Running Equip block");
 
+        base.Equip(item, slot);
+
         if (slot == Tapestry_EquipSlot.LeftHand || slot == Tapestry_EquipSlot.RightHand)
         {
             GameObject obj = (GameObject)Instantiate(Resources.Load("Items/"+item.prefabName));
 
             if (slot == Tapestry_EquipSlot.LeftHand)
             {
-                Unequip(Tapestry_EquipSlot.LeftHand);
+                CleanEquippedItem(Tapestry_EquipSlot.LeftHand);
                 obj.transform.SetParent(holdContainerLeft.transform);
                 if (equippedLeft != null)
                     equippedLeft = item;
             }
             if (slot == Tapestry_EquipSlot.RightHand)
             {
-                Unequip(Tapestry_EquipSlot.LeftHand);
+                CleanEquippedItem(Tapestry_EquipSlot.LeftHand);
                 obj.transform.SetParent(holdContainerRight.transform);
                 if (equippedRight != null)
                     equippedRight = item;
@@ -324,11 +339,9 @@ public class Tapestry_Player : Tapestry_Entity {
                     c.enabled = false;
             }
         }
-        else
-            Debug.Log("TAPESTRY ERROR: Holdable items can only be equipped in the left or right hand!");
     }
 
-    private void Unequip(Tapestry_EquipSlot slot)
+    private void CleanEquippedItem(Tapestry_EquipSlot slot)
     {
         if(slot == Tapestry_EquipSlot.LeftHand)
         {
