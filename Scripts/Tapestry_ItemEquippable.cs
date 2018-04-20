@@ -5,11 +5,19 @@ using UnityEditor;
 
 public class Tapestry_ItemEquippable : Tapestry_Item {
 
-    public bool isTwoHanded = false;
-
     protected override void Reset()
     {
         base.Reset();
         data.isHoldable = true;
+    }
+
+    public virtual void OnHideEquipped()
+    {
+
+    }
+
+    public virtual void OnShowEquipped()
+    {
+
     }
 }

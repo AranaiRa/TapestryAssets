@@ -10,30 +10,6 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
         eyes, ears, neck, shoulders,
         wrists, fingers, waist, back;
 
-    public bool HasNoItemsEquipped
-    {
-        get
-        {
-            bool has = false;
-            if (leftHand != null) has = has || true;
-            if (rightHand != null) has = has || true;
-            if (head != null) has = has || true;
-            if (body != null) has = has || true;
-            if (hands != null) has = has || true;
-            if (legs != null) has = has || true;
-            if (feet != null) has = has || true;
-            if (eyes != null) has = has || true;
-            if (ears != null) has = has || true;
-            if (neck != null) has = has || true;
-            if (shoulders != null) has = has || true;
-            if (wrists != null) has = has || true;
-            if (fingers != null) has = has || true;
-            if (waist != null) has = has || true;
-            if (back != null) has = has || true;
-            return has;
-        }
-    }
-
     public Tapestry_EquipmentProfile()
     {
 
@@ -124,6 +100,27 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
         }
     }
 
+    public int GetNumberOfEquippedItems()
+    {
+        int num = 0;
+        if (leftHand != null)  num++;
+        if (rightHand != null) num++;
+        if (head != null)      num++;
+        if (body != null)      num++;
+        if (hands != null)     num++;
+        if (legs != null)      num++;
+        if (feet != null)      num++;
+        if (eyes != null)      num++;
+        if (ears != null)      num++;
+        if (neck != null)      num++;
+        if (shoulders != null) num++;
+        if (wrists != null)    num++;
+        if (fingers != null)   num++;
+        if (waist != null)     num++;
+        if (back != null)      num++;
+        return num;
+    }
+
     public Dictionary<Tapestry_EquipSlot, Tapestry_ItemStack> ToDict()
     {
         Dictionary<Tapestry_EquipSlot, Tapestry_ItemStack> isd = new Dictionary<Tapestry_EquipSlot, Tapestry_ItemStack>();
@@ -153,5 +150,6 @@ public enum Tapestry_EquipSlot
     LeftHand, RightHand, BothHands, EitherHand,
     Head, Body, Hands, Legs, Feet,
     Eyes, Ears, Neck, Shoulders,
-    Wrist, Fingers, Waist, Back
+    Wrist, Fingers, Waist, Back,
+    Unslotted
 }

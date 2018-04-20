@@ -28,15 +28,18 @@ public class Tapestry_UI_InventoryDisplay : MonoBehaviour {
         int height = 24;
         if(!ReferenceEquals(eq, null))
         {
-            if(eq.HasNoItemsEquipped)
+            if (eq.GetNumberOfEquippedItems() == 0)
             {
                 Tapestry_UI_InventoryDisplayTextElement e =
                        (Tapestry_UI_InventoryDisplayTextElement)Instantiate(displayPrefab, content);
+                e.GetComponent<RectTransform>().localPosition = new Vector3(e.GetComponent<RectTransform>().localPosition.x, y, 0);
                 e.title.text = "<i>Nothing equipped</i>";
                 e.title.color = new Color(1, 1, 1, 0.5f);
                 e.quantity.text = "";
                 e.size.text = "";
                 elements.Add(e);
+                y -= 24;
+                height += 24;
             }
             else
             {
@@ -49,6 +52,7 @@ public class Tapestry_UI_InventoryDisplay : MonoBehaviour {
                     e.SetData(dict[slot]);
                     y -= 24;
                     height += 24;
+                    e.equippedInSlot = slot;
                     if (slot == Tapestry_EquipSlot.LeftHand)
                         e.SetEquippedState(1);
                     else if (slot == Tapestry_EquipSlot.RightHand)
@@ -57,7 +61,6 @@ public class Tapestry_UI_InventoryDisplay : MonoBehaviour {
                         e.SetEquippedState(3);
                     else
                         e.SetEquippedState(4);
-                    e.SetEquippedState(1);
                     elements.Add(e);
                 }
             }
@@ -66,11 +69,14 @@ public class Tapestry_UI_InventoryDisplay : MonoBehaviour {
         {
             Tapestry_UI_InventoryDisplayTextElement e =
                        (Tapestry_UI_InventoryDisplayTextElement)Instantiate(displayPrefab, content);
+            e.GetComponent<RectTransform>().localPosition = new Vector3(e.GetComponent<RectTransform>().localPosition.x, y, 0);
             e.title.text = "<i>No items</i>";
             e.title.color = new Color(1, 1, 1, 0.5f);
             e.quantity.text = "";
             e.size.text = "";
             elements.Add(e);
+            y -= 24;
+            height += 24;
         }
         else
         {

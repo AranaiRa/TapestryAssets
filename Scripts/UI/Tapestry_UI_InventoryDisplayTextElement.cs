@@ -17,6 +17,9 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
         spriteLeft,
         spriteRight,
         spriteBoth;
+    public bool
+        isEquipment;
+    public Tapestry_EquipSlot equippedInSlot = Tapestry_EquipSlot.Unslotted;
     private bool
         active;
     private Tapestry_ItemData data;
@@ -33,12 +36,11 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
     {
         active = false;
         highlight.gameObject.SetActive(false);
-        equipIcon.gameObject.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (title.text != "<i>No items</i>")
+        if (title.text != "<i>No items</i>" && title.text != "<i>Nothing equipped</i>")
         {
             active = true;
             highlight.gameObject.SetActive(true);
@@ -47,7 +49,7 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (title.text != "<i>No items</i>")
+        if (title.text != "<i>No items</i>" && title.text != "<i>Nothing equipped</i>")
         {
             active = false;
             highlight.gameObject.SetActive(false);
@@ -71,22 +73,27 @@ public class Tapestry_UI_InventoryDisplayTextElement : MonoBehaviour, IPointerEn
     {
         if (state == 0)
         {
-            equipIcon.gameObject.SetActive(false);
+            equipIcon.sprite = null;
+            equipIcon.color = new Color(1, 1, 1, 0);
+            isEquipment = false;
         }
         else if (state == 1)
         {
             equipIcon.sprite = spriteLeft;
-            equipIcon.gameObject.SetActive(true);
+            equipIcon.color = new Color(1, 1, 1, 1);
+            isEquipment = true;
         }
         else if (state == 2)
         {
             equipIcon.sprite = spriteRight;
-            equipIcon.gameObject.SetActive(true);
+            equipIcon.color = new Color(1, 1, 1, 1);
+            isEquipment = true;
         }
         else if (state == 3)
         {
             equipIcon.sprite = spriteBoth;
-            equipIcon.gameObject.SetActive(true);
+            equipIcon.color = new Color(1, 1, 1, 1);
+            isEquipment = true;
         }
     }
 

@@ -197,6 +197,7 @@ MonoBehaviour:
   spriteLeft: {fileID: 21300000, guid: 27ceefbe15c23bc469bdf99093848582, type: 3}
   spriteRight: {fileID: 21300000, guid: 053939954c43ee245bda6227e18ed3bd, type: 3}
   spriteBoth: {fileID: 21300000, guid: 5dbad721ca96b1748aeaf58198ebadf4, type: 3}
+  isEquipment: 0
 --- !u!114 &114447117521167138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -209,14 +210,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 27ceefbe15c23bc469bdf99093848582, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

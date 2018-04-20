@@ -29,6 +29,7 @@ public class TapestryInspector_Item : Editor
 
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
+            prefabTooltip = "What is the name of the prefab (placed in the Resources/Items folder) that should be instantiated when this object is dropped in world?\n\nGenerally this should be the object's in-world name, rather than its display name.",
             interactableTooltip = "Can the player take this object to their inventory?",
             displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?",
             valueTooltip = "How valuable is this object?";
@@ -40,6 +41,12 @@ public class TapestryInspector_Item : Editor
         GUILayout.FlexibleSpace();
         i.displayName = EditorGUILayout.DelayedTextField(i.displayName, GUILayout.Width(270));
         i.data.displayName = i.displayName;
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(new GUIContent("Prefab Name", prefabTooltip));
+        GUILayout.FlexibleSpace();
+        i.data.prefabName = EditorGUILayout.DelayedTextField(i.data.prefabName, GUILayout.Width(270));
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
@@ -64,8 +71,6 @@ public class TapestryInspector_Item : Editor
         DrawSubTabEffect(i);
 
         DrawSubTabKeywords(i);
-
-        i.data.prefabName = i.transform.name;
     }
 
     protected virtual void DrawSubTabItemData(Tapestry_Item i)
@@ -79,7 +84,7 @@ public class TapestryInspector_Item : Editor
         GUILayout.BeginVertical("box");
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label(new GUIContent("Owner", owningEntityTooltip));
+        GUILayout.Label(new GUIContent("Owner", owningEntityTooltip), GUILayout.Width(42));
         i.data.owningEntity = (Tapestry_Entity)EditorGUILayout.ObjectField(i.data.owningEntity, typeof(Tapestry_Entity), true, GUILayout.Width(140));
         GUILayout.FlexibleSpace();
         GUILayout.Label(new GUIContent("Faction", owningFactionTooltip));
@@ -87,12 +92,12 @@ public class TapestryInspector_Item : Editor
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label(new GUIContent("Icon", iconTooltip));
+        GUILayout.Label(new GUIContent("Icon", iconTooltip), GUILayout.Width(42));
         i.data.icon = (Sprite)EditorGUILayout.ObjectField(i.data.icon, typeof(Sprite), true, GUILayout.Width(140));
         GUILayout.FlexibleSpace();
-        GUILayout.Label(new GUIContent("Size", sizeTooltip));
-        i.data.size = (Tapestry_ItemSize)EditorGUILayout.EnumPopup(Tapestry_ItemSize.Negligible, GUILayout.Width(100));
-        GUILayout.FlexibleSpace();
+        GUILayout.Label(new GUIContent("Size", sizeTooltip), GUILayout.Width(42));
+        i.data.size = (Tapestry_ItemSize)EditorGUILayout.EnumPopup(Tapestry_ItemSize.Negligible, GUILayout.Width(122));
+        GUILayout.Space(18);
         GUILayout.EndHorizontal();
 
         GUILayout.EndVertical();

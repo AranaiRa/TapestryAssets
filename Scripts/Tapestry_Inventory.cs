@@ -21,7 +21,6 @@ public class Tapestry_Inventory : ScriptableObject {
 
     public void AddItem(Tapestry_ItemData item, int quantity)
     {
-        Debug.Log("Running add method");
         if (item != null)
         {   
             if(items == null)

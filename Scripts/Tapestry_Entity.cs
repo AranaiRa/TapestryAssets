@@ -106,7 +106,6 @@ public class Tapestry_Entity : Tapestry_Actor {
         {
             if(inventory.items[i].item.Equals(item))
             {
-                Debug.Log("Item exists");
                 equipmentProfile.Equip(slot, item);
                 inventory.RemoveItem(item, 1);
             }
@@ -116,6 +115,11 @@ public class Tapestry_Entity : Tapestry_Actor {
     public virtual void Unequip(Tapestry_EquipSlot slot)
     {
         inventory.AddItem(equipmentProfile.GetInSlot(slot), 1);
+        equipmentProfile.Equip(slot, null);
+    }
+
+    public virtual void UnequipAndDestroy(Tapestry_EquipSlot slot)
+    {
         equipmentProfile.Equip(slot, null);
     }
 }

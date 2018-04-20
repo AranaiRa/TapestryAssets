@@ -7,6 +7,9 @@ using UnityEditor;
 [CustomEditor(typeof(Tapestry_ItemEquippable))]
 public class TapestryInspector_ItemHoldable : TapestryInspector_Item
 {
+    List<string> slotEnum;
+    string slotEnumSelection;
+
     public override void OnInspectorGUI()
     {
         Tapestry_ItemEquippable i = target as Tapestry_ItemEquippable;
@@ -21,14 +24,25 @@ public class TapestryInspector_ItemHoldable : TapestryInspector_Item
             }
             else
                 pSel = 0;
+            slotEnum = new List<string>();
+            foreach(Tapestry_EquipSlot es in System.Enum.GetValues(typeof(Tapestry_EquipSlot)))
+            {
+                if (es.ToString() != "LeftHand" && es.ToString() != "RightHand")
+                {
+                    slotEnum.Add(es.ToString());
+                }
+            }
+
             startup = false;
         }
 
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
+            prefabTooltip = "What is the name of the prefab (placed in the Resources/Items folder) that should be instantiated when this object is dropped in world?\n\nGenerally this should be the object's in-world name, rather than its display name.",
             interactableTooltip = "Can the player take this object to their inventory?",
             displayNameTooltip = "Should the object still show its display name when the player's cursor is hovering over the object?",
-            valueTooltip = "How valuable is this object?";
+            valueTooltip = "How valuable is this object?",
+            slotTooltip = "What slot should this object go into when equipped?";
 
         GUILayout.BeginVertical("box");
 
@@ -37,6 +51,12 @@ public class TapestryInspector_ItemHoldable : TapestryInspector_Item
         GUILayout.FlexibleSpace();
         i.displayName = EditorGUILayout.DelayedTextField(i.displayName, GUILayout.Width(270));
         i.data.displayName = i.displayName;
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(new GUIContent("Prefab Name", prefabTooltip));
+        GUILayout.FlexibleSpace();
+        i.data.prefabName = EditorGUILayout.DelayedTextField(i.data.prefabName, GUILayout.Width(270));
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
@@ -54,6 +74,17 @@ public class TapestryInspector_ItemHoldable : TapestryInspector_Item
         i.data.value = EditorGUILayout.DelayedIntField(i.data.value, GUILayout.Width(50));
         GUILayout.EndHorizontal();
 
+        slotEnumSelection = i.data.slot.ToString();
+        int enumIndex = slotEnum.IndexOf(slotEnumSelection);
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(new GUIContent("Slot", slotTooltip), GUILayout.Width(42));
+        slotEnumSelection = slotEnum[EditorGUILayout.Popup(enumIndex, slotEnum.ToArray(), GUILayout.Width(122))];
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        i.data.slot = (Tapestry_EquipSlot)System.Enum.Parse(typeof(Tapestry_EquipSlot), slotEnumSelection);
+
         GUILayout.EndVertical();
 
         DrawSubTabItemData(i);
@@ -61,8 +92,6 @@ public class TapestryInspector_ItemHoldable : TapestryInspector_Item
         DrawSubTabEffect(i);
 
         DrawSubTabKeywords(i);
-
-        i.data.prefabName = i.transform.name;
     }
 
     protected override void DrawSubTabEffect(Tapestry_Item i)

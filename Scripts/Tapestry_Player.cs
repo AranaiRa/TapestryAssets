@@ -9,7 +9,10 @@ public class Tapestry_Player : Tapestry_Entity {
         activateLastFrame,
         pushLastFrame,
         liftLastFrame,
-        openLastFrame;
+        openLastFrame,
+        hideHeldLastFrame,
+        isHidingOrShowing,
+        isHeldItemsHidden;
     public bool allowCameraMovement = true;
     public Tapestry_Activatable objectInSights;
     public Tapestry_UI_Inventory inventoryUI;
@@ -19,7 +22,15 @@ public class Tapestry_Player : Tapestry_Entity {
     public GameObject
         equippedItemContainer;
 
-    private float heldItemXDecay;
+    private float 
+        heldItemXDecay,
+        hideTime;
+    private Vector3
+        heldItemStartingPos,
+        heldItemHiddenPos = new Vector3(0, -.65f, -0.5f);
+    private Quaternion
+        heldItemStartingRot,
+        heldItemHiddenRot = Quaternion.Euler(90, 0, 0);
 
     protected override void Reset()
     {
@@ -61,7 +72,9 @@ public class Tapestry_Player : Tapestry_Entity {
             }
         }
         isRunning = true;
-	}
+        heldItemStartingPos = equippedItemContainer.transform.localPosition;
+        heldItemStartingRot = equippedItemContainer.transform.localRotation;
+    }
 
 	// Update is called once per frame
 	protected override void Update ()
@@ -70,9 +83,9 @@ public class Tapestry_Player : Tapestry_Entity {
         {
             HandleMouselook();
             HandleActivation();
+            HandleHideHeld();
         }
         HandleInventory();
-        HandlePlayerEffects();
         base.Update();
     }
 
@@ -95,11 +108,6 @@ public class Tapestry_Player : Tapestry_Entity {
         dir.x = transform.right.x;
         dir.y = transform.right.z;
         return dir.normalized;
-    }
-
-    private void HandlePlayerEffects()
-    {
-
     }
 
     private void HandleActivation()
@@ -167,7 +175,7 @@ public class Tapestry_Player : Tapestry_Entity {
                             inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
                         
                         Debug.Log(c.inventory.items.Count + " in target container.");
-                        inventoryUI.Open(inventory, equipmentProfile, c.inventory, "Inventory", c.displayName);
+                        inventoryUI.Open(inventory, null, c.inventory, "Inventory", c.displayName);
                     }
                     else
                         objectInSights.Activate(this);
@@ -276,6 +284,8 @@ public class Tapestry_Player : Tapestry_Entity {
     {
         if (inventoryUI == null)
             inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
+        if (ReferenceEquals(equipmentProfile, null))
+            equipmentProfile = (Tapestry_EquipmentProfile)ScriptableObject.CreateInstance("Tapestry_EquipmentProfile");
 
         bool open = Input.GetKey(Tapestry_Config.KeyboardInput_Inventory);
 
@@ -296,34 +306,80 @@ public class Tapestry_Player : Tapestry_Entity {
         openLastFrame = open;
     }
 
-    public Tapestry_Entity ClonePlayerAsEntity()
+    private void HandleHideHeld()
     {
-        throw new System.NotImplementedException();
+        bool swap = Input.GetKey(Tapestry_Config.KeyboardInput_Swap);
+
+        if(hideHeldLastFrame && !isHidingOrShowing)
+        {
+            hideTime = Tapestry_Config.InventoryItemHideTime;
+            isHidingOrShowing = true;
+            equippedItemContainer.SetActive(true);
+        }
+        else if(!Tapestry_WorldClock.isPaused && isHidingOrShowing)
+        {
+            hideTime -= Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor * personalTimeFactor;
+            if (!isHeldItemsHidden)
+            {
+                float prog = hideTime / Tapestry_Config.InventoryItemHideTime;
+                equippedItemContainer.transform.localPosition = Vector3.Lerp(heldItemHiddenPos, heldItemStartingPos, prog);
+                equippedItemContainer.transform.localRotation = Quaternion.Lerp(heldItemHiddenRot, heldItemStartingRot, prog);
+                if (prog <= 0)
+                {
+                    equippedItemContainer.SetActive(false);
+                    isHeldItemsHidden = true;
+                    isHidingOrShowing = false;
+                }
+            }
+            else
+            {
+                float prog = hideTime / Tapestry_Config.InventoryItemHideTime;
+                equippedItemContainer.transform.localPosition = Vector3.Lerp(heldItemStartingPos, heldItemHiddenPos, prog);
+                equippedItemContainer.transform.localRotation = Quaternion.Lerp(heldItemStartingRot, heldItemHiddenRot, prog);
+                if (prog <= 0)
+                {
+                    isHeldItemsHidden = false;
+                    isHidingOrShowing = false;
+                }
+            }
+        }
+
+        //end of frame
+        hideHeldLastFrame = swap;
     }
 
     public override void Equip(Tapestry_ItemData item, Tapestry_EquipSlot slot)
     {
-        Debug.Log("Running Equip block");
-
         base.Equip(item, slot);
 
         if (slot == Tapestry_EquipSlot.LeftHand || slot == Tapestry_EquipSlot.RightHand)
         {
             GameObject obj = (GameObject)Instantiate(Resources.Load("Items/"+item.prefabName));
 
+            //TODO: Dupe bug when switching hands
             if (slot == Tapestry_EquipSlot.LeftHand)
             {
                 CleanEquippedItem(Tapestry_EquipSlot.LeftHand);
                 obj.transform.SetParent(holdContainerLeft.transform);
                 if (equippedLeft != null)
                     equippedLeft = item;
+                else
+                {
+                    inventory.AddItem(equippedLeft, 1);
+                    equippedLeft = item;
+                }
             }
             if (slot == Tapestry_EquipSlot.RightHand)
             {
-                CleanEquippedItem(Tapestry_EquipSlot.LeftHand);
+                CleanEquippedItem(Tapestry_EquipSlot.RightHand);
                 obj.transform.SetParent(holdContainerRight.transform);
                 if (equippedRight != null)
                     equippedRight = item;
+                else
+                {
+                    inventory.AddItem(equippedLeft, 1);
+                    equippedLeft = item;
+                }
             }
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localRotation = Quaternion.identity;
@@ -338,7 +394,23 @@ public class Tapestry_Player : Tapestry_Entity {
                 if(!c.isTrigger)
                     c.enabled = false;
             }
+            foreach (Rigidbody rb in obj.GetComponentsInChildren<Rigidbody>())
+            {
+                Destroy(rb);
+            }
         }
+    }
+
+    public override void Unequip(Tapestry_EquipSlot slot)
+    {
+        CleanEquippedItem(slot);
+        base.Unequip(slot);
+    }
+
+    public override void UnequipAndDestroy(Tapestry_EquipSlot slot)
+    {
+        CleanEquippedItem(slot);
+        base.UnequipAndDestroy(slot);
     }
 
     private void CleanEquippedItem(Tapestry_EquipSlot slot)
@@ -346,6 +418,13 @@ public class Tapestry_Player : Tapestry_Entity {
         if(slot == Tapestry_EquipSlot.LeftHand)
         {
             foreach(Transform child in holdContainerLeft.transform)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+        if (slot == Tapestry_EquipSlot.RightHand)
+        {
+            foreach (Transform child in holdContainerRight.transform)
             {
                 Destroy(child.gameObject);
             }

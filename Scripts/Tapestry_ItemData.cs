@@ -9,6 +9,7 @@ public class Tapestry_ItemData {
     public Tapestry_Entity owningEntity;
     public Tapestry_Faction owningFaction;
     public Tapestry_ItemSize size;
+    public Tapestry_EquipSlot slot = Tapestry_EquipSlot.Unslotted;
     public Sprite icon;
     public int value;
     public string 
