@@ -21,7 +21,13 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
         Rigidbody rb = target.GetComponent<Rigidbody>();
         if(rb != null)
         {
+            if(target.GetType() == typeof(Tapestry_Player))
+            {
+                Tapestry_Player p = target as Tapestry_Player;
+                p.RestrictControls = true;
+            }
             rb.velocity = dir * strength;
+            Debug.Log("velocity should be " + rb.velocity);
         }
     }
 

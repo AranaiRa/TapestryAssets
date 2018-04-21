@@ -4,16 +4,28 @@ using UnityEngine;
 
 public class Tapestry_Player : Tapestry_Entity {
 
-    private bool
-        runToggleLastFrame,
-        activateLastFrame,
-        pushLastFrame,
-        liftLastFrame,
-        openLastFrame,
-        hideHeldLastFrame,
-        isHidingOrShowing,
-        isHeldItemsHidden;
-    public bool allowCameraMovement = true;
+    public bool RestrictControls
+    {
+        get
+        {
+            if (timeUntilControlsReturned > 0)
+                return true;
+            else
+                return false;
+        }
+
+        set
+        {
+            if (value == true)
+                timeUntilControlsReturned = 0.5f;
+            else if (value == false)
+                timeUntilControlsReturned = 0.0f;
+        }
+    }
+
+    public bool 
+        allowCameraMovement = true,
+        allowInputMovement = true;
     public Tapestry_Activatable objectInSights;
     public Tapestry_UI_Inventory inventoryUI;
     public Tapestry_ItemData
@@ -21,10 +33,23 @@ public class Tapestry_Player : Tapestry_Entity {
         equippedRight;
     public GameObject
         equippedItemContainer;
+    public Tapestry_ActorValue 
+        reach;
 
+    private bool
+        runToggleLastFrame,
+        activateLastFrame,
+        pushLastFrame,
+        liftLastFrame,
+        openLastFrame,
+        hideHeldLastFrame,
+        jumpLastFrame,
+        isHidingOrShowing,
+        isHeldItemsHidden;
     private float 
         heldItemXDecay,
-        hideTime;
+        hideTime,
+        timeUntilControlsReturned;
     private Vector3
         heldItemStartingPos,
         heldItemHiddenPos = new Vector3(0, -.65f, -0.5f);
@@ -79,7 +104,7 @@ public class Tapestry_Player : Tapestry_Entity {
 	// Update is called once per frame
 	protected override void Update ()
     {
-        if (!Tapestry_WorldClock.isPaused)
+        if (!Tapestry_WorldClock.IsPaused)
         {
             HandleMouselook();
             HandleActivation();
@@ -87,11 +112,25 @@ public class Tapestry_Player : Tapestry_Entity {
         }
         HandleInventory();
         base.Update();
+
+        if (timeUntilControlsReturned > 0 && !Tapestry_WorldClock.IsPaused)
+            timeUntilControlsReturned -= Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
+        HandleJump();
+    }
+
+    public override void InitializeActorValues()
+    {
+        base.InitializeActorValues();
+        if(ReferenceEquals(reach, null))
+            reach = (Tapestry_ActorValue)ScriptableObject.CreateInstance("Tapestry_ActorValue");
+
+        jumpPower.AdjustBaseValue(4.0f);
+        reach.AdjustBaseValue(Tapestry_Config.EntityActivationDistance);
     }
 
     private Vector2 GetFwd2D()
@@ -122,8 +161,8 @@ public class Tapestry_Player : Tapestry_Entity {
             Camera.main.transform.position,
             Camera.main.transform.forward,
             out hit,
-            Tapestry_Config.EntityActivationDistance,
-            ~LayerMask.GetMask("Ignore Raycast")
+            reach.Value,
+            ~(LayerMask.GetMask("Ignore Raycast") | LayerMask.GetMask("Tapestry Held Items"))
             );
         if (rayHit)
         {
@@ -234,7 +273,7 @@ public class Tapestry_Player : Tapestry_Entity {
 
     private void HandleMovement()
     {
-        if (!Tapestry_WorldClock.isPaused)
+        if (!Tapestry_WorldClock.IsPaused && (isGrounded || RestrictControls))
         {
             Rigidbody rb = GetComponent<Rigidbody>();
 
@@ -280,6 +319,25 @@ public class Tapestry_Player : Tapestry_Entity {
         }
     }
 
+    private void HandleJump()
+    {
+        if (!Tapestry_WorldClock.IsPaused && isGrounded)
+        {
+            bool jump = Input.GetKeyDown(Tapestry_Config.KeyboardInput_Jump) || Input.GetKeyDown(Tapestry_Config.KeyboardInput_Jump);
+
+            if (!jump && jumpLastFrame)
+            {
+                Rigidbody rb = GetComponent<Rigidbody>();
+                isGrounded = false;
+
+                rb.velocity = new Vector3(rb.velocity.x, jumpPower.Value, rb.velocity.z);
+            }
+
+            //end of frame
+            jumpLastFrame = jump;
+        }
+    }
+
     private void HandleInventory()
     {
         if (inventoryUI == null)
@@ -316,7 +374,7 @@ public class Tapestry_Player : Tapestry_Entity {
             isHidingOrShowing = true;
             equippedItemContainer.SetActive(true);
         }
-        else if(!Tapestry_WorldClock.isPaused && isHidingOrShowing)
+        else if(!Tapestry_WorldClock.IsPaused && isHidingOrShowing)
         {
             hideTime -= Time.deltaTime * Tapestry_WorldClock.GlobalTimeFactor * personalTimeFactor;
             if (!isHeldItemsHidden)

@@ -210,7 +210,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
         right.Clear();
         this.gameObject.SetActive(true);
         _isOpen = true;
-        Tapestry_WorldClock.isPaused = true;
+        Tapestry_WorldClock.IsPaused = true;
         left.Init(displayPrefab, _leftInv, _leftName, _equip);
         leftInv = _leftInv;
         leftName = _leftName;
@@ -234,7 +234,7 @@ public class Tapestry_UI_Inventory : MonoBehaviour {
     {
         this.gameObject.SetActive(false);
         _isOpen = false;
-        Tapestry_WorldClock.isPaused = false;
+        Tapestry_WorldClock.IsPaused = false;
         left.Clear();
         right.Clear();
         leftInv = null;

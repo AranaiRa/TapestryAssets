@@ -10,7 +10,7 @@ public static class Tapestry_WorldClock {
     public static int
         hoursPerDay = 24,
         minutesPerHour = 60;
-    public static bool
+    private static bool
         isPaused = false;
 
     private static float
@@ -22,7 +22,7 @@ public static class Tapestry_WorldClock {
     {
         get
         {
-            if (isPaused)
+            if (IsPaused)
                 return 0;
             else
                 return globalTimeFactor;
@@ -31,12 +31,30 @@ public static class Tapestry_WorldClock {
         set
         {
             globalTimeFactor = value;
+            Time.timeScale = value;
+        }
+    }
+
+    public static bool IsPaused
+    {
+        get
+        {
+            return isPaused;
+        }
+
+        set
+        {
+            isPaused = value;
+            if (value)
+                Time.timeScale = 0;
+            else
+                Time.timeScale = globalTimeFactor;
         }
     }
 
     public static float EvaluateTime(float timeToAdd = 0f)
     {
-        if (!isPaused)
+        if (!IsPaused)
         {
             leftoverTime += timeToAdd;
             if (leftoverTime >= 1)

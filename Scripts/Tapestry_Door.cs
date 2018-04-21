@@ -132,7 +132,7 @@ public class Tapestry_Door : Tapestry_Activatable {
                 time = jiggleTime;
             float amt = Random.Range(-lockJiggleIntensity, lockJiggleIntensity);
 
-            if (!Tapestry_WorldClock.isPaused)
+            if (!Tapestry_WorldClock.IsPaused)
             {
                 Quaternion evalRot = Quaternion.LerpUnclamped(rot1, rot2, amt);
                 pivot.transform.localRotation = evalRot;

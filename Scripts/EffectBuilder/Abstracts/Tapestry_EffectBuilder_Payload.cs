@@ -14,6 +14,11 @@ public class Tapestry_EffectBuilder_Payload : ScriptableObject {
         throw new System.NotImplementedException();
     }
 
+    public virtual void Cleanup(Tapestry_Actor target)
+    {
+
+    }
+
     public virtual void DrawInspector()
     {
         GUILayout.BeginVertical("box");

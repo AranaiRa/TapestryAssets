@@ -45,7 +45,7 @@ public class Tapestry_Prop : Tapestry_Actor {
 	}
 	
 	void FixedUpdate () {
-        if (!Tapestry_WorldClock.isPaused && hasBoundEntity)
+        if (!Tapestry_WorldClock.IsPaused && hasBoundEntity)
         {
             HandlePush();
         }

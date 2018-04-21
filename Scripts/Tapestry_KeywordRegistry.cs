@@ -86,6 +86,23 @@ public class Tapestry_KeywordRegistry : ScriptableObject {
         return ContainsAll(reg.keywords);
     }
 
+    public void Add(string str)
+    {
+        if (!keywords.Contains(str))
+        {
+            keywords.Add(str);
+            Debug.Log("successfully added \"" + str +"\"");
+        }
+    }
+
+    public void Add(Tapestry_KeywordRegistry kr)
+    {
+        foreach(string str in kr.keywords)
+        {
+            Add(str);
+        }
+    }
+
     public void DrawInspector()
     {
         GUIStyle title = new GUIStyle();

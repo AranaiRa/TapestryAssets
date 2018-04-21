@@ -41,6 +41,9 @@ public class Tapestry_Effect : ScriptableObject {
             if (time >= decayTime)
                 readyForRemoval = true;
         }
+
+        if (readyForRemoval)
+            payload.Cleanup(target);
     }
 
     public Tapestry_Effect Clone()

@@ -146,7 +146,7 @@ public class Tapestry_Container : Tapestry_Prop {
                 timeAnim = jiggleTime;
             float amt = Random.Range(-lockJiggleIntensity, lockJiggleIntensity);
 
-            if (!Tapestry_WorldClock.isPaused)
+            if (!Tapestry_WorldClock.IsPaused)
             {
                 Quaternion evalRot = Quaternion.LerpUnclamped(rot1, rot2, amt);
                 pivot.transform.localRotation = evalRot;

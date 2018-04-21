@@ -36,7 +36,8 @@ public class Tapestry_EffectZone : MonoBehaviour {
             if (effect.duration != Tapestry_EffectBuilder_Duration.Instant)
             {
                 Tapestry_Actor a = other.GetComponent<Tapestry_Actor>();
-                a.RemoveEffect(effect);
+                if(a != null)
+                    a.RemoveEffect(effect);
             }
         }
     }

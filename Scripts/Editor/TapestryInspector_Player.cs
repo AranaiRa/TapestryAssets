@@ -14,6 +14,7 @@ public class TapestryInspector_Player : Editor
     public override void OnInspectorGUI()
     {
         Tapestry_Player e = target as Tapestry_Player;
+        e.InitializeActorValues();
 
         //DrawDefaultInspector();
 

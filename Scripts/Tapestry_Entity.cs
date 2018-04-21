@@ -14,7 +14,8 @@ public class Tapestry_Entity : Tapestry_Actor {
     public bool
         isRunning = false,
         isPushing = false,
-        isLifting = false;
+        isLifting = false,
+        isGrounded = false;
     public GameObject
         attachPoint;
     public int 
@@ -24,21 +25,23 @@ public class Tapestry_Entity : Tapestry_Actor {
     public GameObject
         holdContainerLeft,
         holdContainerRight;
+    public Tapestry_ActorValue
+        jumpPower;
 
     protected float speed;
-
-
+    
     // Use this for initialization
     void Start () {
         if(effects == null)
             effects = new List<Tapestry_Effect>();
         if (ReferenceEquals(equipmentProfile, null))
             equipmentProfile = (Tapestry_EquipmentProfile)ScriptableObject.CreateInstance("Tapestry_EquipmentProfile");
+        InitializeActorValues();
     }
 	
 	// Update is called once per frame
 	protected override void Update () {
-        HandleEntityEffects();
+        HandleGrounded();
         base.Update();
     }
 
@@ -75,9 +78,20 @@ public class Tapestry_Entity : Tapestry_Actor {
         base.Reset();
     }
 
-    private void HandleEntityEffects()
+    public virtual void InitializeActorValues()
     {
+        if (ReferenceEquals(jumpPower, null))
+            jumpPower = (Tapestry_ActorValue)ScriptableObject.CreateInstance("Tapestry_ActorValue");
+    }
 
+    protected void HandleGrounded()
+    {
+        Rigidbody rb = GetComponent<Rigidbody>();
+        float groundDist = GetComponentInChildren<Collider>().bounds.extents.y;
+        if (Physics.Raycast(transform.position, -Vector3.up, groundDist + 0.1f, ~LayerMask.GetMask("Ignore Raycast")))
+            isGrounded = true;
+        else
+            isGrounded = false;
     }
 
     public override Tapestry_HealthState GetHealthState()
