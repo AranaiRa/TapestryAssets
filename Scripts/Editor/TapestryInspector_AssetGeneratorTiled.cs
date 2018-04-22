@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(Tapestry_TiledAssetGenerator))]
-public class TapestryInspector_TiledAssetGenerator : Editor {
+[CustomEditor(typeof(Tapestry_AssetGeneratorTiled))]
+public class TapestryInspector_AssetGeneratorTiled : Editor {
 
     public override void OnInspectorGUI()
     {
-        Tapestry_TiledAssetGenerator tag = target as Tapestry_TiledAssetGenerator;
+        Tapestry_AssetGeneratorTiled tag = target as Tapestry_AssetGeneratorTiled;
 
         string
             objectTTTooltip = "What object to create the tiled array out of. This can be a scene object or a Prefab.",

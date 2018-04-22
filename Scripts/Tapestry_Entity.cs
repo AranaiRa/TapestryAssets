@@ -41,8 +41,12 @@ public class Tapestry_Entity : Tapestry_Actor {
 	
 	// Update is called once per frame
 	protected override void Update () {
-        HandleGrounded();
         base.Update();
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        HandleGrounded();
     }
 
     protected override void Reset()

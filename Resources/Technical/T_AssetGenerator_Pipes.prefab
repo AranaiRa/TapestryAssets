@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1802668399253284}
+  m_IsPrefabParent: 1
+--- !u!1 &1802668399253284
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4064398599156094}
+  - component: {fileID: 114443969475773054}
+  m_Layer: 0
+  m_Name: T_AssetGenerator_Pipes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4064398599156094
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1802668399253284}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
+--- !u!114 &114443969475773054
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1802668399253284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ac246df927635e47a4d856cb7b2d9cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabShort: {fileID: 114215674357905382, guid: 30e6a1594468e66498fcb1bd3b627ba6,
+    type: 2}
+  prefabMedium: {fileID: 114865342417565112, guid: cca72fa2055ae5a4d925520701302342,
+    type: 2}
+  prefabLong: {fileID: 114757900580418230, guid: 6b05943ccc4496e4fb0d2f97b4984504,
+    type: 2}
+  prefabBend15: {fileID: 114493486034716934, guid: 166a1201b9cfd534e9683b0f51b89057,
+    type: 2}
+  prefabBend30: {fileID: 114729479314027026, guid: 7f402ef0524fce647a54226aa0699e01,
+    type: 2}
+  prefabBend45: {fileID: 114620804558464852, guid: f6eb0d80112055240917e76eb2c557d8,
+    type: 2}
+  prefabBend60: {fileID: 114826940119509130, guid: 22da833ece5c1b44fa0b92f27537a732,
+    type: 2}
+  prefabBend75: {fileID: 114768312581746174, guid: de6fafd2c375a2847a93f33a85929350,
+    type: 2}
+  prefabBend90: {fileID: 114014210885322044, guid: d8a2806813b731e4ca8f67156bf04a11,
+    type: 2}
+  segments: []

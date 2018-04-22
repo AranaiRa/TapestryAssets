@@ -117,8 +117,9 @@ public class Tapestry_Player : Tapestry_Entity {
             timeUntilControlsReturned -= Time.deltaTime;
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         HandleMovement();
         HandleJump();
     }
@@ -273,7 +274,7 @@ public class Tapestry_Player : Tapestry_Entity {
 
     private void HandleMovement()
     {
-        if (!Tapestry_WorldClock.IsPaused && (isGrounded || RestrictControls))
+        if (!Tapestry_WorldClock.IsPaused && isGrounded && timeUntilControlsReturned <= 0)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
 
@@ -311,17 +312,19 @@ public class Tapestry_Player : Tapestry_Entity {
                 direction = direction.normalized * Tapestry_Config.BaseEntityRunSpeed * personalTimeFactor;
             else
                 direction = direction.normalized * Tapestry_Config.BaseEntityWalkSpeed * personalTimeFactor;
-            
+
             rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
 
             //end of frame
             runToggleLastFrame = runToggleThisFrame;
         }
+        //else
+        //    Debug.Log("movement restricted this frame; impulse = "+GetComponent<Rigidbody>().velocity);
     }
 
     private void HandleJump()
     {
-        if (!Tapestry_WorldClock.IsPaused && isGrounded)
+        if (!Tapestry_WorldClock.IsPaused && isGrounded && timeUntilControlsReturned <= 0)
         {
             bool jump = Input.GetKeyDown(Tapestry_Config.KeyboardInput_Jump) || Input.GetKeyDown(Tapestry_Config.KeyboardInput_Jump);
 

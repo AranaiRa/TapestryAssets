@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_TiledAssetGenerator : MonoBehaviour {
+public class Tapestry_AssetGeneratorTiled : MonoBehaviour {
 
     public GameObject tile;
     public Vector2Int arraySize;

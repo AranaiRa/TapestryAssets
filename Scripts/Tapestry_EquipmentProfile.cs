@@ -39,6 +39,8 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
                 return neck;
             case Tapestry_EquipSlot.Shoulders:
                 return shoulders;
+            case Tapestry_EquipSlot.Ears:
+                return ears;
             case Tapestry_EquipSlot.Wrist:
                 return wrists;
             case Tapestry_EquipSlot.Fingers:
@@ -85,6 +87,9 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
             case Tapestry_EquipSlot.Shoulders:
                 shoulders = item;
                 break;
+            case Tapestry_EquipSlot.Ears:
+                ears = item;
+                break;
             case Tapestry_EquipSlot.Wrist:
                 wrists = item;
                 break;
@@ -114,6 +119,7 @@ public class Tapestry_EquipmentProfile : ScriptableObject {
         if (ears != null)      num++;
         if (neck != null)      num++;
         if (shoulders != null) num++;
+        if (ears != null)      num++;
         if (wrists != null)    num++;
         if (fingers != null)   num++;
         if (waist != null)     num++;

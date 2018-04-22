@@ -205,6 +205,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
         GUILayout.BeginVertical("box");
         DrawTiledAssetGeneratorButton();
+        DrawPipeAssetGeneratorButton();
         GUILayout.EndVertical();
     }
 
@@ -1062,7 +1063,20 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             else if (createAtOrigin)
                 main.transform.position = Vector3.zero;
 
-            main.AddComponent<Tapestry_TiledAssetGenerator>();
+            main.AddComponent<Tapestry_AssetGeneratorTiled>();
+        }
+    }
+
+    private void DrawPipeAssetGeneratorButton()
+    {
+        if (GUILayout.Button("Pipe Asset Generator"))
+        {
+            GameObject main = (GameObject)Instantiate(Resources.Load("Technical/T_AssetGenerator_Pipes"));
+
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
         }
     }
 

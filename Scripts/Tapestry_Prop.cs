@@ -404,7 +404,7 @@ public class Tapestry_Prop : Tapestry_Actor {
             else
                 BindEntityForPush(activatingEntity);
         }
-        base.Lift(activatingEntity);
+        base.Push(activatingEntity);
     }
 
     public void BindEntityForPush(Tapestry_Entity e)
