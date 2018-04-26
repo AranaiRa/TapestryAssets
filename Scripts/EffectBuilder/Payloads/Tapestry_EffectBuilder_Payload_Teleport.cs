@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[System.Serializable]
 public class Tapestry_EffectBuilder_Payload_Teleport : Tapestry_EffectBuilder_Payload
 {
     public Vector3
         newPos;
     public float
         newRot;
-    bool
+    public bool
         localPosOffset = false,
         changeRot = false;
 

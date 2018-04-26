@@ -52,6 +52,18 @@ public class Tapestry_Effect : ScriptableObject {
         return export;
     }
 
+    public bool Equals(Tapestry_Effect other)
+    {
+        bool comp = true;
+        comp = comp & (displayName == other.displayName);
+        comp = comp & (duration == other.duration);
+        comp = comp & (sprite == other.sprite);
+        comp = comp & (hideEffectDisplay == other.hideEffectDisplay);
+        comp = comp & (canBeStacked == other.canBeStacked);
+        comp = comp & (payload.GetType() == other.payload.GetType());
+        return true;
+    }
+
     public int DrawInspector(int pSel)
     {
         if (ReferenceEquals(payload, null))

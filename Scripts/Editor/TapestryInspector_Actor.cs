@@ -10,6 +10,8 @@ public class TapestryInspector_Actor : Editor {
     {
         Tapestry_Actor t = target as Tapestry_Actor;
 
+        t.isInteractable = false;
+
         GUILayout.Label("Actor is not a usable component!\nPlease use Entity, Prop, or a component that inherits from one of them.");
         GUILayout.Label("Replace With...");
         GUILayout.BeginHorizontal();

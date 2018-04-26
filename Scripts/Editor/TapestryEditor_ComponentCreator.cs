@@ -44,7 +44,14 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
     private void DrawOptionsPanel()
     {
+        GUIStyle section = new GUIStyle
+        {
+            fontSize = 14,
+            fontStyle = FontStyle.Bold
+        };
+
         GUILayout.BeginVertical("box");
+        GUILayout.Label("Options", section);
         GUILayout.BeginHorizontal();
 
         includeHelpers = EditorGUILayout.Toggle(includeHelpers, GUILayout.Width(12));
@@ -92,14 +99,21 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
     private void DrawButtonsPanel()
     {
+        GUIStyle section = new GUIStyle
+        {
+            fontSize = 14,
+            fontStyle = FontStyle.Bold
+        };
+
         GUILayout.BeginVertical("box");
 
+        GUILayout.Label("World Interaction", section);
         GUILayout.BeginHorizontal();
-
-        GUILayout.FlexibleSpace();
         DrawPropButton();
         GUILayout.FlexibleSpace();
-
+        DrawEffectZoneButton();
+        GUILayout.FlexibleSpace();
+        DrawEffectActivatorButton();
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
 
@@ -123,17 +137,17 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         GUILayout.FlexibleSpace();
 
         GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
+        /*GUILayout.BeginHorizontal();
 
-        GUILayout.FlexibleSpace();
-        DrawEffectZoneButton();
         GUILayout.FlexibleSpace();
         //
         GUILayout.FlexibleSpace();
         //
         GUILayout.FlexibleSpace();
+        //
+        GUILayout.FlexibleSpace();
 
-        GUILayout.EndHorizontal();
+        GUILayout.EndHorizontal();*/
 
         GUILayout.EndVertical();
     }
@@ -142,12 +156,16 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Initialize Scene", GUILayout.Width(buttonWidth*2)))
         {
-            GameObject level = new GameObject();
-            level.name = "LEVEL";
+            GameObject level = new GameObject
+            {
+                name = "LEVEL"
+            };
             level.transform.localPosition = Vector3.zero;
 
-            GameObject lighting = new GameObject();
-            lighting.name = "LIGHTING";
+            GameObject lighting = new GameObject
+            {
+                name = "LIGHTING"
+            };
             lighting.transform.SetParent(level.transform);
             lighting.transform.localPosition = Vector3.zero;
 
@@ -155,18 +173,24 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             mainLight.transform.SetParent(lighting.transform);
             mainLight.transform.localPosition = new Vector3(0,10,0);
 
-            GameObject geo = new GameObject();
-            geo.name = "GEO";
+            GameObject geo = new GameObject
+            {
+                name = "GEO"
+            };
             geo.transform.SetParent(level.transform);
             geo.transform.localPosition = Vector3.zero;
 
-            GameObject interaction = new GameObject();
-            interaction.name = "INTERACTION";
+            GameObject interaction = new GameObject
+            {
+                name = "INTERACTION"
+            };
             interaction.transform.SetParent(level.transform);
             interaction.transform.localPosition = Vector3.zero;
 
-            GameObject clutter = new GameObject();
-            clutter.name = "CLUTTER";
+            GameObject clutter = new GameObject
+            {
+                name = "CLUTTER"
+            };
             clutter.transform.SetParent(level.transform);
             clutter.transform.localPosition = Vector3.zero;
 
@@ -189,8 +213,15 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
     private void DrawNonWorldObjectsPanel()
     {
+        GUIStyle section = new GUIStyle
+        {
+            fontSize = 14,
+            fontStyle = FontStyle.Bold
+        };
+
         GUILayout.BeginVertical("box");
 
+        GUILayout.Label("Items", section);
         GUILayout.BeginHorizontal();
 
         GUILayout.FlexibleSpace();
@@ -204,6 +235,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         GUILayout.EndVertical();
 
         GUILayout.BeginVertical("box");
+        GUILayout.Label("Generators", section);
         DrawTiledAssetGeneratorButton();
         DrawPipeAssetGeneratorButton();
         GUILayout.EndVertical();
@@ -213,11 +245,15 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Prop", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_Prop";
+            GameObject main = new GameObject
+            {
+                name = "T_Prop"
+            };
 
-            GameObject intact = new GameObject();
-            intact.name = "T_Intact";
+            GameObject intact = new GameObject
+            {
+                name = "T_Intact"
+            };
             intact.transform.SetParent(main.transform);
             intact.transform.localPosition = Vector3.zero;
             if (includeHelpers)
@@ -227,8 +263,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 intact.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject broken = new GameObject();
-            broken.name = "T_Broken";
+            GameObject broken = new GameObject
+            {
+                name = "T_Broken"
+            };
             broken.transform.SetParent(main.transform);
             broken.transform.localPosition = Vector3.zero;
             broken.SetActive(false);
@@ -287,8 +325,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             bc08.transform.localPosition = new Vector3(-0.5f, 1.5f, -0.5f);
             bc08.transform.localRotation = Quaternion.Euler(-4.0f, 0.0f, -2.4f);
 
-            GameObject destroyed = new GameObject();
-            destroyed.name = "T_Destroyed";
+            GameObject destroyed = new GameObject
+            {
+                name = "T_Destroyed"
+            };
             destroyed.transform.SetParent(main.transform);
             destroyed.transform.localPosition = Vector3.zero;
             destroyed.SetActive(false);
@@ -367,8 +407,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 cube.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject attaches = new GameObject();
-            attaches.name = "T_AttachPoints";
+            GameObject attaches = new GameObject
+            {
+                name = "T_AttachPoints"
+            };
             attaches.transform.SetParent(main.transform);
             attaches.transform.localPosition = new Vector3(0, 0.945f, 0);
             if (includeHelpers)
@@ -378,8 +420,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 attaches.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject n = new GameObject();
-            n.name = "P_Attach";
+            GameObject n = new GameObject
+            {
+                name = "P_Attach"
+            };
             n.transform.SetParent(attaches.transform);
             n.transform.localPosition = new Vector3(0, 0, -1.28f);
 
@@ -389,8 +433,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             nGiz.transform.localPosition = Vector3.zero;
             nGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject e = new GameObject();
-            e.name = "P_Attach";
+            GameObject e = new GameObject
+            {
+                name = "P_Attach"
+            };
             e.transform.SetParent(attaches.transform);
             e.transform.localPosition = new Vector3(-1.28f, 0, 0);
             e.transform.localRotation = Quaternion.Euler(0, 90, 0);
@@ -401,8 +447,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             eGiz.transform.localPosition = Vector3.zero;
             eGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject s = new GameObject();
-            s.name = "P_Attach";
+            GameObject s = new GameObject
+            {
+                name = "P_Attach"
+            };
             s.transform.SetParent(attaches.transform);
             s.transform.localPosition = new Vector3(0, 0, 1.28f);
             s.transform.localRotation = Quaternion.Euler(0, 180, 0);
@@ -413,8 +461,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             sGiz.transform.localPosition = Vector3.zero;
             sGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject w = new GameObject();
-            w.name = "P_Attach";
+            GameObject w = new GameObject
+            {
+                name = "P_Attach"
+            };
             w.transform.SetParent(attaches.transform);
             w.transform.localPosition = new Vector3(1.28f, 0, 0);
             w.transform.localRotation = Quaternion.Euler(0, 270, 0);
@@ -438,17 +488,21 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Door", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_Door";
-            if(includeHelpers)
+            GameObject main = new GameObject
+            {
+                name = "T_Door"
+            };
+            if (includeHelpers)
             {
                 string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to target the door.";
                 main.AddComponent<Tapestry_InspectorHelper>();
                 main.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject pivot = new GameObject();
-            pivot.name = "T_Pivot";
+            GameObject pivot = new GameObject
+            {
+                name = "T_Pivot"
+            };
             pivot.transform.SetParent(main.transform);
             pivot.transform.localPosition = new Vector3(0, 0, 0.64f);
             if (includeHelpers)
@@ -475,8 +529,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 door.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject emitter = new GameObject();
-            emitter.name = "T_Emitter";
+            GameObject emitter = new GameObject
+            {
+                name = "T_Emitter"
+            };
             emitter.transform.SetParent(main.transform);
             emitter.transform.localPosition = new Vector3(0, 1.1f, 0);
 
@@ -498,8 +554,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Switch", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_Switch";
+            GameObject main = new GameObject
+            {
+                name = "T_Switch"
+            };
             if (includeHelpers)
             {
                 string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to target the switch.";
@@ -519,8 +577,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 cube1.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject pivot = new GameObject();
-            pivot.name = "T_Pivot";
+            GameObject pivot = new GameObject
+            {
+                name = "T_Pivot"
+            };
             pivot.transform.SetParent(main.transform);
             pivot.transform.localPosition = new Vector3(0, 0, 0);
             if (includeHelpers)
@@ -566,8 +626,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Contact Switch", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_ContactSwitch";
+            GameObject main = new GameObject
+            {
+                name = "T_ContactSwitch"
+            };
             if (includeHelpers)
             {
                 string msg = "The collider on this object determines the area that can activate this switch.\n\nIf you change the type of collider, make sure to flag the new one as a Trigger!";
@@ -588,8 +650,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 cube1.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject pivot = new GameObject();
-            pivot.name = "T_Pivot";
+            GameObject pivot = new GameObject
+            {
+                name = "T_Pivot"
+            };
             pivot.transform.SetParent(main.transform);
             pivot.transform.localPosition = new Vector3(0, 0, 0);
             if (includeHelpers)
@@ -644,11 +708,15 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Container", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_Container";
+            GameObject main = new GameObject
+            {
+                name = "T_Container"
+            };
 
-            GameObject pivot = new GameObject();
-            pivot.name = "T_Pivot";
+            GameObject pivot = new GameObject
+            {
+                name = "T_Pivot"
+            };
             pivot.transform.SetParent(main.transform);
             pivot.transform.localPosition = new Vector3(0, 0.7f, -0.5f);
             if (includeHelpers)
@@ -681,8 +749,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             gizmo.transform.SetParent(pivot.transform);
             gizmo.transform.localPosition = Vector3.zero;
 
-            GameObject intact = new GameObject();
-            intact.name = "T_Intact";
+            GameObject intact = new GameObject
+            {
+                name = "T_Intact"
+            };
             intact.transform.SetParent(main.transform);
             intact.transform.localPosition = Vector3.zero;
             if (includeHelpers)
@@ -704,8 +774,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 body.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject broken = new GameObject();
-            broken.name = "T_Broken";
+            GameObject broken = new GameObject
+            {
+                name = "T_Broken"
+            };
             broken.transform.SetParent(main.transform);
             broken.transform.localPosition = Vector3.zero;
             broken.SetActive(false);
@@ -716,8 +788,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 broken.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject destroyed = new GameObject();
-            destroyed.name = "T_Destroyed";
+            GameObject destroyed = new GameObject
+            {
+                name = "T_Destroyed"
+            };
             destroyed.transform.SetParent(main.transform);
             destroyed.transform.localPosition = Vector3.zero;
             destroyed.SetActive(false);
@@ -728,13 +802,17 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 destroyed.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject attaches = new GameObject();
-            attaches.name = "T_AttachPoints";
+            GameObject attaches = new GameObject
+            {
+                name = "T_AttachPoints"
+            };
             attaches.transform.SetParent(main.transform);
             attaches.transform.localPosition = new Vector3(0, 0.95f, 0);
 
-            GameObject n = new GameObject();
-            n.name = "P_Attach";
+            GameObject n = new GameObject
+            {
+                name = "P_Attach"
+            };
             n.transform.SetParent(attaches.transform);
             n.transform.localPosition = new Vector3(0, 0, -0.77f);
 
@@ -744,8 +822,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             nGiz.transform.localPosition = Vector3.zero;
             nGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject e = new GameObject();
-            e.name = "P_Attach";
+            GameObject e = new GameObject
+            {
+                name = "P_Attach"
+            };
             e.transform.SetParent(attaches.transform);
             e.transform.localPosition = new Vector3(-0.77f, 0, 0);
             e.transform.localRotation = Quaternion.Euler(0, 90, 0);
@@ -756,8 +836,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             eGiz.transform.localPosition = Vector3.zero;
             eGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject s = new GameObject();
-            s.name = "P_Attach";
+            GameObject s = new GameObject
+            {
+                name = "P_Attach"
+            };
             s.transform.SetParent(attaches.transform);
             s.transform.localPosition = new Vector3(0, 0, 0.77f);
             s.transform.localRotation = Quaternion.Euler(0, 180, 0);
@@ -768,8 +850,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             sGiz.transform.localPosition = Vector3.zero;
             sGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject w = new GameObject();
-            w.name = "P_Attach";
+            GameObject w = new GameObject
+            {
+                name = "P_Attach"
+            };
             w.transform.SetParent(attaches.transform);
             w.transform.localPosition = new Vector3(0.77f, 0, 0);
             w.transform.localRotation = Quaternion.Euler(0, 270, 0);
@@ -780,8 +864,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             wGiz.transform.localPosition = Vector3.zero;
             wGiz.transform.localRotation = Quaternion.identity;
 
-            GameObject emitter = new GameObject();
-            emitter.name = "T_Emitter";
+            GameObject emitter = new GameObject
+            {
+                name = "T_Emitter"
+            };
             emitter.transform.SetParent(main.transform);
             emitter.transform.localPosition = new Vector3(0, 0.5f, 0);
 
@@ -806,8 +892,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Item Source", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_ItemSource";
+            GameObject main = new GameObject
+            {
+                name = "T_ItemSource"
+            };
             if (includeHelpers)
             {
                 string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to activate the object.";
@@ -815,8 +903,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 main.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject on = new GameObject();
-            on.name = "T_Collection_On";
+            GameObject on = new GameObject
+            {
+                name = "T_Collection_On"
+            };
             on.transform.SetParent(main.transform);
             if (includeHelpers)
             {
@@ -831,8 +921,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             cube1.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             cube1.transform.localPosition = new Vector3(0, 0.45f, 0);
 
-            GameObject off = new GameObject();
-            off.name = "T_Collection_Off";
+            GameObject off = new GameObject
+            {
+                name = "T_Collection_Off"
+            };
             off.transform.SetParent(main.transform);
             if (includeHelpers)
             {
@@ -874,8 +966,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Animated Light", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_AnimatedLight";
+            GameObject main = new GameObject
+            {
+                name = "T_AnimatedLight"
+            };
             if (includeHelpers)
             {
                 string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to target the light.\n\nRemember to set the light parameters in the T_Light object underneath this object in the hierarchy.";
@@ -883,8 +977,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 main.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject emissive = new GameObject();
-            emissive.name = "T_EmissiveMesh";
+            GameObject emissive = new GameObject
+            {
+                name = "T_EmissiveMesh"
+            };
             emissive.transform.SetParent(main.transform);
             if (includeHelpers)
             {
@@ -904,8 +1000,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 cube.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject particles = new GameObject();
-            particles.name = "T_Particles";
+            GameObject particles = new GameObject
+            {
+                name = "T_Particles"
+            };
             particles.transform.SetParent(main.transform);
             particles.transform.localPosition = new Vector3(0, 0.22f, 0);
             if (includeHelpers)
@@ -920,8 +1018,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
             gizmo.transform.SetParent(particles.transform);
             gizmo.transform.localPosition = Vector3.zero;
 
-            GameObject light = new GameObject();
-            light.name = "T_Light";
+            GameObject light = new GameObject
+            {
+                name = "T_Light"
+            };
             light.transform.SetParent(main.transform);
             light.transform.localPosition = new Vector3(0, 0.22f, 0);
             if (includeHelpers)
@@ -931,8 +1031,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
                 light.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
             }
 
-            GameObject emitter = new GameObject();
-            emitter.name = "T_Emitter";
+            GameObject emitter = new GameObject
+            {
+                name = "T_Emitter"
+            };
             emitter.transform.SetParent(main.transform);
             emitter.transform.localPosition = new Vector3(0, 0.22f, 0);
 
@@ -951,8 +1053,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Effect Zone", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_EffectZone";
+            GameObject main = new GameObject
+            {
+                name = "T_EffectZone"
+            };
             /*if (includeHelpers)
             {
                 string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to target the door.";
@@ -978,12 +1082,43 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         }
     }
 
+    private void DrawEffectActivatorButton()
+    {
+        if (GUILayout.Button("Effect Zone", GUILayout.Width(buttonWidth)))
+        {
+            GameObject main = new GameObject
+            {
+                name = "T_EffectActivator"
+            };
+            /*if (includeHelpers)
+            {
+                string msg = "Be aware that any objects with colliders underneath this object in the hierarchy will allow the player to target the door.";
+                main.AddComponent<Tapestry_InspectorHelper>();
+                main.GetComponent<Tapestry_InspectorHelper>().helpMessage = msg;
+            }*/
+
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/pointHelperGizmo"));
+            gizmo.name = "Point Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+            gizmo.transform.localPosition = Vector3.zero;
+
+            if (createAtScreenCenter)
+                TransformViaRay(main.transform);
+            else if (createAtOrigin)
+                main.transform.position = Vector3.zero;
+
+            main.AddComponent<Tapestry_EffectActivator>();
+        }
+    }
+
     private void DrawItemButton()
     {
         if (GUILayout.Button("Item", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_Item";
+            GameObject main = new GameObject
+            {
+                name = "T_Item"
+            };
 
             GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
             gizmo.name = "Location Helper Gizmo";
@@ -1003,8 +1138,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Holdable Item", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_HoldableItem";
+            GameObject main = new GameObject
+            {
+                name = "T_HoldableItem"
+            };
 
             GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
             gizmo.name = "Location Helper Gizmo";
@@ -1030,8 +1167,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Key", GUILayout.Width(buttonWidth)))
         {
-            GameObject main = new GameObject();
-            main.name = "T_Item";
+            GameObject main = new GameObject
+            {
+                name = "T_Item"
+            };
 
             GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
             gizmo.name = "Location Helper Gizmo";
@@ -1051,8 +1190,10 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
     {
         if (GUILayout.Button("Tiled Asset Generator"))
         {
-            GameObject main = new GameObject();
-            main.name = "T_TiledAssetGenerator";
+            GameObject main = new GameObject
+            {
+                name = "T_TiledAssetGenerator"
+            };
 
             GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/locationHelperGizmo"));
             gizmo.name = "Location Helper Gizmo";
@@ -1072,6 +1213,12 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
         if (GUILayout.Button("Pipe Asset Generator"))
         {
             GameObject main = (GameObject)Instantiate(Resources.Load("Technical/T_AssetGenerator_Pipes"));
+            main.name = "T_AssetGenerator_Pipes";
+
+            GameObject gizmo = (GameObject)Instantiate(Resources.Load("Technical/pointHelperGizmo"));
+            gizmo.name = "Point Helper Gizmo";
+            gizmo.transform.SetParent(main.transform);
+            gizmo.transform.localPosition = Vector3.zero;
 
             if (createAtScreenCenter)
                 TransformViaRay(main.transform);

@@ -47,14 +47,35 @@ public class Tapestry_Actor : Tapestry_Activatable {
 
     public virtual void AddEffect(Tapestry_Effect effect)
     {
+        Debug.Log("add call");
         if(effect.canBeStacked || !effects.Contains(effect))
             effects.Add(effect);
     }
 
     public virtual void RemoveEffect(Tapestry_Effect effect)
     {
-        if (effects.Contains(effect))
-            effects.Remove(effect);
+        for (int i = effects.Count - 1; i >= 0; i--)
+        {
+            if (effect.Equals(effects[i]))
+            {
+                effects.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
+    public virtual void RemoveEffectByName(Tapestry_Effect effect)
+    {
+        for (int i = effects.Count - 1; i >= 0; i--)
+        {
+            Debug.Log("comparing \"" + effect.displayName + "\" to \"" + effects[i].displayName + "\"");
+            if (effect.displayName == effects[i].displayName)
+            {
+                Debug.Log("found it");
+                effects.RemoveAt(i);
+                break;
+            }
+        }
     }
 
     public virtual void DealDamage(Tapestry_DamageType type, float amount)

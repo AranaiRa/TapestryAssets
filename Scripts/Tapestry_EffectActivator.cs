@@ -2,14 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tapestry_WeaponMelee : MonoBehaviour {
-
-    public Tapestry_Effect
-        effectClick,
-        effectAerial,
-        effectFwd,
-        effectBack,
-        effectSide;
+public class Tapestry_EffectActivator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

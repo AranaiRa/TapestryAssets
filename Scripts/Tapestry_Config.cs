@@ -39,6 +39,8 @@ public static class Tapestry_Config {
         KeyboardInput_Inventory = KeyCode.I,
         KeyboardInput_InventoryDrop = KeyCode.Q,
         KeyboardInput_Cancel = KeyCode.Escape,
+        KeyboardInput_LeftHand = KeyCode.Mouse0,
+        KeyboardInput_RightHand = KeyCode.Mouse1,
         KeyboardInput_Swap = KeyCode.F;
     //TODO: Figure out actual controller input
     public static KeyCode
@@ -52,7 +54,10 @@ public static class Tapestry_Config {
         ControllerInput_Crouch        = KeyCode.Joystick1Button0,
         ControllerInput_PushLift      = KeyCode.Joystick1Button0,
         ControllerInput_RunWalkToggle = KeyCode.Joystick1Button0,
-        ControllerInput_Inventory     = KeyCode.Joystick1Button0;
+        ControllerInput_Inventory     = KeyCode.Joystick1Button0,
+        ControllerInput_LeftHand      = KeyCode.Joystick1Button0,
+        ControllerInput_RightHand     = KeyCode.Joystick1Button0,
+        ControllerInput_Swap          = KeyCode.Joystick1Button0;
     public static Color
         SunDayColor          = new Color(1.000f, 0.937f, 0.820f, 1.0f),
         SunTwilightColor     = new Color(0.914f, 0.324f, 0.097f, 1.0f),

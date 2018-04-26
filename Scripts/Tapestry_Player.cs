@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,6 +45,8 @@ public class Tapestry_Player : Tapestry_Entity {
         openLastFrame,
         hideHeldLastFrame,
         jumpLastFrame,
+        lmbLastFrame,
+        rmbLastFrame,
         isHidingOrShowing,
         isHeldItemsHidden;
     private float 
@@ -295,6 +298,12 @@ public class Tapestry_Player : Tapestry_Entity {
             bool rgt =
                 Input.GetKey(Tapestry_Config.KeyboardInput_Right) ||
                 Input.GetKey(Tapestry_Config.ControllerInput_Right);
+            bool lmb =
+                Input.GetKey(Tapestry_Config.KeyboardInput_LeftHand) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_LeftHand);
+            bool rmb =
+                Input.GetKey(Tapestry_Config.KeyboardInput_LeftHand) ||
+                Input.GetKey(Tapestry_Config.ControllerInput_LeftHand);
 
             Vector2 direction = new Vector2();
 
@@ -315,8 +324,13 @@ public class Tapestry_Player : Tapestry_Entity {
 
             rb.velocity = new Vector3(direction.x, rb.velocity.y, direction.y);
 
+            //pass controls to item use function
+            HandleHeldItemUse(fwd, bck, lft, rgt, !lmb && lmbLastFrame, !rmb && rmbLastFrame);
+
             //end of frame
             runToggleLastFrame = runToggleThisFrame;
+            lmbLastFrame = lmb;
+            rmbLastFrame = rmb;
         }
         //else
         //    Debug.Log("movement restricted this frame; impulse = "+GetComponent<Rigidbody>().velocity);
@@ -343,8 +357,10 @@ public class Tapestry_Player : Tapestry_Entity {
 
     private void HandleInventory()
     {
-        if (inventoryUI == null)
-            inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
+        if (ReferenceEquals(inventoryUI, null))
+        {
+            inventoryUI = FindObjectOfType<Tapestry_UI_Inventory>();
+        }
         if (ReferenceEquals(equipmentProfile, null))
             equipmentProfile = (Tapestry_EquipmentProfile)ScriptableObject.CreateInstance("Tapestry_EquipmentProfile");
 
@@ -407,6 +423,22 @@ public class Tapestry_Player : Tapestry_Entity {
 
         //end of frame
         hideHeldLastFrame = swap;
+    }
+
+    private void HandleHeldItemUse(bool fwd, bool rev, bool lft, bool rgt, bool lmb, bool rmb)
+    {
+        if (!isHeldItemsHidden && lmb)
+        {
+            if (holdContainerLeft.transform.childCount != 0)
+            {
+                Transform heldTransform = holdContainerLeft.transform.GetChild(0);
+                if(heldTransform.gameObject.GetComponent<Tapestry_ItemWeaponMelee>() != null)
+                {
+                    Tapestry_ItemWeaponMelee held = heldTransform.gameObject.GetComponent<Tapestry_ItemWeaponMelee>();
+                    held.AttackStanding();
+                }
+            }
+        }
     }
 
     public override void Equip(Tapestry_ItemData item, Tapestry_EquipSlot slot)

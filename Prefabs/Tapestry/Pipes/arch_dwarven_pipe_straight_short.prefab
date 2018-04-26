@@ -37,6 +37,7 @@ GameObject:
   - component: {fileID: 114215674357905382}
   - component: {fileID: 33684069440537002}
   - component: {fileID: 23698906058176196}
+  - component: {fileID: 64468690570602802}
   m_Layer: 0
   m_Name: arch_dwarven_pipe_straight_short
   m_TagString: Untagged
@@ -51,7 +52,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1282696694453662}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4932642084348482}
@@ -111,7 +112,21 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1282696694453662}
-  m_Mesh: {fileID: 4300000, guid: 8828812f8ac396f42b51134e4a42b75e, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 5452b28484b6d29448bb3968843f7cb2, type: 3}
+--- !u!64 &64468690570602802
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1282696694453662}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 5452b28484b6d29448bb3968843f7cb2, type: 3}
 --- !u!114 &114215674357905382
 MonoBehaviour:
   m_ObjectHideFlags: 1

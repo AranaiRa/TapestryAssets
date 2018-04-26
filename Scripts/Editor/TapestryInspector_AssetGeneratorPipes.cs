@@ -32,9 +32,11 @@ public class TapestryInspector_AssetGeneratorPipes : Editor
     {
         GUILayout.BeginVertical("box");
 
-        GUIStyle section = new GUIStyle();
-        section.fontSize = 14;
-        section.fontStyle = FontStyle.Bold;
+        GUIStyle section = new GUIStyle
+        {
+            fontSize = 14,
+            fontStyle = FontStyle.Bold
+        };
 
         GUILayout.BeginVertical("box");
         GUILayout.Label("Current Segment", section);

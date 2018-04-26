@@ -8,8 +8,9 @@ using UnityEditor;
 [CustomEditor(typeof(Tapestry_EffectZone))]
 public class TapestryInspector_EffectZone : Editor {
 
-    int pSel;
+    int pSel, toolbarActive;
     bool startup = true;
+    string[] toolbarNames = { "Effect", "Filters" };
 
     public override void OnInspectorGUI()
     {
@@ -26,8 +27,45 @@ public class TapestryInspector_EffectZone : Editor {
             startup = false;
         }
 
-        pSel = e.effect.DrawInspector(pSel);
+        GUILayout.BeginVertical("box");
+
+        GUILayout.BeginHorizontal();
+        e.removeEffectOnTriggerLeave = EditorGUILayout.Toggle(e.removeEffectOnTriggerLeave, GUILayout.Width(12));
+        GUILayout.Label("Remove Effect on Trigger Leave?");
+        GUILayout.EndHorizontal();
+
+        toolbarActive = GUILayout.Toolbar(toolbarActive, toolbarNames);
+
+        if (toolbarActive != -1)
+        {
+            if (toolbarNames[toolbarActive] == "Effect")
+                pSel = e.effect.DrawInspector(pSel);
+
+            else if (toolbarNames[toolbarActive] == "Filters")
+                DrawTabFilters(e);
+        }
+
+        GUILayout.EndVertical();
 
         DrawDefaultInspector();
+    }
+
+    public void DrawTabFilters(Tapestry_EffectZone e)
+    {
+        if(ReferenceEquals(e.keywords, null))
+            e.keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
+
+        GUILayout.BeginHorizontal();
+
+        e.applyByKeyword = EditorGUILayout.Toggle(e.applyByKeyword, GUILayout.Width(12));
+        GUILayout.Label("Apply by Keyword?");
+        GUILayout.FlexibleSpace();
+        e.applyByKeyword = !EditorGUILayout.Toggle(!e.applyByKeyword, GUILayout.Width(12));
+        GUILayout.Label("Ignore by Keyword?");
+        GUILayout.FlexibleSpace();
+
+        GUILayout.EndHorizontal();
+
+        e.keywords.DrawInspector();
     }
 }

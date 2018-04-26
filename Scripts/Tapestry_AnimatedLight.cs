@@ -117,8 +117,11 @@ public class Tapestry_AnimatedLight : Tapestry_Activatable {
             {
                 hasLight = true;
                 lightSource = transform.GetChild(i).gameObject.GetComponent<Light>();
-                if(lightSource == null)
+                if (lightSource == null)
+                {
                     lightSource = transform.GetChild(i).gameObject.AddComponent<Light>();
+                    lightSource.shadows = LightShadows.Soft;
+                }
             }
             if (transform.GetChild(i).name == "T_EmissiveMesh")
             {
