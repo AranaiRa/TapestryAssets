@@ -29,8 +29,27 @@ public class Tapestry_EffectZone : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         Tapestry_Actor a = other.GetComponentInParent<Tapestry_Actor>();
-        if(a != null)
-            a.AddEffect(effect.Clone());
+        if (keywords.Count == 0)
+        {
+            if (a != null)
+                a.AddEffect(effect.Clone());
+        }
+        else if (applyByKeyword)
+        {
+            if (a != null && !ReferenceEquals(a.keywords, null))
+            {
+                if (a.keywords.ContainsOne(keywords))
+                    a.AddEffect(effect.Clone());
+            }
+        }
+        else
+        {
+            if (a != null && !ReferenceEquals(a.keywords, null))
+            {
+                if (!a.keywords.ContainsAll(keywords))
+                    a.AddEffect(effect.Clone());
+            }
+        }
     }
 
     private void OnTriggerExit(Collider other)

@@ -27,7 +27,6 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
                 p.RestrictControls = true;
             }
             rb.velocity = dir * strength;
-            Debug.Log("velocity should be " + rb.velocity);
         }
     }
 

@@ -1084,7 +1084,7 @@ public class TapestryEditor_ComponentCreator : EditorWindow {
 
     private void DrawEffectActivatorButton()
     {
-        if (GUILayout.Button("Effect Zone", GUILayout.Width(buttonWidth)))
+        if (GUILayout.Button("Effect Activator", GUILayout.Width(buttonWidth)))
         {
             GameObject main = new GameObject
             {

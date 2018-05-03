@@ -15,6 +15,8 @@ public class TapestryInspector_Prop : Editor
     {
         Tapestry_Prop p = target as Tapestry_Prop;
 
+        DrawDefaultInspector();
+
         string
             displayTooltip = "What string will display on the player's HUD when looking at this object.",
             displayNameTooltip = "Should the object show its display name when the player's cursor is hovering over the object?";

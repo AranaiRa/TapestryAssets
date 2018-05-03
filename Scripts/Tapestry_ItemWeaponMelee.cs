@@ -46,7 +46,6 @@ public class Tapestry_ItemWeaponMelee : Tapestry_ItemEquippable {
     private void OnTriggerEnter(Collider other)
     {
         Tapestry_Actor actor = other.gameObject.GetComponentInParent<Tapestry_Actor>();
-        Debug.Log("Hit " + actor.displayName);
         if (!ReferenceEquals(actor, null))
         {
             actor.AddEffect(effectStanding);

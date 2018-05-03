@@ -47,7 +47,6 @@ public class Tapestry_Actor : Tapestry_Activatable {
 
     public virtual void AddEffect(Tapestry_Effect effect)
     {
-        Debug.Log("add call");
         if(effect.canBeStacked || !effects.Contains(effect))
             effects.Add(effect);
     }
@@ -68,10 +67,8 @@ public class Tapestry_Actor : Tapestry_Activatable {
     {
         for (int i = effects.Count - 1; i >= 0; i--)
         {
-            Debug.Log("comparing \"" + effect.displayName + "\" to \"" + effects[i].displayName + "\"");
             if (effect.displayName == effects[i].displayName)
             {
-                Debug.Log("found it");
                 effects.RemoveAt(i);
                 break;
             }
@@ -87,6 +84,7 @@ public class Tapestry_Actor : Tapestry_Activatable {
             health -= amount;
             health = Mathf.Clamp(health, 0, 1000);
         }
+        
     }
 
     public virtual void Heal(float amount)

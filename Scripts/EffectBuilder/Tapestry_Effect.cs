@@ -31,6 +31,9 @@ public class Tapestry_Effect : ScriptableObject {
 
     public void Apply(Tapestry_Actor target)
     {
+        //Temporary. Forgive me father, for I have sinned
+        if (ReferenceEquals(payload, null))
+            payload = (Tapestry_EffectBuilder_Payload_Damage)ScriptableObject.CreateInstance("Tapestry_EffectBuilder_Payload_Damage");
         payload.Apply(target);
 
         if (duration == Tapestry_EffectBuilder_Duration.Instant)
