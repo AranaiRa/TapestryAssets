@@ -93,10 +93,10 @@ public class Tapestry_Effect : ScriptableObject {
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Duration", title);
         GUILayout.FlexibleSpace();
-        if(payload.mustBeInstant)
+        if (payload.mustBeInstant)
         {
             duration = Tapestry_EffectBuilder_Duration.Instant;
-            EditorGUILayout.Popup(0,new string[]{"Instant"});
+            EditorGUILayout.Popup(0, new string[] { "Instant" });
         }
         else
             duration = (Tapestry_EffectBuilder_Duration)EditorGUILayout.EnumPopup(duration);
@@ -122,23 +122,28 @@ public class Tapestry_Effect : ScriptableObject {
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.BeginVertical("box");
-        
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Payload", title);
         GUILayout.FlexibleSpace();
         pSel = EditorGUILayout.Popup(pSel, payloads.Keys.ToArray());
         EditorGUILayout.EndHorizontal();
-        
+
         Type pType = payloads[payloads.Keys.ToArray()[pSel]];
         if (ReferenceEquals(payload, null) || payload.GetType() != pType)
             payload = (Tapestry_EffectBuilder_Payload)ScriptableObject.CreateInstance(pType.ToString());
         payload.DrawInspector();
-        
+
         EditorGUILayout.EndVertical();
 
         keywords.DrawInspector();
 
         EditorGUILayout.EndVertical();
+
+        //if (GUILayout.Button("save"))
+        //{
+        //    AssetDatabase.CreateAsset(this, "Assets/Prefabs/Tapestry/Effects/" + displayName + ".asset");
+        //}
 
         return pSel;
     }
