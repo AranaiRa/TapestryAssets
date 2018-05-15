@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 [System.Serializable]
 public class Tapestry_EffectBuilder_Payload_Teleport : Tapestry_EffectBuilder_Payload
@@ -32,6 +34,7 @@ public class Tapestry_EffectBuilder_Payload_Teleport : Tapestry_EffectBuilder_Pa
             target.transform.rotation = Quaternion.Euler(0, newRot, 0);
     }
 
+    #if UNITY_EDITOR
     public override void DrawInspector()
     {
         GUILayout.BeginVertical("box");
@@ -74,4 +77,5 @@ public class Tapestry_EffectBuilder_Payload_Teleport : Tapestry_EffectBuilder_Pa
 
         GUILayout.EndVertical();
     }
+    #endif
 }

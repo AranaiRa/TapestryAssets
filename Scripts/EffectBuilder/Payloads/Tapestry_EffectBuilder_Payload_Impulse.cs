@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 [System.Serializable]
 public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Payload {
@@ -30,6 +32,7 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
         }
     }
 
+    #if UNITY_EDITOR
     public override void DrawInspector()
     {
         GUILayout.BeginVertical("box");
@@ -72,4 +75,5 @@ public class Tapestry_EffectBuilder_Payload_Impulse : Tapestry_EffectBuilder_Pay
 
         GUILayout.EndVertical();
     }
+    #endif
 }

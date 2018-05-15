@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 [System.Serializable]
 public class Tapestry_DamageProfile {
@@ -45,6 +47,7 @@ public class Tapestry_DamageProfile {
         return dict[type].Mitigation;
     }
 
+    #if UNITY_EDITOR
     public void DrawInspector()
     {
         GUILayout.BeginVertical("box");
@@ -75,4 +78,5 @@ public class Tapestry_DamageProfile {
 
         GUILayout.EndVertical();
     }
+    #endif
 }

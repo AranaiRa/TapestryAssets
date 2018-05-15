@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 [System.Serializable]
 public class Tapestry_Inventory : ScriptableObject {
@@ -139,6 +141,7 @@ public class Tapestry_Inventory : ScriptableObject {
         }
     }
 
+    #if UNITY_EDITOR
     public void DrawInspector()
     {
         GUIStyle title = new GUIStyle();
@@ -193,4 +196,5 @@ public class Tapestry_Inventory : ScriptableObject {
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
     }
+    #endif
 }

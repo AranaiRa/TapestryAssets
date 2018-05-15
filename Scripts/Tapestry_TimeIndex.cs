@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 public class Tapestry_TimeIndex {
 
@@ -178,6 +180,7 @@ public class Tapestry_TimeIndex {
         return prog;
     }
 
+    #if UNITY_EDITOR
     public void DrawInspector(bool useMonths=false, bool useYears=false)
     {
         if (useYears)
@@ -204,4 +207,5 @@ public class Tapestry_TimeIndex {
         second = EditorGUILayout.DelayedIntField(second, GUILayout.Width(28));
         GUILayout.Label("Seconds");
     }
+    #endif
 }

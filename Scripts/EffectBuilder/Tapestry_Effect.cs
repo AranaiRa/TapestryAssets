@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 [System.Serializable]
 public class Tapestry_Effect : ScriptableObject {
@@ -66,7 +68,8 @@ public class Tapestry_Effect : ScriptableObject {
         comp = comp & (payload.GetType() == other.payload.GetType());
         return true;
     }
-
+    
+    #if UNITY_EDITOR
     public int DrawInspector(int pSel)
     {
         if (ReferenceEquals(payload, null))
@@ -150,6 +153,7 @@ public class Tapestry_Effect : ScriptableObject {
 
         return pSel;
     }
+    #endif
 }
 
 public enum Tapestry_EffectBuilder_Duration

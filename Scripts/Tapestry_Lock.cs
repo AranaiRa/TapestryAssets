@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 [System.Serializable]
 public class Tapestry_Lock {
@@ -43,4 +45,8 @@ public class Tapestry_Lock {
         LockLevel = 0;
         keyID = "";
     }
+
+    #if UNITY_EDITOR
+    //TODO: Refactor lock inspector here
+    #endif
 }

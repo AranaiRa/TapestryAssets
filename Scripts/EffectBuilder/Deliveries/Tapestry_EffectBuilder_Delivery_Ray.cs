@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 public class Tapestry_EffectBuilder_Delivery_Ray : Tapestry_EffectBuilder_Delivery
 {
@@ -39,6 +41,7 @@ public class Tapestry_EffectBuilder_Delivery_Ray : Tapestry_EffectBuilder_Delive
         return export;
     }
 
+#if UNITY_EDITOR
     public override void DrawInspector()
     {
         GUILayout.BeginVertical("box");
@@ -54,4 +57,5 @@ public class Tapestry_EffectBuilder_Delivery_Ray : Tapestry_EffectBuilder_Delive
 
         GUILayout.EndVertical();
     }
+#endif
 }

@@ -12,9 +12,16 @@ public class Tapestry_UI_HUD : MonoBehaviour {
         activateIndicator, pushIndicator, liftIndicator;
     public Image gaugeHealth, gaugeStamina;
 
+    private float
+        healthLastFrame = 1.0f, staminaLastFrame = 1.0f,
+        timeSinceHealthChange = Tapestry_Config.GaugeFadeDelay, timeSinceStaminaChange = Tapestry_Config.GaugeFadeDelay;
+    private bool
+        healthIsVisible = false,
+        staminaIsVisible = false;
+
     private void Start()
     {
-        
+        healthIsVisible = true;
     }
 
     private void Reset()
@@ -72,5 +79,61 @@ public class Tapestry_UI_HUD : MonoBehaviour {
 
         gaugeHealth.fillAmount = (player.health / 1000f);
         gaugeStamina.fillAmount = (player.stamina / 1000f);
+
+        if(healthIsVisible)
+        {
+            if(healthLastFrame != 1.0f && gaugeHealth.fillAmount == 1.0f)
+            {
+                timeSinceHealthChange = 3.0f;
+            }
+        }
+        else
+        {
+            if(healthLastFrame != gaugeHealth.fillAmount)
+            {
+                healthIsVisible = true;
+                gaugeHealth.CrossFadeAlpha(1, Tapestry_Config.GaugeFadeTime, true);
+            }
+        }
+        if (staminaIsVisible)
+        {
+            if (staminaLastFrame != 1.0f && gaugeStamina.fillAmount == 1.0f)
+            {
+                timeSinceStaminaChange = 3.0f;
+            }
+        }
+        else
+        {
+            if (staminaLastFrame != gaugeStamina.fillAmount)
+            {
+                staminaIsVisible = true;
+                gaugeStamina.CrossFadeAlpha(1, Tapestry_Config.GaugeFadeTime, true);
+            }
+        }
+
+        //end of frame
+        timeSinceHealthChange -= Time.deltaTime;
+        timeSinceStaminaChange -= Time.deltaTime;
+        if (timeSinceHealthChange <= 0)
+        {
+            timeSinceHealthChange = 0;
+            if (gaugeHealth.fillAmount == 1.0f)
+            {
+                healthIsVisible = false;
+                gaugeHealth.CrossFadeAlpha(0, Tapestry_Config.GaugeFadeTime, true);
+            }
+        }
+        if (timeSinceStaminaChange <= 0)
+        {
+            timeSinceStaminaChange = 0;
+            if (gaugeStamina.fillAmount == 1.0f)
+            {
+                staminaIsVisible = false;
+                gaugeStamina.CrossFadeAlpha(0, Tapestry_Config.GaugeFadeTime, true);
+            }
+        }
+
+        healthLastFrame = gaugeHealth.fillAmount;
+        staminaLastFrame = gaugeStamina.fillAmount;
     }
 }

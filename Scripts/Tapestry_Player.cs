@@ -71,6 +71,8 @@ public class Tapestry_Player : Tapestry_Entity {
     // Use this for initialization
     void Start ()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         inventoryUI = FindObjectOfType<Tapestry_Level>().inventoryUI;
         if (ReferenceEquals(inventory, null))
             inventory = (Tapestry_Inventory)ScriptableObject.CreateInstance("Tapestry_Inventory");
@@ -369,14 +371,26 @@ public class Tapestry_Player : Tapestry_Entity {
         if (openLastFrame && !open)
         {
             if (inventoryUI.IsOpen)
+            {
                 inventoryUI.Close();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
             else
+            {
                 inventoryUI.Open(inventory, equipmentProfile);
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
         }
         if(Input.GetKey(Tapestry_Config.KeyboardInput_Cancel))
         {
             if (inventoryUI.IsOpen)
+            {
                 inventoryUI.Close();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
         //End of frame

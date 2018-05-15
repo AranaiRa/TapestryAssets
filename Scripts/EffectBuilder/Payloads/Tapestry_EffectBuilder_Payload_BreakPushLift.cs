@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 public class Tapestry_EffectBuilder_Payload_BreakPushLift : Tapestry_EffectBuilder_Payload {
 
@@ -15,8 +17,10 @@ public class Tapestry_EffectBuilder_Payload_BreakPushLift : Tapestry_EffectBuild
         base.Apply(target);
     }
 
+    #if UNITY_EDITOR
     public override void DrawInspector()
     {
         base.DrawInspector();
     }
+    #endif
 }

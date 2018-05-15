@@ -35,7 +35,6 @@ public class Tapestry_Level : MonoBehaviour {
             sun = go.GetComponent<Light>();
             sun.color = Tapestry_Config.SunDayColor;
             sun.type = LightType.Directional;
-            sun.lightmapBakeType = LightmapBakeType.Realtime;
             sun.intensity = Tapestry_Config.SunDirectLight;
             sun.bounceIntensity = Tapestry_Config.SunIndirectLight;
             sun.shadows = LightShadows.Soft;

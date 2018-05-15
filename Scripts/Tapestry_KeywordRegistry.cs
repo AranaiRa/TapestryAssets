@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 public class Tapestry_KeywordRegistry : ScriptableObject {
 
@@ -91,7 +93,6 @@ public class Tapestry_KeywordRegistry : ScriptableObject {
         if (!keywords.Contains(str))
         {
             keywords.Add(str);
-            Debug.Log("successfully added \"" + str +"\"");
         }
     }
 
@@ -103,6 +104,7 @@ public class Tapestry_KeywordRegistry : ScriptableObject {
         }
     }
 
+    #if UNITY_EDITOR
     public void DrawInspector()
     {
         GUIStyle title = new GUIStyle();
@@ -152,4 +154,5 @@ public class Tapestry_KeywordRegistry : ScriptableObject {
         GUILayout.EndHorizontal();
         GUILayout.EndVertical();
     }
+    #endif
 }

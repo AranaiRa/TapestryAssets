@@ -28,6 +28,9 @@ public class Tapestry_EffectZone : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        if (ReferenceEquals(keywords, null))
+            keywords = (Tapestry_KeywordRegistry)ScriptableObject.CreateInstance("Tapestry_KeywordRegistry");
+
         Tapestry_Actor a = other.GetComponentInParent<Tapestry_Actor>();
         if (keywords.Count == 0)
         {

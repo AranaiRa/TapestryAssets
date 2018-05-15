@@ -7,8 +7,10 @@ public class ReloadLevelZone : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.GetComponent<Tapestry_Player>() != null)
+        Debug.Log("hit reload zone");
+        if (other.gameObject.GetComponentInParent<Tapestry_Player>() != null)
         {
+            Debug.Log("aadaadsfas");
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }

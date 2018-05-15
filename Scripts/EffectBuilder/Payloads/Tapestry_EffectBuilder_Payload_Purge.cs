@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
 public class Tapestry_EffectBuilder_Payload_Purge : Tapestry_EffectBuilder_Payload
 {
@@ -39,7 +41,8 @@ public class Tapestry_EffectBuilder_Payload_Purge : Tapestry_EffectBuilder_Paylo
             }
         }
     }
-
+    
+    #if UNITY_EDITOR
     public override void DrawInspector()
     {
         GUILayout.BeginVertical("box");
@@ -60,4 +63,5 @@ public class Tapestry_EffectBuilder_Payload_Purge : Tapestry_EffectBuilder_Paylo
 
         GUILayout.EndVertical();
     }
+    #endif
 }

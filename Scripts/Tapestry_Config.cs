@@ -21,7 +21,9 @@ public static class Tapestry_Config {
         SoundVolumeSFX = 1.0f,
         DefaultSoundRadius = 4.0f,
         ItemDropDistance = 0.7f,
-        InventoryItemHideTime = 0.4f;
+        InventoryItemHideTime = 0.4f,
+        GaugeFadeTime = 0.4f,
+        GaugeFadeDelay = 3.0f;
     public static Tapestry_Attribute pushLiftAttribute = Tapestry_Attribute.Strength;
     public static Tapestry_Skill lockBypassSkill = Tapestry_Skill.Larceny;
     public static KeyCode
